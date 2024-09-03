@@ -1,0 +1,6 @@
+ 
+# Ignorar todos los archivos .pt
+*.pt
+*.pth
+*.jpg
+*.json
