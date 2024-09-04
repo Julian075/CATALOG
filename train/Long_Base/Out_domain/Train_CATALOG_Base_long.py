@@ -10,7 +10,7 @@ import pandas as pd
 from sklearn.metrics import confusion_matrix, classification_report
 import numpy as np
 import random
-
+import wandb
 
 
 class CustomDataset(Dataset):
@@ -459,5 +459,9 @@ if __name__ == "__main__":
 
     model_params_path = 'Models/CATALOG_V1.pth'
     #prueba_model_top_3(model_params_path)
-    prueba_model(model_params_path)
-    #train()
+    #prueba_model(model_params_path)
+    wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
+    wandb.init(
+        project="Train_CLIP_V1_long_out_domain",
+    )
+    train()
