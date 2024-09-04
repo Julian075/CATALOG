@@ -225,7 +225,7 @@ if __name__ == "__main__":
                     counter = 0
 
                     # Create a directory for each training session based on the unique identifier
-                    os.makedirs(f'Best/training_{unique_id}', exist_ok=True)
+                    os.makedirs(f'Best_serengeti/training_{unique_id}', exist_ok=True)
                     # Save the model parameters within the corresponding directory
                     model_params_path = f'Best_serengeti/training_{unique_id}/best_model_params_{num_layers}_{hidden_dim}.pth'
                     torch.save(projection_model.state_dict(), model_params_path)
