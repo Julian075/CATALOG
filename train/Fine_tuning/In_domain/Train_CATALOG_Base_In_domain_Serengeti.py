@@ -74,8 +74,8 @@ if __name__ == "__main__":
                         help='Text features for training')  # Path for the features of the descriptions categories (Extracted by CLIP text encoder)
 
     parser.add_argument('--weight_Clip', type=float, default=0.6, help='Alpha')
-    parser.add_argument('--num_epochs', type=int, default=500, help='Number of epochs')
-    parser.add_argument('--batch_size', type=int, default=100, help='batch size')
+    parser.add_argument('--num_epochs', type=int, default=1000, help='Number of epochs')
+    parser.add_argument('--batch_size', type=int, default=48, help='batch size')
     parser.add_argument('--pretrained', type=int, default=0, help='pretrained ')
     parser.add_argument('--num_layers', type=int, default=1, help='num_layers ')
     parser.add_argument('--dropout', type=float, default=0.27822, help='dropout ')
