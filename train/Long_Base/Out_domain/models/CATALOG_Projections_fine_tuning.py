@@ -105,7 +105,7 @@ class LLaVA_CLIP(nn.Module):
             param.requires_grad = True
 
         # Run CLIP in eval mode since our batch size is much smaller than during CLIP training
-        for m in self.model.clip_model.modules():
+        for m in self.model_clip.modules():
             if isinstance(m, nn.BatchNorm2d):
                 m.eval()
 
