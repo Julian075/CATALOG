@@ -75,7 +75,7 @@ if __name__ == "__main__":
                         default="../../../features/Features_serengeti/finetuning_features/Text_features_16.pt",
                         help='Text features for training') #Path for the features of the descriptions categories (Extracted by CLIP text encoder)
     parser.add_argument('--text_features2', type=str,
-                        default="../../../features/Features_terra/finetuning_features/Text_features_16_mod.pt",
+                        default="../../../features/Features_terra/finetuning_features/Text_features_16.pt",
                         help='Text features for testing') #Path for the features of the descriptions categories (Extracted by CLIP text encoder)
     
     parser.add_argument('--weight_Clip', type=float, default=0.6, help='Alpha')
