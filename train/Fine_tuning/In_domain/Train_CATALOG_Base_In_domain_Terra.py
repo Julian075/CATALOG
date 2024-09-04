@@ -140,7 +140,7 @@ if __name__ == "__main__":
         device = "cuda" if torch.cuda.is_available() else "cpu"
 
         text_features = torch.load(path_text_feat)
-        #text_features = text_features.to(device)
+        text_features = text_features.to(device)
 
 
 
@@ -345,6 +345,7 @@ if __name__ == "__main__":
         device = "cuda" if torch.cuda.is_available() else "cpu"
 
         text_features = torch.load(path_text_feat)
+        text_features=text_features.to(device)
 
         dataloader_cis_test = get_dataloader(ruta_features_test1, batch_size)
         dataloader_trans_test = get_dataloader(ruta_features_test2, batch_size)
@@ -433,6 +434,7 @@ if __name__ == "__main__":
         device = "cuda" if torch.cuda.is_available() else "cpu"
 
         text_features2 = torch.load(path_text_feat)
+        text_features2=text_features2.to(device)
 
         dataloader_cis_test = get_dataloader(ruta_features_test1, batch_size)
         dataloader_trans_test = get_dataloader(ruta_features_test2, batch_size)

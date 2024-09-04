@@ -97,17 +97,19 @@ class LLaVA_CLIP(nn.Module):
         self.proyection_txt_CLIP = Projection(d_in=512, d_out=512, p=dropout)
 
         self.model_clip, _ = clip.load(f'ViT-B/16', device)
-        self.model_clip.to(device)
-
-        self.device = device
 
         for param in self.model_clip.parameters():
             param.requires_grad = False
 
         self.model_clip.visual.proj.requires_grad = True
 
-        self.criterion=nn.CrossEntropyLoss(reduction="mean")
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        # Run CLIP in eval mode since our batch size is much smaller than during CLIP training
+        for m in self.model.clip_model.modules():
+            if isinstance(m, nn.BatchNorm2d):
+                m.eval()
+
+        self.model_clip.to(device)
+        self.device = device
         # temperature
         self.logit_scale_CLIP = nn.Parameter(torch.ones([]) * np.log(1 / 0.07))
         self.logit_scale_LLaVA = nn.Parameter(torch.ones([]) * np.log(1 / 0.07))
@@ -166,20 +168,9 @@ class LLaVA_CLIP(nn.Module):
         acc = torch.sum(predicted_index.cpu() == target_ind)
         return acc
 
-    def forward(self, embeddings, img, txt_features, weight_p, target_ind, temp):
+    def forward(self, embeddings, img, zeroshot_weights, weight_p, target_ind, temp):
 
         #Train last Layer CLIP
-
-        zeroshot_weights = []
-        for i in range(len(txt_features)):
-            txt=clip.tokenize(txt_features[i]).to(self.device)
-            class_embeddings = self.model_clip.encode_text(txt)  # embed with text encoder
-            class_embeddings = class_embeddings/class_embeddings.norm(dim=-1, keepdim=True)
-            class_embedding = class_embeddings.mean(dim=0)
-            class_embedding = class_embedding / class_embedding.norm()
-            zeroshot_weights.append(class_embedding)
-        zeroshot_weights = torch.stack(zeroshot_weights, dim=1).to(self.device)
-
         img_features = self.model_clip.encode_image(img)
         img_features = img_features/ img_features.norm(dim=-1, keepdim=True)
 

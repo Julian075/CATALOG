@@ -140,7 +140,7 @@ if __name__ == "__main__":
         device = "cuda" if torch.cuda.is_available() else "cpu"
 
         text_features = torch.load(path_text_feat)
-        #text_features = text_features.to(device)
+        text_features = text_features.to(device)
 
 
 
@@ -345,6 +345,7 @@ if __name__ == "__main__":
         device = "cuda" if torch.cuda.is_available() else "cpu"
 
         text_features = torch.load(path_text_feat)
+        text_features = text_features.to(device)
 
         dataloader_cis_test = get_dataloader(ruta_features_test1, batch_size)
         dataloader_trans_test = get_dataloader(ruta_features_test2, batch_size)
@@ -432,7 +433,8 @@ if __name__ == "__main__":
 
         device = "cuda" if torch.cuda.is_available() else "cpu"
 
-        text_features2 = torch.load(path_text_feat)
+        text_features = torch.load(path_text_feat)
+        text_features = text_features.to(device)
 
         dataloader_cis_test = get_dataloader(ruta_features_test1, batch_size)
         dataloader_trans_test = get_dataloader(ruta_features_test2, batch_size)
@@ -458,7 +460,7 @@ if __name__ == "__main__":
                 description_embeddings_cis_test = description_embeddings_cis_test.to(device)
 
                 acc_top_3_cis  = projection_model.predict_top_3(description_embeddings_cis_test,
-                                                               image_features_cis_test, text_features2,
+                                                               image_features_cis_test, text_features,
                                                                weight_Clip, target_index_cis_test, t)
 
                 running_corrects_cis_test += float(acc_top_3_cis)
@@ -469,7 +471,7 @@ if __name__ == "__main__":
                 description_embeddings_trans_test = description_embeddings_trans_test.to(device)
 
                 acc_top_3_trans  = projection_model.predict_top_3(description_embeddings_trans_test,
-                                                                   image_features_trans_test, text_features2,
+                                                                   image_features_trans_test, text_features,
                                                                    weight_Clip, target_index_trans_test, t)
 
 

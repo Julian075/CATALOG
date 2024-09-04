@@ -142,10 +142,10 @@ if __name__ == "__main__":
         device = "cuda" if torch.cuda.is_available() else "cpu"
 
         text_features = torch.load(path_text_feat1)
-        #text_features = text_features.to(device)
+        text_features = text_features.to(device)
 
         text_features2 = torch.load(path_text_feat2)
-        #text_features2 = text_features2.to(device)
+        text_features2 = text_features2.to(device)
 
 
 
