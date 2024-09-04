@@ -80,12 +80,12 @@ if __name__ == "__main__":
     
     parser.add_argument('--weight_Clip', type=float, default=0.6, help='Alpha')
     parser.add_argument('--num_epochs', type=int, default=1000, help='Number of epochs')
-    parser.add_argument('--batch_size', type=int, default=2, help='batch size')
+    parser.add_argument('--batch_size', type=int, default=100, help='batch size')
     parser.add_argument('--pretrained', type=int, default=0, help='pretrained ')
     parser.add_argument('--num_layers', type=int, default=1, help='num_layers ')
     parser.add_argument('--dropout', type=float, default=0.27822, help='dropout ')
     parser.add_argument('--hidden_dim', type=int, default=1045, help='hidden_dim ')
-    parser.add_argument('--lr', type=float, default=0.07641, help='learning rate ')
+    parser.add_argument('--lr', type=float, default=1e-7, help='learning rate ')
     parser.add_argument('--t', type=float, default=0.1, help='temperature ')
     parser.add_argument('--momentum', type=float, default=0.8409, help='momentum ')
     parser.add_argument('--patience', type=int, default=5, help='patience ')
@@ -123,15 +123,13 @@ if __name__ == "__main__":
 
 
     def build_optimizer(projection_model, optimizer, learning_rate, momentum):
-        params1 = {"params": projection_model.description_encoder.parameters(), "lr": learning_rate,
-                   "momentum": momentum}
-        params2 = {"params": projection_model.logit_scale_CLIP, "lr": learning_rate, "momentum": momentum}
-        params3 = {"params": projection_model.logit_scale_LLaVA, "lr": learning_rate, "momentum": momentum}
-        params4 = {"params": projection_model.model_clip.visual.parameters(), "lr": learning_rate,
-                   "momentum": momentum}
+        params1 = {"params": projection_model.description_encoder.parameters(), "lr": learning_rate}
+        params2 = {"params": projection_model.logit_scale_CLIP, "lr": learning_rate}
+        params3 = {"params": projection_model.logit_scale_LLaVA, "lr": learning_rate}
+        params4 = {"params": projection_model.model_clip.visual.parameters(), "lr": learning_rate}
 
         if optimizer == "sgd":
-            optimizer = optim.SGD([params1, params2, params3, params4], lr=learning_rate, momentum=momentum)
+            optimizer = optim.SGD([params1, params2, params3, params4], lr=learning_rate, weight_decay=0.2)
         elif optimizer == "adam":
             optimizer = optim.Adam([params1, params2, params3, params4], lr=learning_rate)
 
