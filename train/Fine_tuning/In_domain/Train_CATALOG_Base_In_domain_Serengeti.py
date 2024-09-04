@@ -74,7 +74,7 @@ if __name__ == "__main__":
                         help='Text features for training')  # Path for the features of the descriptions categories (Extracted by CLIP text encoder)
 
     parser.add_argument('--weight_Clip', type=float, default=0.6, help='Alpha')
-    parser.add_argument('--num_epochs', type=int, default=25, help='Number of epochs')
+    parser.add_argument('--num_epochs', type=int, default=200, help='Number of epochs')
     parser.add_argument('--batch_size', type=int, default=48, help='batch size')
     parser.add_argument('--pretrained', type=int, default=0, help='pretrained ')
     parser.add_argument('--num_layers', type=int, default=1, help='num_layers ')
@@ -227,7 +227,7 @@ if __name__ == "__main__":
                     # Create a directory for each training session based on the unique identifier
                     os.makedirs(f'Best/training_{unique_id}', exist_ok=True)
                     # Save the model parameters within the corresponding directory
-                    model_params_path = f'Best/training_{unique_id}/best_model_params_{num_layers}_{hidden_dim}.pth'
+                    model_params_path = f'Best_serengeti/training_{unique_id}/best_model_params_{num_layers}_{hidden_dim}.pth'
                     torch.save(projection_model.state_dict(), model_params_path)
 
                 else:
