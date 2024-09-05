@@ -387,8 +387,6 @@ class CATALOG_base:
         print(' Cis Test acc Top 3: {:.4f}'.format( epoch_acc_cis_test))
         print(' Trans Test acc Top 3: {:.4f}'.format( epoch_acc_trans_test))
 
-
-
     #model_params_path = '../../../models/CATALOG_Base.pth'
     #prueba_model_top_3(model_params_path)
     #prueba_model(model_params_path)

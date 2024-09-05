@@ -79,7 +79,6 @@ class LLaVA_CLIP(nn.Module):
         super().__init__()
         self.description_encoder = MLP(input_dim=768, hidden_dim=hidden_dim, output_dim=512, num_layers=num_layers,
                                        dropout=dropout, return_embeds=True)
-        self.criterion=nn.CrossEntropyLoss(reduction="mean")
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         # temperature
         self.logit_scale_CLIP = nn.Parameter(torch.ones([]) * np.log(1 / 0.07))

@@ -23,10 +23,9 @@ from train.Fine_tuning.Train_CATALOG_Base_In_domain_Terra import CATALOG_base_In
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
-    parser.add_argument('--model_version', type=str, default="Fine_tuning", help='Model version')
-    parser.add_argument('--train_type', type=str, default="In_domain", help='Type of training')
+    parser.add_argument('--model_version', type=str, default="Base", help='Model version')
+    parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--dataset', type=str, default="terra", help='dataset')
-
     args = parser.parse_args()
 
     model_version = args.model_version
@@ -60,17 +59,22 @@ if __name__ == "__main__":
                 ruta_features_trans_test = "features/Features_terra/standard_features/Features_CATALOG_trans_test_16.pt"
                 path_text_feat = "features/Features_terra/standard_features/Text_features_16.pt"
 
-                model = CATALOG_projections_terra(weight_Clip=0.4848,num_epochs=74,batch_size=65, num_layers=4,
-                                                dropout=0.2658,hidden_dim=1863,lr=0.032,t=1,momentum=0.909
-                                                ,patience=20,model=projections,Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='projection',
-                                                  ruta_features_train=ruta_features_train,ruta_features_val1=ruta_features_cis_val,
-                                                  ruta_features_val2=ruta_features_trans_val,ruta_features_test1=ruta_features_cis_test,
-                                                  ruta_features_test2 = ruta_features_trans_test,path_text_feat=path_text_feat,build_optimizer=build_optimizer,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
+                model = CATALOG_projections_terra(weight_Clip=0.4848, num_epochs=74, batch_size=65, num_layers=4,
+                                                  dropout=0.2658, hidden_dim=1863, lr=0.032, t=1, momentum=0.909
+                                                  , patience=20, model=projections, Dataset=BaselineDataset,
+                                                  Dataloader=dataloader_baseline, version='projection',
+                                                  ruta_features_train=ruta_features_train,
+                                                  ruta_features_val1=ruta_features_cis_val,
+                                                  ruta_features_val2=ruta_features_trans_val,
+                                                  ruta_features_test1=ruta_features_cis_test,
+                                                  ruta_features_test2=ruta_features_trans_test,
+                                                  path_text_feat=path_text_feat, build_optimizer=build_optimizer,
+                                                  exp_name=f'exp_{model_version}_{train_type}_{dataset}')
 
                 model_params_path = 'models/CATALOG_Projections_Terra.pth'
                 model.prueba_model(model_params_path=model_params_path)
-                # model.prueba_model_top_3(model_params_path)
-                # model.train()
+                #model.prueba_model_top_3(model_params_path)
+                #model.train()
         if train_type=="Out_domain":
             ruta_features_train  = "features/Features_serengeti/standard_features/Features_CATALOG_train_16.pt"
             ruta_features_val    = "features/Features_serengeti/standard_features/Features_CATALOG_val_16.pt"
@@ -89,7 +93,7 @@ if __name__ == "__main__":
             model_params_path = 'models/CATALOG_Base.pth'
             model.prueba_model(model_params_path=model_params_path)
             # model.prueba_model_top_3(model_params_path)
-            #model.train()
+            # model.train()
     elif model_version == "Fine_tuning":
         if train_type=="In_domain":
             if dataset=="serengeti":
@@ -149,7 +153,7 @@ if __name__ == "__main__":
             path_text_feat2 = "features/Features_terra/finetuning_features/Text_features_16.pt"
             model = CATALOG_base(weight_Clip=0.6, num_epochs=1000, batch_size=100, num_layers=1,
                                  dropout=0.27822, hidden_dim=1045, lr=1e-7, t=0.1, momentum=0.8409
-                                 , patience=5, model=base_fine_tuning, Dataset=TuningDataset,
+                                 , patience=20, model=base_fine_tuning, Dataset=TuningDataset,
                                  Dataloader=dataloader_Tuning, version='fine_tuning',
                                  ruta_features_train=ruta_features_train,
                                  ruta_features_val=ruta_features_val, ruta_features_test1=ruta_features_test1,
@@ -223,7 +227,7 @@ if __name__ == "__main__":
             path_text_feat2 = "features/Features_terra/finetuning_features/Text_features_16.pt"
             model = CATALOG_base(weight_Clip=0.6, num_epochs=1000, batch_size=100, num_layers=1,
                                  dropout=0.27822, hidden_dim=1045, lr=1e-7, t=0.1, momentum=0.8409
-                                 , patience=5, model=base_fine_tuning_layer, Dataset=TuningDataset,
+                                 , patience=20, model=base_fine_tuning_layer, Dataset=TuningDataset,
                                  Dataloader=dataloader_Tuning, version='fine_tuning_last_layer',
                                  ruta_features_train=ruta_features_train,
                                  ruta_features_val=ruta_features_val, ruta_features_test1=ruta_features_test1,
@@ -247,9 +251,9 @@ if __name__ == "__main__":
             ruta_features_test2  = "features/Features_terra/long_standard_features/Features_CATALOG_trans_test_16.pt"
             path_text_feat1      = "features/Features_serengeti/long_standard_features/Text_features_16.pt"
             path_text_feat2      = "features/Features_terra/long_standard_features/Text_features_16.pt"
-            model = CATALOG_base(weight_Clip=0.6, num_epochs=8, batch_size=48, num_layers=1,
+            model = CATALOG_base(weight_Clip=0.6, num_epochs=100, batch_size=48, num_layers=1,
                                                   dropout=0.27822, hidden_dim=1045, lr=0.07641, t=0.1, momentum=0.8409
-                                                  , patience=5, model=base_long, Dataset=BaselineDataset,
+                                                  , patience=20, model=base_long, Dataset=BaselineDataset,
                                                   Dataloader=dataloader_baseline,version='base',ruta_features_train=ruta_features_train,
                                                   ruta_features_val=ruta_features_val,ruta_features_test1=ruta_features_test1,
                                                   ruta_features_test2=ruta_features_test2,path_text_feat1=path_text_feat1,
