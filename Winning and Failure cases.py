@@ -16,19 +16,7 @@ import pandas as pd
 
 if __name__ == "__main__":
 
-    ruta_features_train = "features/Features_serengeti/standard_features/Features_CATALOG_train_16.pt"
-    ruta_features_val = "features/Features_serengeti/standard_features/Features_CATALOG_val_16.pt"
-    ruta_features_test1 = "features/Features_terra/standard_features/Features_CATALOG_cis_test_16.pt"
-    ruta_features_test2 = "features/Features_terra/standard_features/Features_CATALOG_trans_test_16.pt"
-    path_text_feat1 = "features/Features_serengeti/standard_features/Text_features_16.pt"
-    path_text_feat2 = "features/Features_terra/standard_features/Text_features_16.pt"
-    num_layers = 1
-    dropout = 0.27822
-    hidden_dim = 1045
-    t = 0.1
-    weight_Clip = 0.6
 
-    model_params_path = 'models/CATALOG_Base.pth'
 
 
     def set_seed(seed):
@@ -109,10 +97,21 @@ if __name__ == "__main__":
                                                                                weight_Clip, target_index, t)
                 outputs[img_name[:-4]]={'class':target_index,'Prediction':int(max_indices.cpu()),'Value': float(max_values.cpu())}
         df=pd.DataFrame(outputs)
-        df.to_csv(f'Predictions_{data}_test.csv')
+        df.to_csv(f'Predictions_trans_test.csv')
 
     image_path='data/terra/img/trans_test'
     model_params_path='models/CATALOG_Base.pth'
     description_path='data/terra/descriptions/trans_test'
+    ruta_features_train = "features/Features_serengeti/standard_features/Features_CATALOG_train_16.pt"
+    ruta_features_val = "features/Features_serengeti/standard_features/Features_CATALOG_val_16.pt"
+    ruta_features_test1 = "features/Features_terra/standard_features/Features_CATALOG_cis_test_16.pt"
+    ruta_features_test2 = "features/Features_terra/standard_features/Features_CATALOG_trans_test_16.pt"
+    path_text_feat1 = "features/Features_serengeti/standard_features/Text_features_16.pt"
+    path_text_feat2 = "features/Features_terra/standard_features/Text_features_16.pt"
+    num_layers = 1
+    dropout = 0.27822
+    hidden_dim = 1045
+    t = 0.1
+    weight_Clip = 0.6
     pru_ind(model_params_path,image_path,description_path,'trans')
 
