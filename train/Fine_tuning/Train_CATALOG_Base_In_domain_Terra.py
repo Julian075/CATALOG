@@ -164,7 +164,7 @@ class CATALOG_base_In_domain_terra:
                 print(f"Epoch [{epoch + 1}/{self.num_epochs}]")
                 print('Train loss: {:.4f}, acc: {:.4f}'.format(epoch_loss, epoch_acc))
                 print('Val Cis loss: {:.4f},Val Cis acc: {:.4f}'.format(epoch_loss_cis_val, epoch_acc_cis_val))
-                print('Val loss: {:.4f},Val acc: {:.4f}'.format(epoch_loss_trans_val, epoch_acc_trans_val))
+                print('Val Trans loss: {:.4f},Val acc: {:.4f}'.format(epoch_loss_trans_val, epoch_acc_trans_val))
                 print(f"Time for epoch [{total_time}]")
                 if epoch_acc_trans_val > acc_best:
                     print('Save model')

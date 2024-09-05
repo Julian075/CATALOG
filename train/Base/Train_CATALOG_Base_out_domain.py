@@ -9,6 +9,7 @@ import pandas as pd
 from sklearn.metrics import confusion_matrix, classification_report
 import numpy as np
 import random
+import wandb
 
 
 
@@ -130,6 +131,8 @@ class CATALOG_base:
             epoch_loss_val = running_loss_val / len(dataloader_val)
             epoch_acc_val = (running_corrects_val / size_val) * 100
 
+            wandb.log({"acc_train": epoch_acc, "loss_train": epoch_loss, "acc_val": epoch_acc_val,"loss_val": epoch_loss_val})
+
             time_end = time.time()
             total_time = time_end - time_in
             # Print the loss at every nth epoch
@@ -217,6 +220,9 @@ class CATALOG_base:
 
                 epoch_loss_trans_test = running_loss_trans_test / len(dataloader_trans_test)
                 epoch_acc_trans_test = (running_corrects_trans_test / size_trans_test) * 100
+
+                wandb.log({"acc_cis_test": epoch_acc_cis_test, "loss_cis_test": epoch_loss_cis_test,
+                           "acc_trans_test": epoch_acc_trans_test, "loss_trans_test": epoch_loss_trans_test})
 
                 print('Cis Test loss: {:.4f}, Cis Test acc: {:.4f}'.format(epoch_loss_cis_test, epoch_acc_cis_test))
                 print('Trans Test loss: {:.4f}, Trans Test acc: {:.4f}'.format(epoch_loss_trans_test, epoch_acc_trans_test))
