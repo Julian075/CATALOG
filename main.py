@@ -122,7 +122,7 @@ if __name__ == "__main__":
                 ruta_features_trans_test = "features/Features_terra/finetuning_features/Features_CATALOG_trans_test_16.pt"
                 path_text_feat = "features/Features_terra/finetuning_features/Text_features_16.pt"
 
-                model=CATALOG_base_In_domain_terra(weight_Clip=0.6,num_epochs=1000,batch_size=1, num_layers=1,
+                model=CATALOG_base_In_domain_terra(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=1,
                                                 dropout=0.27822,hidden_dim=1045,lr=1e-7,t=0.1,momentum=0.8409
                                                     , patience=20, model=base_fine_tuning, Dataset=TuningDataset,
                                                     Dataloader=dataloader_Tuning, version='fine_tuning',
@@ -160,7 +160,7 @@ if __name__ == "__main__":
             #model.prueba_model(model_params_path=model_params_path)
             #model.prueba_model_top_3(model_params_path)
             wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
-            wandb.init(project=f"Train_{model_version}_{train_type}_{dataset}")
+            wandb.init(project=f"Train_{model_version}_{train_type}")
             model.train()
             wandb.finish()
 
@@ -196,7 +196,7 @@ if __name__ == "__main__":
                 ruta_features_trans_test = "features/Features_terra/finetuning_features/Features_CATALOG_trans_test_16.pt"
                 path_text_feat = "features/Features_terra/finetuning_features/Text_features_16.pt"
 
-                model=CATALOG_base_In_domain_terra(weight_Clip=0.6,num_epochs=1000,batch_size=1, num_layers=1,
+                model=CATALOG_base_In_domain_terra(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=1,
                                                 dropout=0.27822,hidden_dim=1045,lr=1e-7,t=0.1,momentum=0.8409
                                                     , patience=20, model=base_fine_tuning_layer, Dataset=TuningDataset,
                                                     Dataloader=dataloader_Tuning, version='fine_tuning_last_layer',
@@ -234,7 +234,7 @@ if __name__ == "__main__":
             #model.prueba_model(model_params_path=model_params_path)
             #model.prueba_model_top_3(model_params_path)
             wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
-            wandb.init(project=f"Train_{model_version}_{train_type}_{dataset}")
+            wandb.init(project=f"Train_{model_version}_{train_type}")
             model.train()
             wandb.finish()
 
@@ -259,7 +259,7 @@ if __name__ == "__main__":
             #model.prueba_model(model_params_path=model_params_path)
             #model.prueba_model_top_3(model_params_path)
             wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
-            wandb.init(project=f"Train_{model_version}_{train_type}_{dataset}")
+            wandb.init(project=f"Train_{model_version}_{train_type}")
             model.train()
             wandb.finish()
 
