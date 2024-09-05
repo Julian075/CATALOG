@@ -136,7 +136,10 @@ if __name__ == "__main__":
                 #model_params_path = 'models/CATALOG_finetuning_Base_Terra.pth'
                 #model.prueba_model(model_params_path=model_params_path)
                 #model.prueba_model_top_3(model_params_path)
+                wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
+                wandb.init(project=f"Train_{model_version}_{train_type}_{dataset}")
                 model.train()
+                wandb.finish()
         elif train_type=="Out_domain":
             ruta_features_train = "features/Features_serengeti/finetuning_features/Features_CATALOG_train_16.pt"
             ruta_features_val = "features/Features_serengeti/finetuning_features/Features_CATALOG_val_16.pt"
