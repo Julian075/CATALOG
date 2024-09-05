@@ -85,14 +85,14 @@ def build_optimizer( projection_model, optimizer, learning_rate, momentum, versi
         elif version == 'fine_tuning':
             params6 = {"params": projection_model.model_clip.visual.parameters(), "lr": learning_rate,
                        "momentum": momentum}
-            optimizer = optim.SGD([params1, params2, params3, params6], lr=learning_rate, weight_decay=0.2)
+            optimizer = optim.SGD([params1, params2, params3, params6], lr=learning_rate,momentum=momentum, weight_decay=0.2)
             T_max = 50
             eta_min = learning_rate
             scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=T_max, eta_min=eta_min)
 
         elif version == 'fine_tuning_last_layer':
             params7 = {"params": projection_model.model_clip.visual.proj, "lr": learning_rate, "momentum": momentum}
-            optimizer = optim.SGD([params1, params2, params3, params7], lr=learning_rate, weight_decay=0.2)
+            optimizer = optim.SGD([params1, params2, params3, params7], lr=learning_rate,momentum=momentum, weight_decay=0.2)
             T_max = 50
             eta_min = learning_rate
             scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=T_max, eta_min=eta_min)
