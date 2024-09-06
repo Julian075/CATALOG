@@ -6,13 +6,14 @@ from PIL import Image
 
 #path where is located the images
 dataset='serengeti'
-root=f'data/{dataset}/img'
+#root=f'data/{dataset}/img'
+root='/export/jsantamaria/Bases_de_datos/serengeti/img'
 carpetas=os.listdir(root)
 
 mode_clip=['longclip-B']
 for mode_clip_i in mode_clip:
     for mode in carpetas:
-        if mode=='train' or mode == 'test' or mode =='val':
+        if mode=='train' or mode == 'test' or mode =='validation':
 
             class_indices=['aardvark', 'aardwolf', 'baboon', 'batEaredFox', 'buffalo', 'bushbuck', 'caracal', 'cheetah', 'civet',
              'dikDik',

@@ -5,7 +5,8 @@ import json
 from PIL import Image
 
 dataset='terra'
-root=f'data/{dataset}/img'
+#root=f'data/{dataset}/img'
+root='/export/jsantamaria/Bases_de_datos/terra/img'
 carpetas=os.listdir(root)
 
 mode_clip=['longclip-B']
