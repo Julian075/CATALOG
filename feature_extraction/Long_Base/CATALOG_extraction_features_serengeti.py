@@ -6,7 +6,7 @@ from PIL import Image
 
 #path where is located the images
 dataset='serengeti'
-root=f'../../data/{dataset}/img'
+root=f'data/{dataset}/img'
 carpetas=os.listdir(root)
 
 mode_clip=['longclip-B']
