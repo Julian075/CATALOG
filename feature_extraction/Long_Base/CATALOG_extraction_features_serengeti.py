@@ -1,6 +1,5 @@
 import os
 import torch
-from transformers import BertModel, BertTokenizer
 from long_Clip.model import longclip
 import json
 from PIL import Image
