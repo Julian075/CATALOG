@@ -102,7 +102,7 @@ if __name__ == "__main__":
                 ruta_features_test = "features/Features_serengeti/finetuning_features/Features_CATALOG_test_16.pt"
                 path_text_feat = "features/Features_serengeti/finetuning_features/Text_features_16.pt"
                 model=CATALOG_base_In_domain_serengeti(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=1,
-                                                dropout=0.27822,hidden_dim=1045,lr=1e-7,t=0.1,momentum=0.8409
+                                                dropout=0.27822,hidden_dim=1045,lr=1e-4,t=0.1,momentum=0.8409
                                                     , patience=20, model=base_fine_tuning, Dataset=TuningDataset,
                                                     Dataloader=dataloader_Tuning, version='fine_tuning',
                                                     ruta_features_train=ruta_features_train,
@@ -176,7 +176,7 @@ if __name__ == "__main__":
                 ruta_features_test = "features/Features_serengeti/finetuning_features/Features_CATALOG_test_16.pt"
                 path_text_feat = "features/Features_serengeti/finetuning_features/Text_features_16.pt"
                 model=CATALOG_base_In_domain_serengeti(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=1,
-                                                dropout=0.27822,hidden_dim=1045,lr=1e-7,t=0.1,momentum=0.8409
+                                                dropout=0.27822,hidden_dim=1045,lr=1e-4,t=0.1,momentum=0.8409
                                                     , patience=20, model=base_fine_tuning_layer, Dataset=TuningDataset,
                                                     Dataloader=dataloader_Tuning, version='fine_tuning_last_layer',
                                                     ruta_features_train=ruta_features_train,
