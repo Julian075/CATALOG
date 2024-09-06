@@ -21,9 +21,9 @@ for mode_clip_i in mode_clip:
             device = "cuda" if torch.cuda.is_available() else "cpu"
 
             # Initialize your models, tokenizer, etc.
-            tokenizer_Bert = BertTokenizer.from_pretrained('bert-base-uncased')
-            model_Bert = BertModel.from_pretrained('bert-base-uncased')
-            model_Bert.to(device)
+            #tokenizer_Bert = BertTokenizer.from_pretrained('bert-base-uncased')
+            #model_Bert = BertModel.from_pretrained('bert-base-uncased')
+            #model_Bert.to(device)
 
             model_clip, preprocess_clip = longclip.load(f'./long_Clip/checkpoints/{mode_clip_i}.pt', device=device)
             model_clip.to(device)
@@ -49,16 +49,17 @@ for mode_clip_i in mode_clip:
                     data = json.load(f)
                     description = data['description']
                     f.close()
-                    tokens = tokenizer_Bert.tokenize(description)
-                    tokens = ['[CLS]'] + tokens + ['[SEP]']
-                    attention_mask = [1 if token != '[PAD]' else 0 for token in tokens]
-                    token_ids = tokenizer_Bert.convert_tokens_to_ids(tokens)
+                    tokens = longclip.tokenize(description).to(device)#tokenizer_Bert.tokenize(description)
+                    #tokens = ['[CLS]'] + tokens + ['[SEP]']
+                    #attention_mask = [1 if token != '[PAD]' else 0 for token in tokens]
+                    #token_ids = tokenizer_Bert.convert_tokens_to_ids(tokens)
 
-                    attention_mask = torch.tensor(attention_mask).unsqueeze(0).to(device)
-                    token_ids = torch.tensor(token_ids).unsqueeze(0).to(device)
+                    #attention_mask = torch.tensor(attention_mask).unsqueeze(0).to(device)
+                    #token_ids = torch.tensor(token_ids).unsqueeze(0).to(device)
                     with torch.no_grad():
-                        output_bert = model_Bert(token_ids, attention_mask=attention_mask)
-                        description_embeddings = output_bert.pooler_output
+                        description_embeddings = model_clip.encode_text(tokens)
+                        #output_bert = model_Bert(token_ids, attention_mask=attention_mask)
+                        #description_embeddings = output_bert.pooler_output
 
                     data_dict[img_name] = {
                         "image_features": image_features,
