@@ -62,6 +62,9 @@ class MLP(nn.Module):
         else:
             embed1 = self.linears[0](x)
             embed2 = self.drop(self.linears2[0](self.gelu(embed1)))
+            print(f"Input shape: {x.shape}")  # Shape of the input to the linear layer
+            print(f"Weight shape: {self.linears[0].weight.shape}")  # Shape of the first linear layer's weight
+
             x = self.lns[0](embed1 + embed2)
 
         if self.return_embeds:
