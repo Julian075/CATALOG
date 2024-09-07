@@ -23,9 +23,9 @@ from train.Fine_tuning.Train_CATALOG_Base_In_domain_Terra import CATALOG_base_In
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
-    parser.add_argument('--model_version', type=str, default="Base", help='Model version')
-    parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
-    parser.add_argument('--dataset', type=str, default="terra", help='dataset')
+    parser.add_argument('--model_version', type=str, default="Fine_tuning", help='Model version')
+    parser.add_argument('--train_type', type=str, default="In_domain", help='Type of training')
+    parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
     args = parser.parse_args()
 
     model_version = args.model_version
@@ -111,13 +111,14 @@ if __name__ == "__main__":
                                                     ruta_features_test=ruta_features_test,
                                                     path_text_feat=path_text_feat,build_optimizer=build_optimizer,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
 
-                #model_params_path = 'models/CATALOG_finetuning_Base_Serengeti.pth'
-                #model.prueba_model(model_params_path=model_params_path)
+                model_params_path = 'models/CATALOG_finetuning_Base_Serengeti.pth'
+                print('testing...')
+                model.prueba_model(model_params_path=model_params_path)
                 #model.prueba_model_top_3(model_params_path)
-                wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
-                wandb.init(project=f"Train_{model_version}_{train_type}_{dataset}")
-                model.train()
-                wandb.finish()
+                #wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
+                #wandb.init(project=f"Train_{model_version}_{train_type}_{dataset}")
+                #model.train()
+                #wandb.finish()
 
             elif dataset=="terra":
                 ruta_features_train = "features/Features_terra/finetuning_features/Features_CATALOG_train_16.pt"
@@ -246,12 +247,12 @@ if __name__ == "__main__":
     elif model_version=="Base_long":
 
         if train_type=="Out_domain":
-            ruta_features_train  = "features/Features_serengeti/long_standard_features/Features_CATALOG_train_16.pt"
-            ruta_features_val    = "features/Features_serengeti/long_standard_features/Features_CATALOG_val_16.pt"
-            ruta_features_test1  = "features/Features_terra/long_standard_features/Features_CATALOG_cis_test_16.pt"
-            ruta_features_test2  = "features/Features_terra/long_standard_features/Features_CATALOG_trans_test_16.pt"
-            path_text_feat1      = "features/Features_serengeti/long_standard_features/Text_features_16.pt"
-            path_text_feat2      = "features/Features_terra/long_standard_features/Text_features_16.pt"
+            ruta_features_train  = "features/Features_serengeti/long_standard_features/Features_CATALOG_train_longclip-B.pt"
+            ruta_features_val    = "features/Features_serengeti/long_standard_features/Features_CATALOG_val_longclip-B.pt"
+            ruta_features_test1  = "features/Features_terra/long_standard_features/Features_CATALOG_cis_test_longclip-B.pt"
+            ruta_features_test2  = "features/Features_terra/long_standard_features/Features_CATALOG_trans_test_longclip-B.pt"
+            path_text_feat1      = "features/Features_serengeti/long_standard_features/Text_features_longclip-B.pt"
+            path_text_feat2      = "features/Features_terra/long_standard_features/Text_features_longclip-B.pt"
             model = CATALOG_base(weight_Clip=0.6, num_epochs=100, batch_size=48, num_layers=1,
                                                   dropout=0.27822, hidden_dim=1045, lr=0.07641, t=0.1, momentum=0.8409
                                                   , patience=20, model=base_long, Dataset=BaselineDataset,
