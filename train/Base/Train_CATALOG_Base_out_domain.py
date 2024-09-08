@@ -4,7 +4,6 @@ import torch.optim as optim
 import time
 import argparse
 import datetime
-from models import CATALOG_Base as md
 import pandas as pd
 from sklearn.metrics import confusion_matrix, classification_report
 import numpy as np
@@ -64,7 +63,7 @@ class CATALOG_base:
 
 
 
-        projection_model = md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,pretrained=0)
+        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,pretrained=0)
         projection_model = projection_model.to(device)
 
         # Get your DataLoader
@@ -158,7 +157,7 @@ class CATALOG_base:
                     print("The acc don't increase")
 
             if epoch==(self.num_epochs-1) or counter >= self.patience:
-                projection_model = md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,
+                projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,
                                                  pretrained=0, pretrained_path="")
                 projection_model.load_state_dict(torch.load(model_params_path))
                 projection_model = projection_model.to(device)
@@ -250,7 +249,7 @@ class CATALOG_base:
         dataloader_trans_test = self.dataloader(self.ruta_features_test2, self.batch_size,self.dataset)
 
 
-        projection_model = md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,
+        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,
                                          pretrained=0, pretrained_path="")
         projection_model.load_state_dict(torch.load(model_params_path))
         projection_model = projection_model.to(device)
@@ -340,7 +339,7 @@ class CATALOG_base:
         dataloader_trans_test = self.dataloader(self.ruta_features_test2, self.batch_size,self.dataset)
 
 
-        projection_model = md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,
+        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,
                                          pretrained=0, pretrained_path="")
         projection_model.load_state_dict(torch.load(model_params_path))
         projection_model = projection_model.to(device)

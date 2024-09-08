@@ -23,8 +23,8 @@ from train.Fine_tuning.Train_CATALOG_Base_In_domain_Terra import CATALOG_base_In
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
-    parser.add_argument('--model_version', type=str, default="Fine_tuning", help='Model version')
-    parser.add_argument('--train_type', type=str, default="In_domain", help='Type of training')
+    parser.add_argument('--model_version', type=str, default="Base_long", help='Model version')
+    parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
     args = parser.parse_args()
 
