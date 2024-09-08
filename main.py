@@ -253,7 +253,7 @@ if __name__ == "__main__":
             ruta_features_test2  = "features/Features_terra/long_standard_features/Features_CATALOG_trans_test_longclip-B.pt"
             path_text_feat1      = "features/Features_serengeti/long_standard_features/Text_features_longclip-B.pt"
             path_text_feat2      = "features/Features_terra/long_standard_features/Text_features_longclip-B.pt"
-            model = CATALOG_base(weight_Clip=0.6, num_epochs=100, batch_size=48, num_layers=1,
+            model = CATALOG_base(weight_Clip=0.6, num_epochs=100, batch_size=48, num_layers=4,
                                                   dropout=0.27822, hidden_dim=1045, lr=0.07641, t=0.1, momentum=0.8409
                                                   , patience=20, model=base_long, Dataset=BaselineDataset,
                                                   Dataloader=dataloader_baseline,version='base',ruta_features_train=ruta_features_train,
