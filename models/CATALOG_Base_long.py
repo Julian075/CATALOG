@@ -14,25 +14,25 @@ class MLP(nn.Module):
         self.linears2 = nn.ModuleList()
         self.gelu = QuickGELU()
         self.num_layers = num_layers
-
         if num_layers > 1:
-            self.linears.append(nn.Linear(input_dim, hidden_dim))
-            self.linears2.append(nn.Linear(hidden_dim, hidden_dim))
+            self.linears.append(nn.Linear(input_dim, hidden_dim).half())  # Cast to float16
+            self.linears2.append(nn.Linear(hidden_dim, hidden_dim).half())
 
             for _ in range(num_layers - 2):
-                self.linears.append(nn.Linear(hidden_dim, hidden_dim, bias=True))
-                self.linears2.append(nn.Linear(hidden_dim, hidden_dim, bias=True))
+                self.linears.append(nn.Linear(hidden_dim, hidden_dim, bias=True).half())
+                self.linears2.append(nn.Linear(hidden_dim, hidden_dim, bias=True).half())
 
-            self.linears.append(nn.Linear(hidden_dim, output_dim, bias=True))
-            self.linears2.append(nn.Linear(output_dim, output_dim, bias=True))
+            self.linears.append(nn.Linear(hidden_dim, output_dim, bias=True).half())
+            self.linears2.append(nn.Linear(output_dim, output_dim, bias=True).half())
         else:
-            self.linears.append(nn.Linear(input_dim, output_dim))
-            self.linears2.append(nn.Linear(output_dim, output_dim, bias=True))
+            self.linears.append(nn.Linear(input_dim, output_dim).half())
+            self.linears2.append(nn.Linear(output_dim, output_dim, bias=True).half())
 
         self.lns = nn.ModuleList()
         for _ in range(num_layers - 1):
-            self.lns.append(nn.LayerNorm(hidden_dim))
-        self.lns.append(nn.LayerNorm(output_dim))
+            self.lns.append(nn.LayerNorm(hidden_dim).half())
+        self.lns.append(nn.LayerNorm(output_dim).half())
+
         # The log softmax layer
         self.softmax = nn.LogSoftmax()
         self.drop = nn.Dropout(dropout)

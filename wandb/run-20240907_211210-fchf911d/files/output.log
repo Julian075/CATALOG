@@ -1,0 +1,20 @@
+
+0
+Traceback (most recent call last):
+  File "D:\Udea\Maestria\Experimentos\Repositorios\CATALOG\main.py", line 269, in <module>
+    model.train()
+  File "D:\Udea\Maestria\Experimentos\Repositorios\CATALOG\train\Base\Train_CATALOG_Base_out_domain.py", line 93, in train
+    loss, acc,_ = projection_model(description_embeddings, image_features, text_features, self.weight_Clip,target_index,self.t)
+  File "C:\Users\Julia\AppData\Roaming\Python\Python310\site-packages\torch\nn\modules\module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "D:\Udea\Maestria\Experimentos\Repositorios\CATALOG\models\CATALOG_Base_long.py", line 140, in forward
+    description_features = self.description_encoder(embeddings)
+  File "C:\Users\Julia\AppData\Roaming\Python\Python310\site-packages\torch\nn\modules\module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "D:\Udea\Maestria\Experimentos\Repositorios\CATALOG\models\CATALOG_Base_long.py", line 63, in forward
+    embed1 = self.linears[0](x)
+  File "C:\Users\Julia\AppData\Roaming\Python\Python310\site-packages\torch\nn\modules\module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "C:\Users\Julia\AppData\Roaming\Python\Python310\site-packages\torch\nn\modules\linear.py", line 114, in forward
+    return F.linear(input, self.weight, self.bias)
+RuntimeError: mat1 and mat2 must have the same dtype
