@@ -154,7 +154,7 @@ if __name__ == "__main__":
             path_text_feat1 = "features/Features_serengeti/finetuning_features/Text_features_16.pt"
             path_text_feat2 = "features/Features_terra/finetuning_features/Text_features_16.pt"
             model = CATALOG_base(weight_Clip=0.6, num_epochs=1000, batch_size=100, num_layers=1,
-                                 dropout=0.27822, hidden_dim=1045, lr=1e-7, t=0.1, momentum=0.8409
+                                 dropout=0.27822, hidden_dim=1045, lr=0.07641, t=0.1, momentum=0.8409
                                  , patience=20, model=base_fine_tuning, Dataset=TuningDataset,
                                  Dataloader=dataloader_Tuning, version='fine_tuning',
                                  ruta_features_train=ruta_features_train,
