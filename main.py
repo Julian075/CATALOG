@@ -99,7 +99,7 @@ if __name__ == "__main__":
             if dataset=="serengeti":
                 ruta_features_train = "features/Features_serengeti/finetuning_features/Features_CATALOG_train_16.pt"
                 ruta_features_val = "features/Features_serengeti/finetuning_features/Features_CATALOG_val_16.pt"
-                ruta_features_test = "features/Features_terra/finetuning_features/Features_CATALOG_trans_test_16.pt"#"features/Features_serengeti/finetuning_features/Features_CATALOG_test_16.pt"
+                ruta_features_test = "features/Features_terra/finetuning_features/Features_CATALOG_cis_test_16.pt"#"features/Features_serengeti/finetuning_features/Features_CATALOG_test_16.pt"
                 path_text_feat = "features/Features_serengeti/finetuning_features/Text_features_16.pt"
 
                 model=CATALOG_base_In_domain_serengeti(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=4,
@@ -112,7 +112,6 @@ if __name__ == "__main__":
                                                     path_text_feat=path_text_feat,build_optimizer=build_optimizer,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
 
                 model_params_path = 'models/CATALOG_finetuning_Base_Serengeti.pth'
-                print('testing...')
                 model.prueba_model(model_params_path=model_params_path)
                 #model.prueba_model_top_3(model_params_path)
                 #wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
