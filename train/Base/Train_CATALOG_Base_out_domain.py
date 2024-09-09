@@ -250,8 +250,8 @@ class CATALOG_base:
         dataloader_trans_test = self.dataloader(self.ruta_features_test2, self.batch_size,self.dataset)
 
 
-        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,
-                                         pretrained=0, pretrained_path="")
+        #projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout, pretrained=0, pretrained_path="")
+        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,device=device)
         projection_model.load_state_dict(torch.load(model_params_path))
         projection_model = projection_model.to(device)
         projection_model.eval()
