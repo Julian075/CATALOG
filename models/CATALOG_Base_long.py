@@ -75,7 +75,7 @@ class MLP(nn.Module):
 
 
 class LLaVA_CLIP(nn.Module):
-    def __init__(self, hidden_dim, num_layers, dropout, pretrained,pretrained_path="") -> None:
+    def __init__(self, hidden_dim, num_layers, dropout, device="") -> None:
         super().__init__()
         self.description_encoder = MLP(input_dim=512, hidden_dim=hidden_dim, output_dim=512, num_layers=num_layers,
                                        dropout=dropout, return_embeds=True)
@@ -83,9 +83,6 @@ class LLaVA_CLIP(nn.Module):
         # temperature
         self.logit_scale_CLIP = nn.Parameter(torch.ones([]) * np.log(1 / 0.07))
         self.logit_scale_LLaVA = nn.Parameter(torch.ones([]) * np.log(1 / 0.07))
-        if pretrained:
-            self.pesos_preentrenados = torch.load(pretrained_path)#('weights/best_model_params_path.pth')
-            self.description_encoder.load_state_dict(self.pesos_preentrenados)
 
     # LLaVA-CLIP Loss
     def LLaVA_CLIP_loss(self, logits: torch.Tensor,label,t) :
