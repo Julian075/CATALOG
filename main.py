@@ -19,6 +19,13 @@ from train.Base.Train_CATALOG_Base_out_domain import CATALOG_base
 from train.Fine_tuning.Train_CATALOG_Base_In_domain_Serengeti import CATALOG_base_In_domain_serengeti
 from train.Fine_tuning.Train_CATALOG_Base_In_domain_Terra import CATALOG_base_In_domain_terra
 
+def mode_model(model,model_params_path,mode):
+    if mode == 'train':
+        model.train()
+    elif mode == 'test':
+        model.prueba_model(model_params_path=model_params_path)
+    elif mode == 'test_top3':
+        model.prueba_model_top_3(model_params_path=model_params_path)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
@@ -26,11 +33,13 @@ if __name__ == "__main__":
     parser.add_argument('--model_version', type=str, default="Fine_tuning", help='Model version')
     parser.add_argument('--train_type', type=str, default="In_domain", help='Type of training')
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
+    parser.add_argument('--mode', type=str, default="train", help='define if you want train or test')
     args = parser.parse_args()
 
     model_version = args.model_version
     train_type = args.train_type
     dataset=args.dataset
+    mode = args.mode
 
 
 
@@ -48,9 +57,9 @@ if __name__ == "__main__":
                                                     path_text_feat=path_text_feat,build_optimizer=build_optimizer,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
 
                 model_params_path = 'models/CATALOG_Projections_Serengeti.pth'
-                model.prueba_model(model_params_path=model_params_path)
-                #model.prueba_model_top_3(model_params_path)
-                #model.train()
+                mode_model(model, model_params_path, mode)
+
+
             elif dataset=="terra" :
                 ruta_features_train = "features/Features_terra/standard_features/Features_CATALOG_train_16.pt"
                 ruta_features_cis_val = "features/Features_terra/standard_features/Features_CATALOG_cis_val_16.pt"
@@ -72,9 +81,9 @@ if __name__ == "__main__":
                                                   exp_name=f'exp_{model_version}_{train_type}_{dataset}')
 
                 model_params_path = 'models/CATALOG_Projections_Terra.pth'
-                model.prueba_model(model_params_path=model_params_path)
-                #model.prueba_model_top_3(model_params_path)
-                #model.train()
+                mode_model(model, model_params_path, mode)
+
+
         if train_type=="Out_domain":
             ruta_features_train  = "features/Features_serengeti/standard_features/Features_CATALOG_train_16.pt"
             ruta_features_val    = "features/Features_serengeti/standard_features/Features_CATALOG_val_16.pt"
@@ -91,16 +100,15 @@ if __name__ == "__main__":
                                                   path_text_feat2=path_text_feat2,build_optimizer=build_optimizer,exp_name=f'exp_{model_version}_{train_type}')
 
             model_params_path = 'models/CATALOG_Base.pth'
-            model.prueba_model(model_params_path=model_params_path)
-            # model.prueba_model_top_3(model_params_path)
-            # model.train()
+            mode_model(model, model_params_path, mode)
+
     elif model_version == "Fine_tuning":
         if train_type=="In_domain":
             if dataset=="serengeti":
                 ruta_features_train = "features/Features_serengeti/finetuning_features/Features_CATALOG_train_16.pt"
                 ruta_features_val = "features/Features_serengeti/finetuning_features/Features_CATALOG_val_16.pt"
-                ruta_features_test = "features/Features_terra/finetuning_features/Features_CATALOG_trans_test_16.pt"#"features/Features_serengeti/finetuning_features/Features_CATALOG_test_16.pt"
-                path_text_feat = "features/Features_terra/finetuning_features/Text_features_16.pt"
+                ruta_features_test = "features/Features_serengeti/finetuning_features/Features_CATALOG_test_16.pt"
+                path_text_feat = "features/Features_serengeti/finetuning_features/Text_features_16.pt"
 
                 model=CATALOG_base_In_domain_serengeti(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=4,
                                                 dropout=0.4,hidden_dim=1743,lr=1e-3,t=0.1,momentum=0.8409
@@ -111,12 +119,12 @@ if __name__ == "__main__":
                                                     ruta_features_test=ruta_features_test,
                                                     path_text_feat=path_text_feat,build_optimizer=build_optimizer,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
 
+
+
                 model_params_path = 'models/CATALOG_finetuning_Base_Serengeti.pth'
-                model.prueba_model(model_params_path=model_params_path)
-                #model.prueba_model_top_3(model_params_path)
+                mode_model(model, model_params_path, mode)
                 #wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
                 #wandb.init(project=f"Train_{model_version}_{train_type}_{dataset}")
-                #model.train()
                 #wandb.finish()
 
             elif dataset=="terra":
@@ -138,13 +146,9 @@ if __name__ == "__main__":
                                                        ruta_features_test2=ruta_features_trans_test,
                                                     path_text_feat=path_text_feat,build_optimizer=build_optimizer,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
 
-                #model_params_path = 'models/CATALOG_finetuning_Base_Terra.pth'
-                #model.prueba_model(model_params_path=model_params_path)
-                #model.prueba_model_top_3(model_params_path)
-                wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
-                wandb.init(project=f"Train_{model_version}_{train_type}_{dataset}")
-                model.train()
-                wandb.finish()
+
+                model_params_path = 'models/CATALOG_finetuning_Base_Terra.pth'
+                mode_model(model, model_params_path, mode)
         elif train_type=="Out_domain":
             ruta_features_train = "features/Features_serengeti/finetuning_features/Features_CATALOG_train_16.pt"
             ruta_features_val = "features/Features_serengeti/finetuning_features/Features_CATALOG_val_16.pt"
@@ -162,12 +166,8 @@ if __name__ == "__main__":
                                  path_text_feat2=path_text_feat2, build_optimizer=build_optimizer,exp_name=f'exp_{model_version}_{train_type}')
 
             model_params_path = 'models/CATALOG_finetuning_Base_out_domain.pth'
-            model.prueba_model(model_params_path=model_params_path)
-            #model.prueba_model_top_3(model_params_path)
-            #wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
-            #wandb.init(project=f"Train_{model_version}_{train_type}")
-            #model.train()
-            #wandb.finish()
+            mode_model(model, model_params_path, mode)
+
 
     elif model_version == "Fine_tuning_layer":
         if train_type=="In_domain":
@@ -185,13 +185,9 @@ if __name__ == "__main__":
                                                     ruta_features_test=ruta_features_test,
                                                     path_text_feat=path_text_feat,build_optimizer=build_optimizer,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
 
-                #model_params_path = 'models/CATALOG_finetuning_Base_Serengeti.pth'
-                #model.prueba_model(model_params_path=model_params_path)
-                #model.prueba_model_top_3(model_params_path)
-                wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
-                wandb.init(project=f"Train_{model_version}_{train_type}_{dataset}")
-                model.train()
-                wandb.finish()
+                model_params_path = 'models/CATALOG_finetuning_layer_Base_Serengeti.pth'
+                mode_model(model, model_params_path, mode)
+
 
             elif dataset=="terra":
                 ruta_features_train = "features/Features_terra/finetuning_features/Features_CATALOG_train_16.pt"
@@ -212,13 +208,9 @@ if __name__ == "__main__":
                                                        ruta_features_test2=ruta_features_trans_test,
                                                     path_text_feat=path_text_feat,build_optimizer=build_optimizer,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
 
-                #model_params_path = 'models/CATALOG_finetuning_Base_Terra.pth'
-                #model.prueba_model(model_params_path=model_params_path)
-                #model.prueba_model_top_3(model_params_path)
-                wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
-                wandb.init(project=f"Train_{model_version}_{train_type}_{dataset}")
-                model.train()
-                wandb.finish()
+                model_params_path = 'models/CATALOG_finetuning_layer_Base_Terra.pth'
+                mode_model(model, model_params_path, mode)
+
         elif train_type=="Out_domain":
             ruta_features_train = "features/Features_serengeti/finetuning_features/Features_CATALOG_train_16.pt"
             ruta_features_val = "features/Features_serengeti/finetuning_features/Features_CATALOG_val_16.pt"
@@ -235,13 +227,8 @@ if __name__ == "__main__":
                                  ruta_features_test2=ruta_features_test2, path_text_feat1=path_text_feat1,
                                  path_text_feat2=path_text_feat2, build_optimizer=build_optimizer,exp_name=f'exp_{model_version}_{train_type}')
 
-            #model_params_path = 'models/CATALOG_finetuning_Base_out_domain.pth'
-            #model.prueba_model(model_params_path=model_params_path)
-            #model.prueba_model_top_3(model_params_path)
-            #wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
-            #wandb.init(project=f"Train_{model_version}_{train_type}")
-            #model.train()
-            #wandb.finish()
+            model_params_path = 'models/CATALOG_finetuning_layer_Base_out_domain.pth'
+            mode_model(model, model_params_path, mode)
 
     elif model_version=="Base_long":
 
@@ -260,13 +247,8 @@ if __name__ == "__main__":
                                                   ruta_features_test2=ruta_features_test2,path_text_feat1=path_text_feat1,
                                                   path_text_feat2=path_text_feat2,build_optimizer=build_optimizer,exp_name=f'exp_{model_version}_{train_type}')
 
-            #model_params_path = 'models/CATALOG_Base_long.pth'
-            #model.prueba_model(model_params_path=model_params_path)
-            #model.prueba_model_top_3(model_params_path)
-            wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
-            wandb.init(project=f"Train_{model_version}_{train_type}")
-            model.train()
-            wandb.finish()
+            model_params_path = 'models/CATALOG_Base_long.pth'
+            mode_model(model, model_params_path, mode)
 
 
 
