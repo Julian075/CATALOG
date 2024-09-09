@@ -23,7 +23,7 @@ from train.Fine_tuning.Train_CATALOG_Base_In_domain_Terra import CATALOG_base_In
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
-    parser.add_argument('--model_version', type=str, default="Base_long", help='Model version')
+    parser.add_argument('--model_version', type=str, default="Fine_tuning", help='Model version')
     parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
     args = parser.parse_args()
@@ -162,13 +162,13 @@ if __name__ == "__main__":
                                  ruta_features_test2=ruta_features_test2, path_text_feat1=path_text_feat1,
                                  path_text_feat2=path_text_feat2, build_optimizer=build_optimizer,exp_name=f'exp_{model_version}_{train_type}')
 
-            #model_params_path = 'models/CATALOG_finetuning_Base_out_domain.pth'
-            #model.prueba_model(model_params_path=model_params_path)
+            model_params_path = 'models/CATALOG_finetuning_Base_out_domain.pth'
+            model.prueba_model(model_params_path=model_params_path)
             #model.prueba_model_top_3(model_params_path)
-            wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
-            wandb.init(project=f"Train_{model_version}_{train_type}")
-            model.train()
-            wandb.finish()
+            #wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
+            #wandb.init(project=f"Train_{model_version}_{train_type}")
+            #model.train()
+            #wandb.finish()
 
     elif model_version == "Fine_tuning_layer":
         if train_type=="In_domain":
@@ -239,10 +239,10 @@ if __name__ == "__main__":
             #model_params_path = 'models/CATALOG_finetuning_Base_out_domain.pth'
             #model.prueba_model(model_params_path=model_params_path)
             #model.prueba_model_top_3(model_params_path)
-            wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
-            wandb.init(project=f"Train_{model_version}_{train_type}")
-            model.train()
-            wandb.finish()
+            #wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
+            #wandb.init(project=f"Train_{model_version}_{train_type}")
+            #model.train()
+            #wandb.finish()
 
     elif model_version=="Base_long":
 
