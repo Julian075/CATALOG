@@ -99,7 +99,7 @@ if __name__ == "__main__":
             if dataset=="serengeti":
                 ruta_features_train = "features/Features_serengeti/finetuning_features/Features_CATALOG_train_16.pt"
                 ruta_features_val = "features/Features_serengeti/finetuning_features/Features_CATALOG_val_16.pt"
-                ruta_features_test = "features/Features_serengeti/finetuning_features/Features_CATALOG_test_16.pt"
+                ruta_features_test = "features/Features_terra/finetuning_features/Features_CATALOG_trans_test_16.pt"#"features/Features_serengeti/finetuning_features/Features_CATALOG_test_16.pt"
                 path_text_feat = "features/Features_serengeti/finetuning_features/Text_features_16.pt"
 
                 model=CATALOG_base_In_domain_serengeti(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=4,
