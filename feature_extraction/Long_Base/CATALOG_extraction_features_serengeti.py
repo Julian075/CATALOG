@@ -12,8 +12,7 @@ carpetas=os.listdir(root)
 mode_clip=['longclip-B']
 for mode_clip_i in mode_clip:
     for mode in carpetas:
-        if mode=='validation':
-        #if mode=='train' or mode == 'test' or mode =='validation':
+        if mode=='train' or mode == 'test' or mode =='validation':
 
             class_indices=['aardvark', 'aardwolf', 'baboon', 'batEaredFox', 'buffalo', 'bushbuck', 'caracal', 'cheetah', 'civet',
              'dikDik',
