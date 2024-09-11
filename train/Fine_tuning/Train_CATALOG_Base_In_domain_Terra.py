@@ -1,28 +1,22 @@
 import os
 import torch
-from torch.utils.data import Dataset, DataLoader
-import torch.optim as optim
 import time
-import argparse
 import datetime
 import pandas as pd
 from sklearn.metrics import confusion_matrix, classification_report
 import numpy as np
 import random
-from PIL import Image
-import clip
-import wandb
 
 
 class CATALOG_base_In_domain_terra:
 
     def __init__(self, weight_Clip , num_epochs , batch_size, num_layers, dropout, hidden_dim, lr, t, momentum, patience, model, Dataset, Dataloader,version,ruta_features_train,ruta_features_val1,ruta_features_val2,ruta_features_test1,ruta_features_test2,path_text_feat, build_optimizer,exp_name):
-        self.ruta_features_train      = ruta_features_train#"features/Features_terra/standard_features/Features_CATALOG_train_16.pt"
-        self.ruta_features_val1   = ruta_features_val1#"features/Features_terra/standard_features/Features_CATALOG_cis_val_16.pt"
-        self.ruta_features_val2  = ruta_features_val2#"features/Features_terra/standard_features/Features_CATALOG_trans_val_16.pt"
-        self.ruta_features_test1   = ruta_features_test1#"features/Features_terra/standard_features/Features_CATALOG_cis_test_16.pt"
-        self.ruta_features_test2 = ruta_features_test2#"features/Features_terra/standard_features/Features_CATALOG_trans_test_16.pt"
-        self.path_text_feat           = path_text_feat #"features/Features_terra/standard_features/Text_features_16.pt"
+        self.ruta_features_train      = ruta_features_train
+        self.ruta_features_val1   = ruta_features_val1
+        self.ruta_features_val2  = ruta_features_val2
+        self.ruta_features_test1   = ruta_features_test1
+        self.ruta_features_test2 = ruta_features_test2
+        self.path_text_feat           = path_text_feat
         self.weight_Clip=weight_Clip
         self.num_epochs=num_epochs
         self.batch_size=batch_size
@@ -151,9 +145,6 @@ class CATALOG_base_In_domain_terra:
             epoch_loss_trans_val = running_loss_trans_val / len(dataloader_trans_val)
             epoch_acc_trans_val = (running_corrects_trans_val / size_trans_val) * 100
 
-            wandb.log({"acc_train": epoch_acc, "loss_train": epoch_loss, "acc_cis_val": epoch_acc_cis_val,
-                       "loss_cis_val": epoch_loss_cis_val, "acc_trans_val": epoch_acc_trans_val,
-                       "loss_trans_val": epoch_loss_trans_val})
 
             time_end = time.time()
             total_time = time_end - time_in
@@ -246,8 +237,6 @@ class CATALOG_base_In_domain_terra:
                 print('Cis Test loss: {:.4f}, Cis Test acc: {:.4f}'.format(epoch_loss_cis_test, epoch_acc_cis_test))
                 print('Trans Test loss: {:.4f}, Trans Test acc: {:.4f}'.format(epoch_loss_trans_test, epoch_acc_trans_test))
 
-                wandb.log({"acc_cis_test": epoch_acc_cis_test, "loss_cis_test": epoch_loss_cis_test,
-                           "acc_trans_test": epoch_acc_trans_test, "loss_trans_test": epoch_loss_trans_test})
 
                 # Calculate the confusion matrix
                 conf_matrix_cis = confusion_matrix(all_labels_cis, all_preds_cis)
@@ -406,13 +395,3 @@ class CATALOG_base_In_domain_terra:
         print(' Trans Test acc Top 3: {:.4f}'.format( epoch_acc_trans_test))
 
 
-
-    #model_params_path = '../../../models/CATALOG_finetuning_Base_Terra.pth'
-    #prueba_model_top_3(model_params_path)
-    #prueba_model(model_params_path)
-    #wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
-    #wandb.init(
-    #    project="Train_CLIP_V1_in_domain_Terra",
-    #)
-    #train()
-    #wandb.finish()

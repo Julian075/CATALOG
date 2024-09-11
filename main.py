@@ -8,7 +8,6 @@ from models import CATALOG_Projections_fine_tuning as projections_fine_tuning
 from models import CATALOG_Projections_fine_tuning_last_layer as projections_fine_tuning_layer
 
 import argparse
-import wandb
 from utils import BaselineDataset,dataloader_baseline,TuningDataset,dataloader_Tuning,build_optimizer
 
 
@@ -123,9 +122,6 @@ if __name__ == "__main__":
 
                 model_params_path = 'models/CATALOG_finetuning_Base_Serengeti.pth'
                 mode_model(model, model_params_path, mode)
-                #wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
-                #wandb.init(project=f"Train_{model_version}_{train_type}_{dataset}")
-                #wandb.finish()
 
             elif dataset=="terra":
                 ruta_features_train = "features/Features_terra/finetuning_features/Features_CATALOG_train_16.pt"

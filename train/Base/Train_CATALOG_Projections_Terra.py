@@ -1,6 +1,5 @@
 import os
 import torch
-import torch.optim as optim
 import time
 import datetime
 import pandas as pd
@@ -19,12 +18,12 @@ import random
 
 class CATALOG_projections_terra:
     def __init__(self, weight_Clip , num_epochs , batch_size, num_layers, dropout, hidden_dim, lr, t, momentum, patience, model, Dataset, Dataloader,version,ruta_features_train,ruta_features_val1,ruta_features_val2,ruta_features_test1,ruta_features_test2,path_text_feat,build_optimizer,exp_name):
-        self.ruta_features_train      = ruta_features_train#"features/Features_terra/standard_features/Features_CATALOG_train_16.pt"
-        self.ruta_features_cis_val    = ruta_features_val1#"features/Features_terra/standard_features/Features_CATALOG_cis_val_16.pt"
-        self.ruta_features_trans_val  = ruta_features_val2#"features/Features_terra/standard_features/Features_CATALOG_trans_val_16.pt"
-        self.ruta_features_cis_test   = ruta_features_test1#"features/Features_terra/standard_features/Features_CATALOG_cis_test_16.pt"
-        self.ruta_features_trans_test = ruta_features_test2#"features/Features_terra/standard_features/Features_CATALOG_trans_test_16.pt"
-        self.path_text_feat           = path_text_feat #"features/Features_terra/standard_features/Text_features_16.pt"
+        self.ruta_features_train      = ruta_features_train
+        self.ruta_features_cis_val    = ruta_features_val1
+        self.ruta_features_trans_val  = ruta_features_val2
+        self.ruta_features_cis_test   = ruta_features_test1
+        self.ruta_features_trans_test = ruta_features_test2
+        self.path_text_feat           = path_text_feat
         self.weight_Clip=weight_Clip
         self.num_epochs=num_epochs
         self.batch_size=batch_size
@@ -416,8 +415,3 @@ class CATALOG_projections_terra:
         print(' Cis Test acc Top 3: {:.4f}'.format( epoch_acc_cis_test))
         print(' Trans Test acc Top 3: {:.4f}'.format( epoch_acc_trans_test))
 
-
-    #model_params_path = '../../../models/CATALOG_Projections_Terra.pth'
-    #prueba_model_top_3(model_params_path)
-    #prueba_model(model_params_path)
-    #train()

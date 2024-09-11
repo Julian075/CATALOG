@@ -1,7 +1,5 @@
 import os
 import torch
-from torch.utils.data import Dataset, DataLoader
-import torch.optim as optim
 import time
 import datetime
 import pandas as pd
@@ -18,10 +16,10 @@ import random
 
 class CATALOG_projections_serengeti:
     def __init__(self,weight_Clip,num_epochs,batch_size,num_layers,dropout,hidden_dim,lr,t,momentum,patience,model,Dataset,Dataloader,version,ruta_features_train,ruta_features_val,ruta_features_test,path_text_feat,build_optimizer,exp_name):
-        self.ruta_features_train = ruta_features_train# "features/Features_serengeti/standard_features/Features_CATALOG_train_16.pt"
-        self.ruta_features_val   = ruta_features_val  # "features/Features_serengeti/standard_features/Features_CATALOG_val_16.pt"
-        self.ruta_features_test  = ruta_features_test # "features/Features_serengeti/standard_features/Features_CATALOG_test_16.pt"
-        self.path_text_feat= path_text_feat#"features/Features_serengeti/standard_features/Text_features_16.pt"
+        self.ruta_features_train = ruta_features_train
+        self.ruta_features_val   = ruta_features_val
+        self.ruta_features_test  = ruta_features_test
+        self.path_text_feat= path_text_feat
         self.weight_Clip=weight_Clip
         self.num_epochs=num_epochs
         self.batch_size=batch_size
@@ -296,8 +294,3 @@ class CATALOG_projections_serengeti:
 
 
 
-
-    #model_params_path = '../../../models/CATALOG_Projections_Serengeti.pth'
-    #prueba_model_top_3(model_params_path)
-    #prueba_model(model_params_path)
-    #train()

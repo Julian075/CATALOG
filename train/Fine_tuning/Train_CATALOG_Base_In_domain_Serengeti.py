@@ -1,17 +1,11 @@
 import os
 import torch
-from torch.utils.data import Dataset, DataLoader
-import torch.optim as optim
 import time
-import argparse
 import datetime
 import pandas as pd
 from sklearn.metrics import confusion_matrix, classification_report
 import numpy as np
 import random
-from PIL import Image
-import clip
-import wandb
 
 
 
@@ -127,8 +121,6 @@ class CATALOG_base_In_domain_serengeti:
             epoch_loss_val = running_loss_val / len(dataloader_val)
             epoch_acc_val = (running_corrects_val / size_val) * 100
 
-            wandb.log({"acc_train": epoch_acc, "loss_train": epoch_loss, "acc_val": epoch_acc_val, "loss_val": epoch_loss_val})
-
 
             time_end = time.time()
             total_time = time_end - time_in
@@ -195,7 +187,6 @@ class CATALOG_base_In_domain_serengeti:
                 epoch_acc_test = (running_corrects_test / size_test) * 100
 
                 print('Test loss: {:.4f},Test acc: {:.4f}'.format(epoch_loss_test, epoch_acc_test))
-                wandb.log({"acc_test": epoch_acc_test, "loss_test": epoch_loss_test})
 
                 # Calculate confusion matrix
                 conf_matrix = confusion_matrix(all_labels, all_preds)
@@ -301,13 +292,3 @@ class CATALOG_base_In_domain_serengeti:
 
 
 
-
-    #model_params_path = '../../../models/CATALOG_finetuning_Base_Serengeti.pth'
-    #prueba_model_top_3(model_params_path)
-    #prueba_model(model_params_path)
-    #wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
-    #wandb.init(
-    #    project="Train_CLIP_V1_in_domain_Serengeti",
-    #)
-    #train()
-    #wandb.finish()

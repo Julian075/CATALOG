@@ -1,14 +1,11 @@
 import os
 import torch
-import torch.optim as optim
 import time
-import argparse
 import datetime
 import pandas as pd
 from sklearn.metrics import confusion_matrix, classification_report
 import numpy as np
 import random
-import wandb
 
 
 
@@ -17,12 +14,12 @@ import wandb
 
 class CATALOG_base:
     def __init__(self, weight_Clip, num_epochs, batch_size, num_layers, dropout, hidden_dim, lr, t, momentum, patience,model, Dataset, Dataloader,version,ruta_features_train,ruta_features_val,ruta_features_test1,ruta_features_test2,path_text_feat1,path_text_feat2,build_optimizer,exp_name):
-        self.ruta_features_train  = ruta_features_train  #  "features/Features_serengeti/standard_features/Features_CATALOG_train_16.pt"
-        self.ruta_features_val    = ruta_features_val    #  "features/Features_serengeti/standard_features/Features_CATALOG_val_16.pt"
-        self.ruta_features_test1  = ruta_features_test1  #  "features/Features_terra/standard_features/Features_CATALOG_cis_test_16.pt"
-        self.ruta_features_test2  = ruta_features_test2  #  "features/Features_terra/standard_features/Features_CATALOG_trans_test_16.pt"
-        self.path_text_feat1      = path_text_feat1      # "features/Features_serengeti/standard_features/Text_features_16.pt"
-        self.path_text_feat2      = path_text_feat2      #  "features/Features_terra/standard_features/Text_features_16.pt"
+        self.ruta_features_train  = ruta_features_train
+        self.ruta_features_val    = ruta_features_val
+        self.ruta_features_test1  = ruta_features_test1
+        self.ruta_features_test2  = ruta_features_test2
+        self.path_text_feat1      = path_text_feat1
+        self.path_text_feat2      = path_text_feat2
         self.weight_Clip=weight_Clip
         self.num_epochs=num_epochs
         self.batch_size=batch_size
@@ -130,7 +127,6 @@ class CATALOG_base:
             epoch_loss_val = running_loss_val / len(dataloader_val)
             epoch_acc_val = (running_corrects_val / size_val) * 100
 
-            wandb.log({"acc_train": epoch_acc, "loss_train": epoch_loss, "acc_val": epoch_acc_val,"loss_val": epoch_loss_val})
 
             time_end = time.time()
             total_time = time_end - time_in
@@ -219,8 +215,6 @@ class CATALOG_base:
                 epoch_loss_trans_test = running_loss_trans_test / len(dataloader_trans_test)
                 epoch_acc_trans_test = (running_corrects_trans_test / size_trans_test) * 100
 
-                wandb.log({"acc_cis_test": epoch_acc_cis_test, "loss_cis_test": epoch_loss_cis_test,
-                           "acc_trans_test": epoch_acc_trans_test, "loss_trans_test": epoch_loss_trans_test})
 
                 print('Cis Test loss: {:.4f}, Cis Test acc: {:.4f}'.format(epoch_loss_cis_test, epoch_acc_cis_test))
                 print('Trans Test loss: {:.4f}, Trans Test acc: {:.4f}'.format(epoch_loss_trans_test, epoch_acc_trans_test))
@@ -383,7 +377,3 @@ class CATALOG_base:
         print(' Cis Test acc Top 3: {:.4f}'.format( epoch_acc_cis_test))
         print(' Trans Test acc Top 3: {:.4f}'.format( epoch_acc_trans_test))
 
-    #model_params_path = '../../../models/CATALOG_Base.pth'
-    #prueba_model_top_3(model_params_path)
-    #prueba_model(model_params_path)
-    #train()
