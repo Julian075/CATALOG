@@ -81,7 +81,7 @@ These paths are required for testing and can be customized as needed by modifyin
 Command-Line Arguments:
 | Argument         | Description                                         | Default         |
 |------------------|-----------------------------------------------------|-----------------|
-| `--model_version` | Specifies the model version (`Base`, `Fine_tuning`, etc.) | `"Fine_tuning"` |
+| `--model_version` | Specifies the model version (`Base`, `Fine_tuning`, `Fine_tuning_layer`, `Base_long`.) | `"Fine_tuning"` |
 | `--train_type`   | Specifies the type of training (`In_domain`, `Out_domain`) | `"In_domain"`   |
 | `--dataset`      | Specifies the dataset to use (`serengeti`, `terra`) | `"serengeti"`   |
 | `--mode`         | Specifies the mode (`train`, `test`, `test_top3`)   | `"train"`       |
