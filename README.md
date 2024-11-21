@@ -8,21 +8,23 @@ Our approach has been evaluated on two benchmark datasets, **Snapshot Serengeti*
 
 The work has been accepted for presentation at **WACV 2025**.
 
-## Features
-- **Baseline Models**: Includes standard feature extraction and classification techniques.
-- **Fine-Tuning**: Optimized models with domain-specific adjustments.
-- **Multi-modal Feature Projections**: Integration of image and textual features.
-- **Support for Long Features**: Extended capabilities for long-sequence feature analysis.
+## Repository Structure
 
-## Requirements
-Before running the code, make sure you have the following dependencies installed:
-- Python 3.8 or later
-- PyTorch
-- torchvision
-- CLIP by OpenAI
-- Additional libraries: `Pillow`, `argparse`
+This repository is organized as follows:
 
-Install dependencies using:
+- **`data/`**: This folder contains the datasets to be tested. Place your datasets here before running experiments.
+- **`feature_extraction/`**: Provides the scripts for offline feature extraction from the datasets, tailored for different versions of the model.
+- **`features/`**: Stores the extracted feature files. Ensure this directory is populated with features before running the training or testing scripts.
+- **`models/`**: Contains the pre-trained models and the architecture definitions for various model versions.
+- **`train/`**: Includes the training scripts for different versions of the model.
+- **`main.py`**: A central script to execute the workflows (training and testing) with command-line arguments.
+
+### Using `main.py`
+
+The `main.py` script allows you to train and test models conveniently. Below is an example of how to use it:
+
+#### Command to Train a Model
 ```bash
-pip install -r requirements.txt
+python main.py --model_version <Model_Type> --train_type <Training_Type> --dataset <Dataset> --mode train
+
 
