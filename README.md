@@ -43,7 +43,9 @@ Install the required Python libraries:
 ```bash
 pip install -r requirements.txt
 ```
+---
 ## Usage
+
 ### Training a Model
 
 To train a specific model, use:
@@ -63,7 +65,21 @@ Example:
 ```bash
 python main.py --model_version Fine_tuning --train_type Out_domain --dataset terra --mode test
 ```
-## Command-Line Arguments
+### Default Feature and Model Parameter Paths
+
+For each type of model, the following default paths are set for feature files and model parameters:
+
+- **Feature Paths** (for training, validation, testing, and textual features):
+  - `ruta_features_train`: `features/Features_serengeti/finetuning_features/Features_CATALOG_train_16.pt`
+  - `ruta_features_val`: `features/Features_serengeti/finetuning_features/Features_CATALOG_val_16.pt`
+  - `ruta_features_test`: `features/Features_serengeti/finetuning_features/Features_CATALOG_test_16.pt`
+  - `path_text_feat`: `features/Features_serengeti/finetuning_features/Text_features_16.pt`
+
+- **Model Parameters Path** (used for testing):
+  - `model_params_path`: `models/CATALOG_finetuning_layer_Base_Serengeti.pth`
+
+These paths are required for testing and can be customized as needed by modifying the respective arguments in `main.py`.
+### Command-Line Arguments
 Command-Line Arguments:
 | Argument         | Description                                         | Default         |
 |------------------|-----------------------------------------------------|-----------------|
@@ -71,7 +87,7 @@ Command-Line Arguments:
 | `--train_type`   | Specifies the type of training (`In_domain`, `Out_domain`) | `"In_domain"`   |
 | `--dataset`      | Specifies the dataset to use (`serengeti`, `terra`) | `"serengeti"`   |
 | `--mode`         | Specifies the mode (`train`, `test`, `test_top3`)   | `"train"`       |
-
+---
 ## Replicate Results
 To replicate results, ensure that the datasets are placed in the `data/` folder and features are precomputed in the `features/` folder.
 
