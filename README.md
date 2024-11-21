@@ -1,9 +1,7 @@
-
+<h1 align="center">Camera Trap Language-guided Contrastive Learning (CATALOG)</h1>
 <p align="center">
   <img src="pipeline_v2.png" alt="Header Image" width="600">
 </p>
-
-<h1 align="center">Camera Trap Language-guided Contrastive Learning (CATALOG)</h1>
 
 <p align="center">
 This is the repository of the model "Camera Trap Language-guided Contrastive Learning (CATALOG)" accepted at <strong>WACV 2025</strong>.
