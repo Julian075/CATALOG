@@ -51,7 +51,7 @@ Example:
 ```bash
 python feature_extraction/Base/CATALOG_extraction_features_Terra.py
 ```
-The extracted features will be saved in the path: features/Features_{dataset}/standard_features/Text_{mode_clip_i}.pt. Features will always be extracted for mode_clip_i using the ViT-B/32 and ViT-B/16 versions.
+The extracted features will be saved in the path: `features/Features_{dataset}/standard_features/Text_{mode_clip_i}.pt.` Features will always be extracted for mode_clip_i using the ViT-B/32 and ViT-B/16 versions.
 
 
 ### Training a Model
