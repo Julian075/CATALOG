@@ -108,6 +108,7 @@ For **Terra Incognita** (Out-domain training):
 ```bash
 python main.py --model_version Fine_tuning --train_type Out_domain --dataset terra --mode train
 ```
+<p><b>Note:</b> Ensure the dataset follows the required structure: an <code>img/</code> folder containing images and a <code>descriptions/</code> folder containing the output descriptions from the VLM. Within each of these, the subfolders should be organized as <code>Train/</code>, <code>Test/</code>, and <code>Val/</code>.</p>
 
 If you use this code, please cite our work:
 ```
