@@ -46,6 +46,7 @@ pip install -r requirements.txt
 
 ### Feature Extraction
 Before training or testing, make sure to extract the required features. You can find the corresponding script for each dataset, model, and training type in the feature_extraction/ folder. Execute the appropriate script to perform the feature extraction:
+
 Example:
 ```bash
 python feature_extraction/Base/CATALOG_extraction_features_Terra.py
