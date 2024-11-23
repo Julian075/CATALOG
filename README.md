@@ -48,7 +48,7 @@ pip install -r requirements.txt
 
 ### Description Extraction
 
-Before extracting features, generate textual descriptions for your images using the extract_description.py script. This step prepares the descriptions required for multimodal learning.
+Before extracting features, generate textual descriptions for your images using the ImageDescriptionExtractor.py script. This step prepares the descriptions required for multimodal learning.
 
 Example:
 ```bash
