@@ -31,7 +31,7 @@ The repository is organized as follows:
 - **`models/`**: Pre-trained models and architecture definitions.
 - **`train/`**: Training scripts for different model configurations.
 - **`main.py`**: Central script to run training and testing with command-line arguments.
-- **ImageDescriptionExtractor.py`**: Script to extract the descriptions of the images
+- **`ImageDescriptionExtractor.py`**: Script to extract the descriptions of the images
 
 Clone this repository:
 ```bash
