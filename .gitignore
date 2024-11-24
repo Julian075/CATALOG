@@ -1,4 +1,5 @@
- 
+ *.pyc
+__pycache__/
 # Ignorar todos los archivos .pt
 *.pt
 *.pth
