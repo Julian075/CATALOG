@@ -120,13 +120,13 @@ Command-Line Arguments:
 To replicate results, ensure that the datasets are placed in the `data/` folder and features are precomputed in the `features/` folder.
 
 Example Commands:
-For **Snapshot Serengeti** (In-domain training):
+For **In-domain training** (Snapshot Serengeti):
 ```bash
-python main.py --model_version Base --train_type In_domain --dataset serengeti --mode train
+python main.py --model_version Fine_tuning --train_type In_domain --dataset serengeti --mode train
 ```
-For **Terra Incognita** (Out-domain training):
+For **Out-domain training**:
 ```bash
-python main.py --model_version Fine_tuning --train_type Out_domain --dataset terra --mode train
+python main.py --model_version Base --train_type Out_domain --mode train
 ```
 
 If you use this code, please cite our work:
