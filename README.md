@@ -137,7 +137,7 @@ If you use this code, please cite our work:
 @inproceedings{santamaria2025catalog,
   title={CATALOG: A Camera Trap Language-guided Contrastive Learning Model},
   author={Julian D. Santamaria, Claudia Isaza, Jhony H. Giraldo},
-  booktitle={"IEEE/CVF Winter Conference on Applications of Computer Vision"},
+  booktitle={IEEE/CVF Winter Conference on Applications of Computer Vision},
   year={2025}
 }
 ```
