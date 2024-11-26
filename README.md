@@ -1,4 +1,4 @@
-<h1 align="center">Camera Trap Language-guided Contrastive Learning (CATALOG)</h1>
+<h1 align="center">CATALOG: A Camera Trap Language-guided Contrastive Learning Model</h1>
 <p align="center">
   <img src="pipeline_v2.png" alt="Header Image" width="600">
 </p>
@@ -135,9 +135,9 @@ python main.py --model_version Base --train_type Out_domain --mode train
 If you use this code, please cite our work:
 ```
 @inproceedings{santamaria2025catalog,
-  title={Camera Trap Language-guided Contrastive Learning (CATALOG)},
+  title={CATALOG: A Camera Trap Language-guided Contrastive Learning Model},
   author={Julian D. Santamaria, Claudia Isaza, Jhony H. Giraldo},
-  booktitle={WACV},
+  booktitle={"IEEE/CVF Winter Conference on Applications of Computer Vision"},
   year={2025}
 }
 ```
