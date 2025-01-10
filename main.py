@@ -1,3 +1,5 @@
+import numpy as np
+
 from models import CATALOG_Base as base
 from models import CATALOG_Base_fine_tuning as base_fine_tuning
 from models import CATALOG_Base_fine_tuning_last_layer as base_fine_tuning_layer
@@ -6,6 +8,8 @@ from models import CATALOG_Base_long as base_long
 from models import CATALOG_Projections as projections
 from models import CATALOG_Projections_fine_tuning as projections_fine_tuning
 from models import CATALOG_Projections_fine_tuning_last_layer as projections_fine_tuning_layer
+
+import json
 
 import argparse
 from utils import BaselineDataset,dataloader_baseline,TuningDataset,dataloader_Tuning,build_optimizer
@@ -20,17 +24,19 @@ from train.Fine_tuning.Train_CATALOG_Base_In_domain_Terra import CATALOG_base_In
 
 def mode_model(model,model_params_path,mode):
     if mode == 'train':
-        model.train()
+        epoch_loss_cis_test_, epoch_acc_cis_test_,epoch_loss_trans_test_, epoch_acc_trans_test_= model.train()
+        return epoch_loss_cis_test_, epoch_acc_cis_test_, epoch_loss_trans_test_, epoch_acc_trans_test_
     elif mode == 'test':
         model.prueba_model(model_params_path=model_params_path)
+
     elif mode == 'test_top3':
         model.prueba_model_top_3(model_params_path=model_params_path)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
-    parser.add_argument('--model_version', type=str, default="Fine_tuning", help='Model version')
-    parser.add_argument('--train_type', type=str, default="In_domain", help='Type of training')
+    parser.add_argument('--model_version', type=str, default="Base", help='Model version')
+    parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
     parser.add_argument('--mode', type=str, default="train", help='define if you want train or test')
     args = parser.parse_args()
@@ -88,18 +94,30 @@ if __name__ == "__main__":
             ruta_features_val    = "features/Features_serengeti/standard_features/Features_CATALOG_val_16.pt"
             ruta_features_test1  = "features/Features_terra/standard_features/Features_CATALOG_cis_test_16.pt"
             ruta_features_test2  = "features/Features_terra/standard_features/Features_CATALOG_trans_test_16.pt"
-            path_text_feat1      = "features/Features_serengeti/standard_features/Text_features_16.pt"
-            path_text_feat2      = "features/Features_terra/standard_features/Text_features_16.pt"
-            model = CATALOG_base(weight_Clip=0.6, num_epochs=8, batch_size=48, num_layers=1,
-                                                  dropout=0.27822, hidden_dim=1045, lr=0.07641, t=0.1, momentum=0.8409
-                                                  , patience=5, model=base, Dataset=BaselineDataset,
-                                                  Dataloader=dataloader_baseline,version='base',ruta_features_train=ruta_features_train,
-                                                  ruta_features_val=ruta_features_val,ruta_features_test1=ruta_features_test1,
-                                                  ruta_features_test2=ruta_features_test2,path_text_feat1=path_text_feat1,
-                                                  path_text_feat2=path_text_feat2,build_optimizer=build_optimizer,exp_name=f'exp_{model_version}_{train_type}')
+            omg=np.arange(0, 1.2, 0.2)
 
-            model_params_path = 'models/CATALOG_Base.pth'
-            mode_model(model, model_params_path, mode)
+            Ablation_omg={}
+            for omg_i in omg:
+                omg_i=str(omg_i)
+                if '0.6' in omg_i:
+                    omg_i='0.6'
+                path_text_feat1      = f"features/Features_serengeti/standard_features/Text_16_Ab_beta_{omg_i}.pt"
+                path_text_feat2      = f"features/Features_terra/standard_features/Text_16_Ab_omg_{omg_i}.pt"
+                model = CATALOG_base(weight_Clip=0.6, num_epochs=8, batch_size=48, num_layers=1,
+                                                      dropout=0.27822, hidden_dim=1045, lr=0.07641, t=0.1, momentum=0.8409
+                                                      , patience=5, model=base, Dataset=BaselineDataset,
+                                                      Dataloader=dataloader_baseline,version='base',ruta_features_train=ruta_features_train,
+                                                      ruta_features_val=ruta_features_val,ruta_features_test1=ruta_features_test1,
+                                                      ruta_features_test2=ruta_features_test2,path_text_feat1=path_text_feat1,
+                                                      path_text_feat2=path_text_feat2,build_optimizer=build_optimizer,exp_name=f'exp_{model_version}_{train_type}')
+
+                model_params_path = f'models/CATALOG_Base.pth'
+                epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test=mode_model(model, model_params_path, mode)
+                Ablation_beta=[omg_i]=[epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test]
+
+            with open("Ablation_omg.json", "w") as json_file:
+                json.dump(Ablation_omg, json_file, indent=4)
+
 
     elif model_version == "Fine_tuning":
         if train_type=="In_domain":
