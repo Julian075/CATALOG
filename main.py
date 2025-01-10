@@ -101,7 +101,7 @@ if __name__ == "__main__":
                 omg_i=str(omg_i)
                 if '0.6' in omg_i:
                     omg_i='0.6'
-                path_text_feat1      = f"features/Features_serengeti/standard_features/Text_16_Ab_beta_{omg_i}.pt"
+                path_text_feat1      = f"features/Features_serengeti/standard_features/Text_16_Ab_omg_{omg_i}.pt"
                 path_text_feat2      = f"features/Features_terra/standard_features/Text_16_Ab_omg_{omg_i}.pt"
                 model = CATALOG_base(weight_Clip=0.6, num_epochs=8, batch_size=48, num_layers=1,
                                                       dropout=0.27822, hidden_dim=1045, lr=0.07641, t=0.1, momentum=0.8409
