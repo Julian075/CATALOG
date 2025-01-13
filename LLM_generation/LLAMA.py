@@ -18,7 +18,7 @@ pipeline = transformers.pipeline(
 
 speacies_list=['badger', 'bird', 'bobcat', 'car', 'cat', 'coyote', 'deer', 'dog', 'empty', 'fox',
                'opossum', 'rabbit', 'raccoon', 'rodent', 'skunk','squirrel']
-max_length=len(speacies_list*200)
+max_length=len(speacies_list)*200
 # Generación de texto
 output = pipeline(f"""You are an AI assistant specialized in biology and providing accurate and detailed descriptions of animal species. We
 are creating detailed and specific prompts to describe various species. The goal is to generate multiple sentences
@@ -38,5 +38,5 @@ muzzle.
 digging burrows.
 • overall badgers have a rugged and muscular appearance
 suited for their burrowing lifestyle.
-The species are {speacies_list}""", max_length=max_length)
+The species are {speacies_list} give me the descriptions""", max_length=max_length)
 print(output)
