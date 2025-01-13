@@ -9,7 +9,7 @@ def generate_species_description(species_list):
     token = os.getenv("HF_TOKEN")
     login(token)
     # Configura el modelo y el pipeline
-    model_id = "meta-llama/Meta-Llama-3-8B-Instruct"
+    model_id ="ministral/Ministral-3b-instruct"# "meta-llama/Meta-Llama-3-8B-Instruct"
 
     pipeline = transformers.pipeline(
         "text-generation",
