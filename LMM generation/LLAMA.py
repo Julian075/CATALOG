@@ -1,14 +1,24 @@
-from transformers import LlamaForCausalLM, LlamaTokenizer
+from huggingface_hub import login
+import transformers
+import torch
+import os
 
-# Cargar el modelo y el tokenizador
-model_name = "meta-llama/Llama-2-7b-hf"  # Ejemplo: LLaMA 2 de 7B parámetros
-tokenizer = LlamaTokenizer.from_pretrained(model_name)
-model = LlamaForCausalLM.from_pretrained(model_name)
+# Inicia sesión con tu token de acceso
+token = os.getenv("HF_TOKEN")
+login(token)
+#token = ""  # Reemplaza con tu token personal
+#login(token)
 
-# Entrada y generación de texto
-input_text = "¿Por qué es importante la biodiversidad?"
-inputs = tokenizer(input_text, return_tensors="pt")
-outputs = model.generate(**inputs, max_length=100)
+# Configura el modelo y el pipeline
+model_id = "meta-llama/Meta-Llama-3-8B"
 
-# Mostrar resultado
-print(tokenizer.decode(outputs[0]))
+pipeline = transformers.pipeline(
+    "text-generation",
+    model=model_id,
+    model_kwargs={"torch_dtype": torch.bfloat16},
+    device_map="auto"
+)
+
+# Generación de texto
+output = pipeline("Hey, how are you doing today?", max_length=50)
+print(output)
