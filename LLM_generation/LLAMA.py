@@ -5,7 +5,7 @@ import os
 import json
 import argparse
 
-def generate_species_description(speacies_list):
+def generate_species_description(species_list):
     # Inicia sesión con tu token de acceso
     token = os.getenv("HF_TOKEN")
     login(token)
@@ -18,7 +18,7 @@ def generate_species_description(speacies_list):
         model_kwargs={"torch_dtype": torch.bfloat16},
         device_map="auto"
     )
-    max_length=len(speacies_list)*200
+    max_length=len(species_list)*200
     # Generación de texto
     output = pipeline(f"""You are an AI assistant specialized in biology and providing accurate and detailed descriptions of animal species. We
     are creating detailed and specific prompts to describe various species. The goal is to generate multiple sentences
@@ -38,19 +38,20 @@ def generate_species_description(speacies_list):
     digging burrows.
     • overall badgers have a rugged and muscular appearance
     suited for their burrowing lifestyle.
-    The species are {speacies_list} provide detailed descriptions for each species in the same structure""", max_length=max_length)
+    The species are {species_list} provide detailed descriptions for each species in the same structure""", max_length=max_length)
     output_file = "species_descriptions.json"
     generated_text = output[0]["generated_text"]
     with open(output_file, "w", encoding="utf-8") as file:
-        json.dump({speacies_list[i]: desc.strip() for i, desc in enumerate(generated_text.split("\n\n"))}, file,
+        json.dump({species_list[i]: desc.strip() for i, desc in enumerate(generated_text.split("\n\n"))}, file,
                   indent=4)
-#speacies_list=['badger', 'bird', 'bobcat', 'car', 'cat', 'coyote', 'deer', 'dog', 'empty', 'fox',  'opossum', 'rabbit', 'raccoon', 'rodent', 'skunk','squirrel']
+#species_list=['badger', 'bird', 'bobcat', 'car', 'cat', 'coyote', 'deer', 'dog', 'empty', 'fox',  'opossum', 'rabbit', 'raccoon', 'rodent', 'skunk','squirrel']
+#badger bird bobcat car cat coyote deer dog empty fox opossum rabbit raccoon rodent skunk squirrel
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Extract descriptions of animal species.")
-    parser.add_argument("--speacies_list", type=str, nargs='+', required=True, help="Speacies list.")
+    parser.add_argument("--species_list", type=str, nargs='+', required=True, help="Speacies list.")
 
     args = parser.parse_args()
 
-    generate_species_description(args.speacies_list)
+    generate_species_description(args.species_list)
 
 
