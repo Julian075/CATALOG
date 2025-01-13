@@ -10,7 +10,7 @@ def generate_species_description(species_list):
     login(token)
 
     # Configure the model and tokenizer
-    model_id = "microsoft/Phi-3-mini-4k-instruct"
+    model_id = "microsoft/Phi-3-small-8k-instruct"
 
     # Load the model and tokenizer
     model = AutoModelForCausalLM.from_pretrained(
@@ -68,7 +68,6 @@ def generate_species_description(species_list):
     with open(output_file, "w", encoding="utf-8") as file:
         file.write(generated_text)
 
-    print(f"Descriptions generated and saved to {output_file}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Extract descriptions of animal species.")
