@@ -1,6 +1,5 @@
 from huggingface_hub import login
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
-import torch
 import os
 import argparse
 
@@ -10,7 +9,7 @@ def generate_species_description(species_list):
     login(token)
 
     # Configure the model and tokenizer
-    model_id = "microsoft/Phi-3.5-vision-instruct"
+    model_id = "microsoft/Phi-3-mini-128k-instruct"
 
     # Load the model and tokenizer
     model = AutoModelForCausalLM.from_pretrained(
