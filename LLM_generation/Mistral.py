@@ -10,7 +10,7 @@ def generate_species_description(species_list):
     login(token)
 
     # Configure the model and the pipeline
-    model_id = "mistralai/Mistral-Nemo-Instruct-2407"
+    model_id = "mistralai/Mistral-7B-Instruct-v0.3"
     pipe = pipeline(
         "text-generation",
         model=model_id,
