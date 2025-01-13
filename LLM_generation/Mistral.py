@@ -1,19 +1,28 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM
-import torch
+from huggingface_hub import login
+from transformers import pipeline
+import os
 import argparse
 
 
 def generate_species_description(species_list):
-    # Load tokenizer and model directly
-    tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-v0.1")
-    model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-v0.1")
+    # Login with your Hugging Face token
+    token = os.getenv("HF_TOKEN")
+    login(token)
 
-    # Set device (use GPU if available, otherwise fallback to CPU)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = model.to(device)
+    # Configure the model and the pipeline
+    model_id = "mistralai/Mistral-7B-v0.1"
+    pipe = pipeline(
+        "text-generation",
+        model=model_id,
+        model_kwargs={"torch_dtype": "auto"},
+        device_map="auto",
+    )
 
-    # Prepare the input prompt
-    species_prompt = f"""You are an AI assistant specialized in biology and providing accurate and detailed descriptions of animal species. We
+    # Calculate max length
+    max_length = len(species_list) * 200
+
+    # Generate the text
+    prompt = f"""You are an AI assistant specialized in biology and providing accurate and detailed descriptions of animal species. We
     are creating detailed and specific prompts to describe various species. The goal is to generate multiple sentences
     that capture different aspects of each species’ appearance and behavior. Please follow the structure and style shown
     in the examples below. Each species should have a set of descriptions that highlight key characteristics.
@@ -31,31 +40,21 @@ def generate_species_description(species_list):
     digging burrows.
     • overall badgers have a rugged and muscular appearance
     suited for their burrowing lifestyle.
-
     The species are {species_list} provide detailed descriptions for each species in the same structure."""
 
-    # Tokenize the input prompt
-    inputs = tokenizer(species_prompt, return_tensors="pt").to(device)
+    output = pipe(prompt, max_length=max_length)
 
-    # Generate text
-    max_length = len(species_list) * 200
-    outputs = model.generate(
-        **inputs,
-        max_length=max_length,
-        num_return_sequences=1,
-    )
+    # Save the output
+    output_file = "Mistral_species_descriptions.txt"
+    generated_text = output[0]["generated_text"]
 
-    # Decode the generated text
-    generated_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
-
-    # Save the generated text to a file
-    output_file = "Mistal_species_descriptions.txt"
     with open(output_file, "w", encoding="utf-8") as file:
         file.write(generated_text)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Extract descriptions of animal species.")
     parser.add_argument("--species_list", type=str, nargs='+', required=True, help="Species list.")
-    args = parser.parse_args()
 
+    args = parser.parse_args()
     generate_species_description(args.species_list)
