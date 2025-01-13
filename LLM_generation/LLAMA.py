@@ -2,7 +2,6 @@ from huggingface_hub import login
 import transformers
 import torch
 import os
-import json
 import argparse
 
 def generate_species_description(species_list):
@@ -42,8 +41,7 @@ def generate_species_description(species_list):
     output_file = "species_descriptions.json"
     generated_text = output[0]["generated_text"]
     with open(output_file, "w", encoding="utf-8") as file:
-        json.dump({species_list[i]: desc.strip() for i, desc in enumerate(generated_text.split("\n \n"))}, file,
-                  indent=4)
+        file.write(generated_text)
 #species_list=['badger', 'bird', 'bobcat', 'car', 'cat', 'coyote', 'deer', 'dog', 'empty', 'fox',  'opossum', 'rabbit', 'raccoon', 'rodent', 'skunk','squirrel']
 #badger bird bobcat car cat coyote deer dog empty fox opossum rabbit raccoon rodent skunk squirrel
 if __name__ == "__main__":
