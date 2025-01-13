@@ -40,7 +40,7 @@ def generate_species_description(species_list):
     digging burrows.
     • overall badgers have a rugged and muscular appearance
     suited for their burrowing lifestyle.
-    The species are {species_str}. Provide detailed descriptions for each species in the same structure."""
+    The species are {species_str}. Provide detailed descriptions for each species in the same structure, ensuring that no species is skipped."""
 
     # Create messages in the format required for Qwen
     messages = [
@@ -73,7 +73,7 @@ def generate_species_description(species_list):
     generated_text = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
 
     # Save the generated text to a file
-    output_file = "Qwen_species_descriptions.txt"
+    output_file = "Qwen_species_descriptions2.txt"
     with open(output_file, "w", encoding="utf-8") as file:
         file.write(generated_text)
 
