@@ -9,7 +9,7 @@ def generate_species_description(species_list):
     token = os.getenv("HF_TOKEN")
     login(token)
     # Configura el modelo y el pipeline
-    model_id = "google/gemma-2-2b-it"
+    model_id = "microsoft/Phi-3-mini-4k-instruct"
 
     pipeline = transformers.pipeline(
         "text-generation",
