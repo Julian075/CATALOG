@@ -10,20 +10,20 @@ def generate_species_description(species_list):
     login(token)
 
     # Configure the model and tokenizer
-    model_id = "google/gemma-2-2b-it"
+    model_name = "Qwen/Qwen2.5-Coder-32B-Instruct"
 
-    # Load the model and tokenizer
     model = AutoModelForCausalLM.from_pretrained(
-        model_id,
-        device_map="auto",  # Adjust for your hardware
-        torch_dtype=torch.bfloat16,
+        model_name,
+        torch_dtype="auto",
+        device_map="auto"
     )
-    tokenizer = AutoTokenizer.from_pretrained(model_id)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-    # Prepare the prompt
+    # Prepare the species as a comma-separated list
     species_str = ", ".join(species_list)
-    prompt = f"""You are an AI assistant specialized in biology and providing accurate and detailed descriptions of animal species. We
-    are creating detailed and specific prompts to describe various species. The goal is to generate multiple sentences
+
+    # Construct the prompt
+    prompt = f"""We are creating detailed and specific prompts to describe various species. The goal is to generate multiple sentences
     that capture different aspects of each species’ appearance and behavior. Please follow the structure and style shown
     in the examples below. Each species should have a set of descriptions that highlight key characteristics.
     Example Structure:
@@ -40,24 +40,40 @@ def generate_species_description(species_list):
     digging burrows.
     • overall badgers have a rugged and muscular appearance
     suited for their burrowing lifestyle.
-    The species are {species_str}. Provide detailed descriptions for each species in the same structure, ensuring that no species is skipped."""
+    The species are {species_str}. Provide detailed descriptions for each species in the same structure."""
 
-    # Tokenize input and move to device
-    input_ids = tokenizer(prompt, return_tensors="pt").to("cuda")
+    # Create messages in the format required for Qwen
+    messages = [
+        {"role": "system", "content": "You are an AI assistant specialized in biology and providing accurate and detailed descriptions of animal species."},
+        {"role": "user", "content": prompt}
+    ]
 
-    # Generate output
-    outputs = model.generate(
-        **input_ids,
-        max_new_tokens=len(species_list) * 200,
-        temperature=0.7,
-        do_sample=True,
+    # Apply the chat template
+    text = tokenizer.apply_chat_template(
+        messages,
+        tokenize=False,
+        add_generation_prompt=True
     )
 
-    # Decode the generated text
-    generated_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    # Tokenize the input and move to the device
+    model_inputs = tokenizer([text], return_tensors="pt").to(model.device)
+
+    # Generate the text
+    generated_ids = model.generate(
+        **model_inputs,
+        max_new_tokens=len(species_list) * 200
+    )
+
+    # Extract only the generated part of the text
+    generated_ids = [
+        output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
+    ]
+
+    # Decode the output
+    generated_text = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
 
     # Save the generated text to a file
-    output_file = "Gemma_species_descriptions.txt"
+    output_file = "Qwen_species_descriptions.txt"
     with open(output_file, "w", encoding="utf-8") as file:
         file.write(generated_text)
 
@@ -69,3 +85,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     generate_species_description(args.species_list)
+
