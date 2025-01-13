@@ -10,7 +10,7 @@ def generate_species_description(species_list):
     login(token)
 
     # Configure the model and tokenizer
-    model_id = "microsoft/Phi-3-small-8k-instruct"
+    model_id = "microsoft/phi-4"
 
     # Load the model and tokenizer
     model = AutoModelForCausalLM.from_pretrained(
