@@ -10,7 +10,7 @@ login(token)
 #login(token)
 
 # Configura el modelo y el pipeline
-model_id = "meta-llama/Meta-Llama-3-8B"
+model_id = "meta-llama/Meta-Llama-3-8B-Instruct"
 
 pipeline = transformers.pipeline(
     "text-generation",
