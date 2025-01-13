@@ -1,5 +1,6 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
+import argparse
 
 
 def generate_species_description(species_list):
@@ -52,3 +53,9 @@ def generate_species_description(species_list):
     with open(output_file, "w", encoding="utf-8") as file:
         file.write(generated_text)
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Extract descriptions of animal species.")
+    parser.add_argument("--species_list", type=str, nargs='+', required=True, help="Species list.")
+    args = parser.parse_args()
+
+    generate_species_description(args.species_list)
