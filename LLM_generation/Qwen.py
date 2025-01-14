@@ -7,14 +7,6 @@ import os
 
 
 
-# Example usage
-output_file = "Qwen_species_descriptions_serengeti.txt"
-unique_file = get_unique_filename(output_file)
-
-with open(unique_file, "w", encoding="utf-8") as file:
-    generated_text = "Example content for the file."
-    file.write(generated_text)
-
 
 def generate_species_description(species_list,counter):
     # Login to Hugging Face with the token
