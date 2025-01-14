@@ -50,7 +50,7 @@ def generate_species_description(species_list):
 
     # Text generation arguments
     generation_args = {
-        "max_new_tokens": len(species_list) * 200,
+        "max_new_tokens": len(species_list) * 300,
         "return_full_text": False,
         "temperature": 0.7,
         "do_sample": True,
