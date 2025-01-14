@@ -38,7 +38,7 @@ def generate_species_description(species_list):
     • overall badgers have a rugged and muscular appearance
     suited for their burrowing lifestyle.
     The species are {species_list} provide detailed descriptions for each species in the same structure""", max_length=max_length)
-    output_file = "LLAMA_species_descriptions.txt"
+    output_file = "LLAMA_species_descriptions_serengeti.txt"
     generated_text = output[0]["generated_text"]
     with open(output_file, "w", encoding="utf-8") as file:
         file.write(generated_text)

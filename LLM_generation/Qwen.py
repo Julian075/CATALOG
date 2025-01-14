@@ -72,7 +72,7 @@ def generate_species_description(species_list):
     generated_text = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
 
     # Save the generated text to a file
-    output_file = "Qwen_species_descriptions2.txt"
+    output_file = "Qwen_species_descriptions_serengeti.txt"
     with open(output_file, "w", encoding="utf-8") as file:
         file.write(generated_text)
 

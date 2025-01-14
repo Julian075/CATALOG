@@ -63,7 +63,7 @@ def generate_species_description(species_list):
     generated_text = output[0]['generated_text']
 
     # Save the generated text to a file
-    output_file = "Phi_species_descriptions2.txt"
+    output_file = "Phi_species_descriptions_serengeti.txt"
     with open(output_file, "w", encoding="utf-8") as file:
         file.write(generated_text)
 
