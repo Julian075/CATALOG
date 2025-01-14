@@ -6,20 +6,6 @@ import argparse
 import os
 
 
-def get_unique_filename(base_name):
-
-    if not os.path.exists(base_name):
-        return base_name
-
-    name, ext = os.path.splitext(base_name)
-    counter = 1
-
-    while True:
-        new_name = f"{name}{counter}{ext}"
-        if not os.path.exists(new_name):
-            return new_name
-        counter += 1
-
 
 # Example usage
 output_file = "Qwen_species_descriptions_serengeti.txt"
@@ -30,7 +16,7 @@ with open(unique_file, "w", encoding="utf-8") as file:
     file.write(generated_text)
 
 
-def generate_species_description(species_list):
+def generate_species_description(species_list,counter):
     # Login to Hugging Face with the token
     token = os.getenv("HF_TOKEN")
     login(token)
@@ -98,8 +84,7 @@ def generate_species_description(species_list):
     generated_text = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
 
     # Save the generated text to a file
-    output_file = "Qwen_species_descriptions_serengeti.txt"
-    output_file = get_unique_filename(output_file)
+    output_file = f"Qwen_species_descriptions_serengeti{counter}.txt"
     with open(output_file, "w", encoding="utf-8") as file:
         file.write(generated_text)
 
@@ -108,7 +93,8 @@ def generate_species_description(species_list):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Extract descriptions of animal species.")
     parser.add_argument("--species_list", type=str, nargs='+', required=True, help="Species list.")
+    parser.add_argument("--counter", type=str, required=True, help="Species list.")
     args = parser.parse_args()
 
-    generate_species_description(args.species_list)
+    generate_species_description(args.species_list,args.counter)
 
