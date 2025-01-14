@@ -19,8 +19,7 @@ def generate_species_description(species_list):
     )
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-    # Prepare the species as a comma-separated list
-    species_str = ", ".join(species_list)
+
 
     # Construct the prompt
     prompt = f"""We are creating detailed and specific prompts to describe various species. The goal is to generate multiple sentences
@@ -40,7 +39,7 @@ def generate_species_description(species_list):
     digging burrows.
     • overall badgers have a rugged and muscular appearance
     suited for their burrowing lifestyle.
-    The species are {species_str}. Provide detailed descriptions for each species in the list, ensuring that all species are included and described in the same structured format without skipping any."""
+    The species are {species_list}. Provide detailed descriptions for each species in the list, ensuring that all species are included and described in the same structured format without skipping any."""
 
     # Create messages in the format required for Qwen
     messages = [

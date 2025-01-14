@@ -46,7 +46,7 @@ def generate_species_description(species_list):
     digging burrows.
     • overall badgers have a rugged and muscular appearance
     suited for their burrowing lifestyle.
-    The species are {species_list} provide detailed descriptions for each species in the same structure, ensuring that no species is skipped."""
+    The species are {species_list}. Provide detailed descriptions for each species in the list, ensuring that all species are included and described in the same structured format without skipping any."""
 
     # Text generation arguments
     generation_args = {
