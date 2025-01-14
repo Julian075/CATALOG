@@ -3,6 +3,32 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 import os
 import argparse
+import os
+
+
+def get_unique_filename(base_name):
+
+    if not os.path.exists(base_name):
+        return base_name
+
+    name, ext = os.path.splitext(base_name)
+    counter = 1
+
+    while True:
+        new_name = f"{name}{counter}{ext}"
+        if not os.path.exists(new_name):
+            return new_name
+        counter += 1
+
+
+# Example usage
+output_file = "Qwen_species_descriptions_serengeti.txt"
+unique_file = get_unique_filename(output_file)
+
+with open(unique_file, "w", encoding="utf-8") as file:
+    generated_text = "Example content for the file."
+    file.write(generated_text)
+
 
 def generate_species_description(species_list):
     # Login to Hugging Face with the token
@@ -73,6 +99,7 @@ def generate_species_description(species_list):
 
     # Save the generated text to a file
     output_file = "Qwen_species_descriptions_serengeti.txt"
+    output_file = get_unique_filename(output_file)
     with open(output_file, "w", encoding="utf-8") as file:
         file.write(generated_text)
 
