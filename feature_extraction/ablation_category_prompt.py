@@ -12,17 +12,16 @@ def zeroshot_classifier(classnames, templates1, templates2,omg):
             texts = clip.tokenize(texts).to(device)
             template_embeddings = model_clip.encode_text(texts)  # embed with text encoder
             template_embeddings /= template_embeddings.norm(dim=-1, keepdim=True)
-            template_embeddings = template_embeddings.mean(dim=0)
-            template_embeddings /= template_embeddings.norm()
+
 
             texts2 = [template for template in templates2[classname]]  # format with class
             texts2 = clip.tokenize(texts2).to(device)
             description_embeddings = model_clip.encode_text(texts2)  # embed with text encoder
             description_embeddings /= description_embeddings.norm(dim=-1, keepdim=True)
-            description_embeddings = description_embeddings.mean(dim=0)
-            description_embeddings /= description_embeddings.norm()
 
-            class_embedding = template_embeddings *omg + description_embeddings * omg
+
+            class_embedding = torch.cat ((template_embeddings *(1-omg),description_embeddings * omg), dim = 0)
+            class_embedding = class_embedding.mean(dim=0)
             class_embedding /= class_embedding.norm()  # Normalize final embedding
 
 
@@ -733,16 +732,16 @@ camera_trap_templates_serengeti = {
 }
 
 
-omg = np.arange(0, 1.2, 0.2)
+omg = np.arange(0, 1.1, 0.1)
 for mode_clip_i in mode_clip:
     model_clip, preprocess_clip = clip.load(f'ViT-B/{mode_clip_i}', device)
     model_clip.to(device)
     for omg_i in omg:
         zeroshot_weights = zeroshot_classifier(class_indices_serengeti, camera_trap_templates1, camera_trap_templates_serengeti,omg_i)
-        torch.save(zeroshot_weights,f'../features/Features_serengeti/standard_features/Text_{mode_clip_i}_Ab_omg_{omg_i}.pt')
+        torch.save(zeroshot_weights,f'../features/Features_serengeti/standard_features/Text_{mode_clip_i}_Ab_{omg_i}.pt')
 
         zeroshot_weights = zeroshot_classifier(list(class_indices_terra.keys()), camera_trap_templates1, camera_trap_templates_terra,omg_i)
-        torch.save(zeroshot_weights,f'../features/Features_terra/standard_features/Text_{mode_clip_i}_Ab_omg_{omg_i}.pt')
+        torch.save(zeroshot_weights,f'../features/Features_terra/standard_features/Text_{mode_clip_i}_Ab_{omg_i}.pt')
 
 
 
