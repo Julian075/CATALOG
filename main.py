@@ -94,13 +94,11 @@ if __name__ == "__main__":
             ruta_features_val    = "features/Features_serengeti/standard_features/Features_CATALOG_val_16.pt"
             ruta_features_test1  = "features/Features_terra/standard_features/Features_CATALOG_cis_test_16.pt"
             ruta_features_test2  = "features/Features_terra/standard_features/Features_CATALOG_trans_test_16.pt"
-            omg=np.arange(0, 1.2, 0.2)
+            omg=np.round(np.arange(0, 1.1, 0.1),2)
 
             Ablation_omg={}
             for omg_i in omg:
                 omg_i=str(omg_i)
-                if '0.6' in omg_i:
-                    omg_i='0.6'
                 path_text_feat1      = f"features/Features_serengeti/standard_features/Text_16_Ab_omg_{omg_i}.pt"
                 path_text_feat2      = (f"features/Features_terra/standard_features/Text_16_Ab_omg_{omg_i}.pt")
                 model = CATALOG_base(weight_Clip=0.6, num_epochs=8, batch_size=48, num_layers=1,
@@ -115,7 +113,7 @@ if __name__ == "__main__":
                 epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test=mode_model(model, model_params_path, mode)
                 Ablation_omg[omg_i]=[epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test]
 
-            with open("Ablation_omg.json", "w") as json_file:
+            with open("Ablation_Tem_vs_Des.json", "w") as json_file:
                 json.dump(Ablation_omg, json_file, indent=4)
 
 
