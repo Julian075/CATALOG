@@ -99,4 +99,3 @@ def build_optimizer( projection_model, optimizer, learning_rate, momentum, versi
 
     return optimizer,scheduler
 
-

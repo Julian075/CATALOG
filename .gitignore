@@ -4,4 +4,7 @@ __pycache__/
 *.pt
 *.pth
 *.jpg
+*.png
+*.cvs
 *.json
+*.zip
