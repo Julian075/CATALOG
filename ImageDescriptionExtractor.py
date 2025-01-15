@@ -91,5 +91,3 @@ if __name__ == "__main__":
 
     extract_description(args.path, args.dataset, time_b=args.time)
 
-
-
