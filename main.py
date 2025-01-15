@@ -99,8 +99,8 @@ if __name__ == "__main__":
             Ablation_omg={}
             for omg_i in omg:
                 omg_i=str(omg_i)
-                path_text_feat1      = f"features/Features_serengeti/standard_features/Text_16_Ab_omg_{omg_i}.pt"
-                path_text_feat2      = (f"features/Features_terra/standard_features/Text_16_Ab_omg_{omg_i}.pt")
+                path_text_feat1      = f"features/Features_serengeti/standard_features/Text_16_Ab_{omg_i}.pt"
+                path_text_feat2      = (f"features/Features_terra/standard_features/Text_16_Ab_{omg_i}.pt")
                 model = CATALOG_base(weight_Clip=0.6, num_epochs=8, batch_size=48, num_layers=1,
                                                       dropout=0.27822, hidden_dim=1045, lr=0.07641, t=0.1, momentum=0.8409
                                                       , patience=5, model=base, Dataset=BaselineDataset,
