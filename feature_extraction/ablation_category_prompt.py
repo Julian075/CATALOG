@@ -738,10 +738,10 @@ for mode_clip_i in mode_clip:
     model_clip.to(device)
     for omg_i in omg:
         zeroshot_weights = zeroshot_classifier(class_indices_serengeti, camera_trap_templates1, camera_trap_templates_serengeti,omg_i)
-        torch.save(zeroshot_weights,f'../features/Features_serengeti/standard_features/Text_{mode_clip_i}_Ab_{omg_i}.pt')
+        torch.save(zeroshot_weights,f'features/Features_serengeti/standard_features/Text_{mode_clip_i}_Ab_{omg_i}.pt')
 
         zeroshot_weights = zeroshot_classifier(list(class_indices_terra.keys()), camera_trap_templates1, camera_trap_templates_terra,omg_i)
-        torch.save(zeroshot_weights,f'../features/Features_terra/standard_features/Text_{mode_clip_i}_Ab_{omg_i}.pt')
+        torch.save(zeroshot_weights,f'features/Features_terra/standard_features/Text_{mode_clip_i}_Ab_{omg_i}.pt')
 
 
 
