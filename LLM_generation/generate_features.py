@@ -4,28 +4,18 @@ import clip
 import numpy as np
 
 
-def zeroshot_classifier(classnames, templates1, templates2,omg):
+def zeroshot_classifier(classnames, templates1, templates2):
     with torch.no_grad():
         zeroshot_weights = []
         for classname in classnames:
             texts = [template.format(classname) for template in templates1]
-            texts = clip.tokenize(texts).to(device)
-            template_embeddings = model_clip.encode_text(texts)  # embed with text encoder
-            template_embeddings /= template_embeddings.norm(dim=-1, keepdim=True)
-            template_embeddings = template_embeddings.mean(dim=0)
-            template_embeddings /= template_embeddings.norm()
-
             texts2 = [template for template in templates2[classname]]  # format with class
-            texts2 = clip.tokenize(texts2).to(device)
-            description_embeddings = model_clip.encode_text(texts2)  # embed with text encoder
-            description_embeddings /= description_embeddings.norm(dim=-1, keepdim=True)
-            description_embeddings = description_embeddings.mean(dim=0)
-            description_embeddings /= description_embeddings.norm()
-
-            class_embedding = template_embeddings *omg + description_embeddings * omg
-            class_embedding /= class_embedding.norm()  # Normalize final embedding
-
-
+            texts = texts + texts2
+            texts = clip.tokenize(texts).to(device)  # tokenize
+            class_embeddings = model_clip.encode_text(texts)  # embed with text encoder
+            class_embeddings /= class_embeddings.norm(dim=-1, keepdim=True)
+            class_embedding = class_embeddings.mean(dim=0)
+            class_embedding /= class_embedding.norm()
             zeroshot_weights.append(class_embedding)
         zeroshot_weights = torch.stack(zeroshot_weights, dim=1).to(device)
     return zeroshot_weights
@@ -1050,15 +1040,697 @@ camera_trap_templates_serengeti_Phi = {
 
 }
 
+camera_trap_templates_terra_Phi = {
+"badger":[
+" a badger is a mammal with a stout body and short sturdy legs.",
+" a badger’s fur is coarse and typically grayish-black.",
+" badgers often feature a white stripe running from the nose to the back of the head dividing into two stripes along the sides of the body to the base of the tail.",
+" badgers have broad flat heads with small eyes and ears.",
+" badger noses are elongated and tapered ending in a black muzzle.",
+" badgers possess strong well-developed claws adapted for digging burrows.",
+" overall badgers have a rugged and muscular appearance suited for their burrowing lifestyle."],
 
+"bird":[
+" a bird is a warm-blooded vertebrate characterized by feathers, beak, and the ability to fly (although some species are flightless).",
+" birds have a lightweight skeleton with hollow bones, reducing their overall body weight.",
+" feathers cover the bird’s body, providing insulation, protection, and, in many cases, aiding in flight.",
+" the beak is a hard, keratinous structure that varies in shape and size depending on the species’ dietary needs.",
+" birds have a unique respiratory system that includes air sacs, allowing for efficient oxygen exchange during flight."],
 
-omg = np.arange(0, 1.2, 0.2)
-for mode_clip_i in mode_clip:
-    model_clip, preprocess_clip = clip.load(f'ViT-B/{mode_clip_i}', device)
-    model_clip.to(device)
-    for omg_i in omg:
-        zeroshot_weights = zeroshot_classifier(class_indices_serengeti, camera_trap_templates1, camera_trap_templates_serengeti,omg_i)
-        torch.save(zeroshot_weights,f'../features/Features_serengeti/standard_features/Text_{mode_clip_i}_Ab_omg_{omg_i}.pt')
+"bobcat":[
+" a bobcat is a medium-sized wild cat native to North America, with a distinctive short, “bobbed” tail.",
+" bobcats have a robust, muscular body, with a short, thick tail and a broad head.",
+" their fur is short and usually sandy or reddish-brown, with distinctive dark stripes on the legs and tail.",
+" bobcats possess keen senses, including excellent night vision and a highly developed sense of hearing.",
+" they are solitary and largely nocturnal, preferring to hunt small mammals and birds."],
 
-        zeroshot_weights = zeroshot_classifier(list(class_indices_terra.keys()), camera_trap_templates1, camera_trap_templates_terra,omg_i)
-        torch.save(zeroshot_weights,f'../features/Features_terra/standard_features/Text_{mode_clip_i}_Ab_omg_{omg_i}.pt')
+"car":[
+" a car is a wheeled motor vehicle that is used for transportation.",
+" cars have a metal frame, four wheels, and an enclosed cabin for passengers.",
+" they are powered by an internal combustion engine or, more recently, electric motors.",
+" cars are designed with a variety of safety features, including seat belts and airbags.",
+" modern cars often feature advanced technology, such as GPS navigation and in-car entertainment systems."],
+
+"cat":[
+" a cat is a small carnivorous mammal with soft fur, retractable claws, and a keen sense of hearing and sight.",
+" cats have a flexible body, quick reflexes, and sharp teeth designed for hunting.",
+" domestic cats come in various colors and patterns, with long, slender bodies and a distinctive 'M' shape on their forehead.",
+" wild cats, such as lions and tigers, have larger bodies, shorter legs, and a more muscular build.",
+" cats are known for their agility and ability to climb and jump with ease."],
+
+"coyote":[
+" a coyote is a canid native to North America, known for its sharp, pointed ears and bushy tail.",
+" coyotes have a lean, athletic build with long legs for endurance running.",
+" their fur is typically grayish-brown, with a white underbelly and a bushy, black-tipped tail.",
+" coyotes are highly adaptable, able to thrive in various habitats, from forests and grasslands to urban areas.",
+" they are primarily nocturnal, hunting small mammals and birds."],
+
+"deer":[
+" a deer is a hoofed mammal belonging to the family Cervidae, characterized by its slender body and antlers (in males).",
+" deer vary in size and color, with species such as the white-tailed deer, red deer, and caribou.",
+" deer are herbivores, feeding on a diet of leaves, grass, and fruits.",
+" males, or bucks, grow antlers annually, which are shed and regrown each year.",
+" deer are known for their agility, able to run quickly and leap over obstacles."],
+
+"dog":[
+" a dog is a domesticated carnivorous mammal belonging to the Canidae family, known for its loyalty and diverse breeds.",
+" dogs have a wide range of sizes, colors, and shapes, with various breeds serving different purposes, such as herding, hunting, and companionship.",
+" dogs have a keen sense of smell and hearing, making them excellent trackers and protectors.",
+" they communicate through vocalizations, body language, and facial expressions.",
+" dogs are social animals, forming strong bonds with their owners and other dogs."],
+
+"empty":[
+" empty is the lack of content or occupancy.",
+" it can refer to a container, space, or concept that is unfilled or devoid of substance.",
+" empty can also symbolize solitude, freedom, or potential, depending on the context.",
+" in a literal sense, an empty room lacks furniture and possessions.",
+" metaphorically, an empty vessel is open to new ideas and experiences."],
+
+"fox":[
+" a fox is a small, opportunistic carnivore native to Europe, Asia, and North America, known for its bushy tail and cunning nature.",
+" foxes have a slender body, long legs, and a pointed snout, with a coat varying in color from red to gray to brown.",
+" foxes are highly adaptable, able to thrive in various habitats, including forests, grasslands, and urban areas.",
+" they are primarily nocturnal, hunting rodents, birds, and fruits.",
+" foxes are known for their intelligence and cunning, often using elaborate strategies to catch their prey."],
+
+"opossum":[
+" an opossum is a marsupial native to North and South America, known for its long, hairless tail and prehensile snout.",
+" opossums have a small, pointed snout with a long, sensitive prehensile snout, used for grooming and finding food.",
+" their fur is typically grayish-brown, with a lighter belly and a white face.",
+" opossums are omnivorous, feeding on fruits, insects, small mammals, and carrion.",
+" they are marsupials, giving birth to underdeveloped young that crawl into a pouch on their mother’s belly for further development."],
+
+"rabbit":[
+" a rabbit is a small mammal belonging to the family Leporidae, characterized by its long ears, hind legs, and fluffy tail.",
+" rabbits have a soft, dense fur that varies in color from white to brown to gray, with some species having distinctive markings.",
+" their fur provides insulation and camouflage in their natural habitats, which range from forests and grasslands to deserts.",
+" rabbits are herbivores, feeding on a diet of grass, leaves, and other plant material.",
+" they are known for their reproductive capacity, with females breeding multiple times per year and producing several litters."],
+
+"raccoon":[
+" a raccoon is a medium-sized mammal native to North America, known for its distinctive facial mask and ringed tail.",
+" raccoons have a stocky body, with a bushy, ringed tail, and a mask of dark fur around their eyes.",
+" their fur is typically grayish-brown, with a lighter underside and a dense, coarse coat.",
+" raccoons are omnivorous, feeding on a variety of foods, including fruits, nuts, insects, and small mammals.",
+" they are highly adaptable, able to thrive in diverse environments, from forests and wetlands to urban areas."],
+
+"rodent":[
+" a rodent is a mammal belonging to the order Rodentia, characterized by its continuously growing incisors in the upper and lower jaws.",
+" rodents include a diverse group of species, such as mice, rats, squirrels, and beavers.",
+" their body size varies, with some species as small as 2 inches long, while others, like beavers, can grow to over 3 feet long.",
+" rodents have a wide range of diets, feeding on seeds, fruits, nuts, insects, and even carrion in some species.",
+" they are known for their ability to reproduce rapidly, with some species capable of producing multiple litters per year."],
+
+"skunk":[
+" a skunk is a small mammal native to North and South America, known for its distinctive black and white coloration and its ability to spray a foul-smelling liquid as a defense mechanism.",
+" skunks have a stocky body, with a short, furry tail and a striped pattern of black and white.",
+" their fur is typically thick and dense, with a soft undercoat and a coarse outer coat.",
+" skunks are omnivores, feeding on a diet of insects, small mammals, fruits, and vegetables.",
+" they are solitary animals, living in underground burrows or dens."],
+
+"squirrel":[
+" a squirrel is a small to medium-sized rodent belonging to the family Sciuridae, characterized by its long, bushy tail and sharp claws for climbing.",
+" squirrels have a small, slender body, with a long, fluffy tail, and a bushy, round head.",
+" their fur varies in color, with some species having a reddish-brown coat, while others are gray, black, or white.",
+" squirrels are primarily herbivores, feeding on nuts, seeds, fruits, and flowers.",
+" they are highly adapted for climbing, with strong hind limbs and sharp claws that allow them to scale trees and jump between branches with ease."],
+
+}
+
+camera_trap_templates_serengeti_Qwen ={
+'aardvark':[
+" an aardvark is a nocturnal mammal with a long, snouted face and a tubular body.",
+" aardvarks have sparse, coarse hair that ranges in color from gray to brown.",
+" they possess large, rabbit-like ears and a long, prehensile tongue used for catching ants and termites.",
+" aardvarks have powerful claws on their front feet, which they use for digging burrows and breaking into insect nests.",
+" their skin is tough and thick, providing protection from bites.",
+" aardvarks have a unique zigzag pattern of muscles in their tongue, which helps them to flick it rapidly in and out of ant and termite nests.",
+" overall, aardvarks have a somewhat awkward appearance but are highly adapted for their underground lifestyle."],
+
+'ardwolf':[
+" an aardwolf is a small, nocturnal mammal with a slender body and long legs.",
+" aardwolves have short, dense fur that is typically a yellowish-brown or tawny color with black vertical stripes.",
+" they have a bushy tail that is often held upright when standing.",
+" aardwolves have a long snout and sharp, pointed teeth, which they use to crush insects.",
+" their ears are large and rounded, helping them to hear prey moving underground.",
+" aardwolves feed primarily on harvester termites, making them important predators in their ecosystem.",
+" they are known for their distinctive striped pattern and are often mistaken for aardvarks due to their similar habitat and diet."],
+
+'baboon':[
+" a baboon is a robust primate with a stocky build and a prominent face.",
+" baboons have a varied coat color depending on the species, ranging from olive-gray to brown or even red.",
+" they possess a distinctive patch of bare skin on their rump, which can be brightly colored in some species.",
+" baboons have a pronounced sagittal crest on their skull, where muscles attach to aid in chewing.",
+" their faces are marked with a series of ridges and folds, giving them a somewhat fierce appearance.",
+" baboons have opposable thumbs, which assist in grasping objects and climbing trees.",
+" they are highly social animals, living in large groups called troops, and are known for their complex social structures."],
+
+'batEaredFox':[
+" a bat-eared fox is a small canid with exceptionally large, bat-like ears.",
+" its fur is generally sandy brown or tan with black markings around the eyes and on the legs.",
+" bat-eared foxes have a short, bushy tail that is usually tipped with black.",
+" their ears are not only large but also highly mobile, allowing them to pinpoint the location of prey.",
+" bat-eared foxes have a slender build, with long legs and a lean body, which makes them fast runners.",
+" they primarily feed on insects, small mammals, and birds, making them important predators in their environment.",
+" their large ears also help regulate their body temperature, especially in hot climates."],
+
+'buffalo':[
+" a buffalo, specifically the African buffalo, is a large bovine with a heavy, muscular build.",
+" their coat is typically dark gray or black, although it can vary in color based on age and sex.",
+" buffaloes have a distinctive hump above the shoulders and a large, muscular head.",
+" they have large horns that curve upwards and outwards, forming a crescent shape.",
+" buffaloes have a tough hide that is covered with sparse hair, providing protection from predators.",
+" they live in large herds and are known for their aggressive behavior when threatened.",
+" their powerful build and curved horns make them formidable animals in their natural habitat."],
+
+'bushbuck':[
+" a bushbuck is a medium-sized antelope with a reddish-brown coat that is often mottled with white spots.",
+" they have a slender body with long legs and a short tail.",
+" bushbucks have a distinctive white ring around their eyes and a white chevron between their horns.",
+" their horns are spiral and occur only in males, while females are hornless.",
+" bushbucks are shy and elusive, spending most of their time hidden in dense vegetation.",
+" they have a strong sense of smell and are primarily browsers, feeding on leaves, shoots, and fruits.",
+" their coloring provides excellent camouflage in their forest habitats."],
+
+'caracal':[
+" a caracal is a medium-sized wild cat with a slender body and long legs.",
+" their fur is generally tawny or reddish-brown with black spots and streaks.",
+" caracals have a distinctive black tuft at the tip of their ears, which gives them a unique appearance.",
+" their eyes are large and round, typically amber or golden in color.",
+" caracals have a short tail that is usually black-tipped.",
+" they are excellent climbers and are known for their ability to take down prey much larger than themselves.",
+" caracals are adaptable and can be found in a variety of habitats, including deserts, savannas, and forests."],
+
+'cheetah':[
+" a cheetah is a slender, fast-running feline with a spotted coat.",
+" their fur is typically tawny or yellowish with black spots arranged in a unique pattern.",
+" cheetahs have a small head with high-set eyes and a long, slender tail.",
+" they have distinctive black 'tear marks' running from the corners of their eyes down the sides of their nose, which may help reduce glare while hunting.",
+" cheetahs have non-retractable claws that provide traction during sprints.",
+" they are the fastest land animals, capable of reaching speeds over 100 km/h.",
+" their spotted coat provides excellent camouflage in grasslands and open savannas."],
+
+'civet':[
+" a civet is a small, carnivorous mammal with a slender body and a long, bushy tail.",
+" their fur is typically gray or brown with black spots or stripes.",
+" civets have a distinctive mask-like marking around their eyes, which can be black or dark brown.",
+" they have a long snout and small, round ears.",
+" civets are nocturnal and have excellent night vision and a keen sense of smell.",
+" they are omnivorous, feeding on a variety of insects, small mammals, and fruits.",
+" civets are known for their musky scent glands, which they use for marking territory and attracting mates."],
+
+'dikDik':[
+" a dik-dik is a small antelope with a distinctive prehensile lip and a compact body.",
+" their fur is typically reddish-brown with white underparts and black markings around the eyes and mouth.",
+" dik-diks have long, thin legs and a short tail.",
+" they have small, rounded ears and a small head with a prominent nose.",
+" dik-diks are known for their high-pitched, barking calls, which they use for communication and warning of danger.",
+" they are shy and elusive, living in dense vegetation and avoiding open areas.",
+" their small size and agility allow them to move quickly through underbrush, evading predators."],
+
+'eland':[
+" an eland is a large, spiral-horned antelope with a light tan or reddish-brown coat.",
+" they have a distinctive dewlap, a fold of loose skin hanging from the throat.",
+" elands have large, rounded ears and a short tail.",
+" their horns are long and spiral, occurring in both males and females.",
+" elands are the largest antelope species and are known for their gentle nature.",
+" they are browsers, feeding on leaves, flowers, and fruits.",
+" their size and spiral horns make them easily recognizable in their savanna and woodland habitats."],
+
+'elephant':[
+" an elephant is a large, gray mammal with a long trunk and large ears.",
+" their skin is thick and gray, with wrinkles and folds that give them a distinctive appearance.",
+" elephants have a long, flexible trunk that serves as a nose and arm.",
+" they have large, fan-shaped ears that are covered in blood vessels and help regulate body temperature.",
+" elephants have four tusks, two in the upper jaw and two in the lower jaw, although tusks in females are often smaller or absent.",
+" they are highly social animals, living in family groups led by a matriarch.",
+" their intelligence and memory are renowned, and they play a crucial role in their ecosystem through seed dispersal and habitat modification."],
+
+'gazelleGrants':[
+" a Grant's gazelle is a medium-sized antelope with a slender body and long legs.",
+" their coat is typically tawny or reddish-brown with white underparts and a distinctive black stripe on the rump.",
+" Grant's gazelles have a long neck and a small head with large, forward-facing eyes.",
+" they have a short tail that is usually black-tipped.",
+" Grant's gazelles are known for their graceful leaps and bounds, which they use to evade predators.",
+" they are primarily grazers, feeding on grasses and other low-lying vegetation.",
+" their coloring and agility make them well-suited to their open grassland habitats."],
+
+'gazelleThomsons':[
+" a Thomson's gazelle is a medium-sized antelope with a slender build and long legs.",
+" their coat is typically reddish-brown with white underparts and a distinctive black stripe on the rump.",
+" Thomson's gazelles have a long neck and a small head with large, forward-facing eyes.",
+" they have a short tail that is usually black-tipped.",
+" Thomson's gazelles are known for their high-speed dashes and sharp turns, which they use to escape predators.",
+" they are primarily grazers, feeding on grasses and other low-lying vegetation.",
+" their coloring and agility make them well-adapted to their open grassland habitats."],
+
+'genet':[
+" a genet is a small, carnivorous mammal with a slender body and a bushy tail.",
+" their fur is typically gray or brown with black spots or stripes.",
+" genets have a distinctive mask-like marking around their eyes, which can be black or dark brown.",
+" they have a long snout and small, rounded ears.",
+" genets are nocturnal and have excellent night vision and a keen sense of smell.",
+" they are omnivorous, feeding on a variety of insects, small mammals, and fruits.",
+" genets are known for their agility and are skilled climbers, using their long tails for balance."],
+
+'giraffe':[
+" a giraffe is a tall mammal with a long neck and legs, standing up to 18 feet tall.",
+" a giraffe's coat is covered in distinctive irregular patches of brown or orange separated by lighter lines, creating a unique pattern.",
+" giraffes have small heads with large eyes and short horns called ossicones covered in skin and hair.",
+" their tongues can be up to 20 inches long, prehensile and covered in small, claw-like projections called papillae, aiding in grasping leaves.",
+" giraffes have a spotted pattern that varies among individuals, serving as camouflage in the savanna.",
+" their legs are long and slender, with hooves that are wide and splayed to support their weight.",
+" overall, giraffes have a graceful yet powerful build, designed for reaching high foliage."],
+
+'guineaFowl':[
+" a guinea fowl is a bird with a compact body and a fan-shaped tail.",
+" its plumage is predominantly gray with white spots, giving it a speckled appearance.",
+" guinea fowls have a distinctive crest on their heads, which is usually black and horn-colored.",
+" they have a white face with a red wattle hanging down from the throat.",
+" their eyes are surrounded by a ring of bright blue skin.",
+" guinea fowls have strong, yellow legs and feet equipped with sharp claws.",
+" these birds are known for their loud, resonant call and their ability to run swiftly on the ground."],
+
+'hare':[
+" a hare is a medium-sized mammal with a long, powerful hind leg and a short, bushy tail.",
+" its fur is soft and dense, typically ranging in color from gray to brown, with white underparts.",
+" hares have large, round ears that are usually tipped with black.",
+" their eyes are large and positioned on the sides of the head, providing a wide field of vision.",
+" hares have a lean and muscular body, adapted for quick bursts of speed.",
+" they have long, agile front legs and large, robust hind legs with long, straight claws.",
+" overall, hares have a sleek, athletic appearance suited for their life as prey animals."],
+
+'hartebeest':[
+" a hartebeest is a large antelope with a sturdy build and a distinctively curved horn.",
+" its coat is reddish-brown to tan, with a lighter underbelly and a dark patch around the eyes and mouth.",
+" hartebeests have a pair of long, S-shaped horns that curve backward and inward.",
+" their heads are broad with a concave profile, and they have a noticeable ridge above the eyes.",
+" hartebeests have a stocky body with a deep chest and a muscular neck.",
+" their legs are long and slender, with hooves that are spread to provide stability.",
+" overall, hartebeests have a robust and imposing presence, well-suited for their grazing habits."],
+
+'hippopotamus':[
+" a hippopotamus is a large, semi-aquatic mammal with a barrel-shaped body and short legs.",
+" its skin is thick and gray, often appearing pink due to blood vessels near the surface.",
+" hippos have a wide mouth with large, tusk-like canine teeth that can reach up to 2 feet in length.",
+" their eyes and ears are located high on their heads, allowing them to see and hear while mostly submerged.",
+" hippos have a short, stubby tail and a thick layer of fat beneath their skin.",
+" their legs are short and wide, adapted for walking on the riverbed.",
+" overall, hippos have a massive and powerful build, reflecting their dominance in aquatic environments."],
+
+'honeyBadger':[
+" a honey badger is a small, stocky mammal with a thick, loose-fitting black and white striped coat.",
+" its fur is dense and wiry, providing protection against bites and scratches.",
+" honey badgers have a distinctive white stripe running from the top of the head to the tip of the tail.",
+" their heads are small and rounded, with a short, pointed snout.",
+" honey badgers have small, round ears and small, dark eyes.",
+" they possess strong jaws and sharp, non-retractable claws used for digging and fighting.",
+" overall, honey badgers have a tough and resilient appearance, well-suited for their aggressive nature."],
+
+'hyenaSpotted':[
+" a spotted hyena is a carnivorous mammal with a robust build and a distinctive laugh-like vocalization.",
+" its coat is a mixture of brown and black spots on a tan background, with a pale belly.",
+" spotted hyenas have a broad head with a powerful jaw and large, sharp teeth.",
+" their ears are round and upright, and their eyes are small but keen.",
+" they have a long, bushy tail that is often held erect when running.",
+" spotted hyenas have strong legs and a flexible spine, enabling them to run at high speeds.",
+" overall, spotted hyenas have a powerful and agile appearance, reflecting their role as apex predators."],
+
+'hyenaStriped':[
+" a striped hyena is a carnivorous mammal with a slender build and a pale, striped coat.",
+" its coat has dark brown or black vertical stripes, similar to a tiger, but less distinct.",
+" striped hyenas have a broad head with a pointed snout and powerful jaws.",
+" their eyes are small and set far apart, with a keen sense of smell.",
+" they have a long, bushy tail that is often carried horizontally.",
+" striped hyenas have long, slender legs and a flexible spine, adapted for both running and climbing.",
+" overall, striped hyenas have a lean and agile appearance, reflecting their scavenging and hunting habits."],
+
+'impala':[
+" an impala is a medium-sized antelope with a slender build and striking spiral horns in males.",
+" its coat is a reddish-brown with a white underbelly, and a black stripe runs along the lower part of its body.",
+" male impalas have long, spiral horns that curve backward and outward, up to 3 feet in length.",
+" their heads are relatively small with a narrow snout and large ears.",
+" impalas have a long, slender neck and a deep chest.",
+" their legs are long and muscular, with hooves that are spread to provide stability.",
+" overall, impalas have a graceful and athletic appearance, well-suited for their life as browsers."],
+
+'jackal':[
+" a jackal is a small, slender carnivorous mammal with a bushy tail and a distinctive howl.",
+" its coat is typically sandy or gray, with a darker stripe along the back and tail.",
+" jackals have a pointed snout and large, pointed ears that can swivel independently.",
+" their eyes are large and expressive, with a keen sense of sight and hearing.",
+" jackals have long, slender legs and a lithe body, adapted for speed and agility.",
+" their paws are small and padded, with non-retractable claws.",
+" overall, jackals have a lean and agile appearance, reflecting their role as opportunistic hunters and scavengers."],
+
+'koriBustard':[
+" a kori bustard is a large, ground-dwelling bird with a distinctive appearance and flight capabilities.",
+" its plumage is predominantly light brown with a white underbelly and a black stripe across the breast.",
+" kori bustards have a large, broad bill with a hooked tip and a yellow cere.",
+" their eyes are large and set far apart, with a keen sense of vision.",
+" kori bustards have long, powerful legs and a short, broad tail.",
+" their wings are long and pointed, capable of supporting their heavy bodies in flight.",
+" overall, kori bustards have a majestic and powerful appearance, well-suited for their habitat."],
+
+'leopard':[
+" a leopard is a large, carnivorous cat with a spotted coat and a powerful build.",
+" its coat is yellowish-brown with black rosettes, each containing black spots.",
+" leopards have a broad head with a short, broad snout and large, piercing eyes.",
+" their ears are small and rounded, with tufts of black hair at the tips.",
+" leopards have a long, muscular body with a thick, spotted tail.",
+" their legs are long and powerful, with large, retractable claws.",
+" overall, leopards have a sleek and agile appearance, reflecting their stealth and strength."],
+
+'lionFemale':[
+" a female lion is a large, powerful carnivorous cat with a tawny coat and a slender build.",
+" her coat is a uniform tawny color with faint black spots, less prominent than those of a leopard.",
+" female lions have a broad head with a short, broad snout and large, amber eyes.",
+" their ears are small and rounded, with tufts of black hair at the tips.",
+" female lions have a long, muscular body with a thick, spotted tail.",
+" their legs are long and powerful, with large, retractable claws.",
+" overall, female lions have a majestic and powerful appearance, reflecting their role as dominant members of the pride."],
+
+'lionMale':[
+" a male lion is a large, powerful carnivorous cat with a tawny coat and a distinctive mane.",
+" his coat is a uniform tawny color with faint black spots, less prominent than those of a leopard.",
+" male lions have a broad head with a short, broad snout and large, amber eyes.",
+" their ears are small and rounded, with tufts of black hair at the tips.",
+" male lions have a long, muscular body with a thick, spotted tail.",
+" their legs are long and powerful, with large, retractable claws.",
+" male lions are distinguished by their thick mane, which ranges in color from light gold to dark brown and can extend to the shoulders and back.",
+" overall, male lions have an imposing and majestic appearance, symbolizing power and leadership."],
+
+'mongoose':[
+" a mongoose is a small, agile mammal with a slender body and a bushy tail.",
+" its coat is typically brown or gray with dark markings, though colors vary among species.",
+" mongooses have a small, elongated head with a pointed snout and large, round eyes.",
+" their ears are small and rounded, and they have whiskers on their faces and legs.",
+" mongooses have long, slender legs and a lithe body, adapted for speed and agility.",
+" their paws are small and padded, with non-retractable claws.",
+" overall, mongooses have a lean and agile appearance, reflecting their role as opportunistic hunters and scavengers."],
+
+'ostrich':[
+" an ostrich is a large, flightless bird with a long neck and legs.",
+" its plumage is primarily white with black and gray feathers on the wings and tail.",
+" ostriches have a long, thin neck with a small head and large, round eyes.",
+" their bills are long and slender, ending in a hooked tip.",
+" ostriches have long, powerful legs with two toes, each equipped with a large, clawed foot.",
+" their bodies are long and streamlined, with a small, featherless head.",
+" ostriches have a long, broad tail with long, wispy feathers.",
+" overall, ostriches have a striking and imposing appearance, well-suited for their life on the savanna."],
+
+'porcupine':[
+" a porcupine is a large rodent characterized by its thick, spiny coat of quills.",
+" a porcupine’s quills are typically brown or black, with white tips, and are barbed at the tip.",
+" porcupines have a rounded body shape with short legs and a bushy tail.",
+" their faces are small and round, with small eyes and a blunt snout.",
+" porcupines have large, flat teeth adapted for gnawing on bark and wood.",
+" they are mostly nocturnal and use their sharp claws for climbing trees and digging dens.",
+" porcupines have a defensive mechanism where they can release their quills when threatened."],
+
+'reedbuck':[
+" a reedbuck is a medium-sized antelope with slender legs and a long neck.",
+" reedbucks have a reddish-brown coat with white underbellies and a white rump patch.",
+" they have a distinctive white ring around their eyes and a dark stripe along their back.",
+" reedbucks have small, pointed ears and a small, straight horn (only in males).",
+" their hooves are broad and slightly webbed, ideal for walking on soft ground.",
+" reedbucks are generally shy and prefer to hide in dense vegetation.",
+" they are excellent swimmers and can escape predators by entering water."],
+
+'reptiles':[
+" reptiles are cold-blooded vertebrates with scaly skin, usually laying eggs on land.",
+" reptiles vary widely in size and shape, from small lizards to large crocodiles.",
+" their skin is covered in scales which can be smooth or bumpy, and is often colored for camouflage.",
+" most reptiles have four limbs, though some species like snakes have evolved to lose them.",
+" reptiles have a three-chambered heart (except for crocodilians, which have a four-chambered heart).",
+" they are found in diverse habitats including deserts, forests, and aquatic environments.",
+" reptiles breathe through lungs and have a backbone made of vertebrae."],
+
+'rhinoceros':[
+" a rhinoceros is a large herbivorous mammal with thick, armored skin.",
+" rhinos have a distinctive horn on their nose, which varies in number and shape between species.",
+" their skin is tough and gray, covered in plates called epidermal scales.",
+" rhinos have a small brain relative to their body size and a short tail.",
+" they have a wide mouth with lips adapted for grazing and browsing.",
+" rhinos have poor eyesight but excellent hearing and smell.",
+" they are known for their solitary nature and territorial behavior."],
+
+'rodents':[
+" rodents are small mammals characterized by their large, chisel-like incisors that grow continuously.",
+" their bodies are generally small and compact, with fur that can vary in color from brown to gray.",
+" rodents have long, sensitive whiskers and small, rounded ears.",
+" they have a variety of body shapes depending on the species, from the sleek body of a mouse to the stocky build of a beaver.",
+" rodents are highly adaptable and can be found in almost every habitat on Earth.",
+" they are primarily nocturnal and feed on a variety of foods, including seeds, nuts, and plants.",
+" rodents are known for their rapid reproduction rates and ability to burrow."],
+
+'secretaryBird':[
+" a secretary bird is a tall, terrestrial bird of prey with a distinctive crest of feathers on its head.",
+" secretary birds have long legs and toes, adapted for running and hunting on the ground.",
+" their plumage is primarily gray with black and white markings, giving them a striking appearance.",
+" they have a long, snake-like neck and a hooked bill, both adaptations for capturing prey.",
+" secretary birds have keen eyesight and can spot prey from a distance.",
+" they hunt by stomping on insects and small animals with their powerful feet before swallowing them whole.",
+" secretary birds are known for their unique method of flight, with their long legs trailing behind them."],
+
+'serval':[
+" a serval is a medium-sized wild cat with a slender body and long legs.",
+" servals have a tawny coat covered in black spots and stripes, providing excellent camouflage.",
+" they have a small head with large, rounded ears and large, expressive eyes.",
+" servals have a long neck and a bushy tail with a black tip.",
+" their paws are large and have non-retractable claws, aiding in their ability to climb trees.",
+" servals are excellent climbers and jumpers, able to leap up to 12 feet vertically.",
+" they are nocturnal hunters, feeding on small mammals, birds, and insects."],
+
+'topi':[
+" a topi is an antelope with a distinctive white face and a dark brown body.",
+" topis have a high, lyre-shaped horns that curve backward and outward.",
+" their coat is short and glossy, with a black stripe running down the spine.",
+" topis have a slender body with long legs, allowing them to run swiftly.",
+" they have a small head with large ears and a pointed snout.",
+" topis are highly social and live in large herds.",
+" they are found in grasslands and open savannas, where they graze on grasses."],
+
+'vervetMonkey':[
+" a vervet monkey is a small, arboreal primate with a greenish-gray back and yellow underbelly.",
+" vervet monkeys have a distinctively blue face framed by white hair, with black hands and feet.",
+" they have a small head with large, expressive eyes and a pink nose.",
+" vervet monkeys have a long, prehensile tail that they use for balance while climbing.",
+" their hands and feet are dexterous, with opposable thumbs and fingers.",
+" vervet monkeys are highly social and live in complex multi-male, multi-female groups.",
+" they are omnivorous, eating fruits, leaves, insects, and small animals."],
+
+'warthog':[
+" a warthog is a wild pig with a distinctive appearance, featuring two pairs of large, fleshy warts on its face.",
+" warthogs have a brownish-gray coat with sparse hair, making them appear almost bald.",
+" they have a long, muscular body with short legs and a broad head.",
+" warthogs have a pair of large, curved tusks that protrude from their lower jaw.",
+" their eyes are small and set far back on their heads, providing good peripheral vision.",
+" warthogs are known for their unique behavior of wallowing in mud to protect their skin from sunburn and insect bites.",
+" they are primarily grazers and live in open grasslands and savannas."],
+
+'waterbuck':[
+" a waterbuck is a large antelope with a robust body and a distinctive white ring around its rump.",
+" waterbucks have a reddish-brown coat that becomes more gray with age.",
+" they have a long, narrow face with a white blaze on their forehead.",
+" waterbucks have spiral horns that curve backwards and are present only in males.",
+" their ears are large and mobile, helping them detect predators.",
+" waterbucks are excellent swimmers and often rest in water to cool off and avoid biting flies.",
+" they are found in wetland areas and near water sources, where they graze on grasses."],
+
+'wildcat':[
+" a wildcat is a small, wild felid with a tawny coat covered in black spots and stripes.",
+" wildcats have a slender body with long legs and a bushy tail.",
+" they have a small head with large, round eyes and pointed ears.",
+" wildcats have retractable claws and sharp, curved teeth adapted for hunting.",
+" their coat is dense and provides excellent camouflage in their forest habitats.",
+" wildcats are solitary and primarily nocturnal, feeding on small mammals and birds.",
+" they are skilled climbers and can take refuge in trees to avoid predators."],
+
+'wildebeest':[
+" a wildebeest is a large, bovine antelope with a distinctive face and horns.",
+" wildebeests have a grayish-brown coat with a darker mane and beard.",
+" they have a square, flat face with a pair of horns that curve forward and then downward.",
+" wildebeests have a long, muscular neck and a broad, deep chest.",
+" their eyes are set far apart, providing good binocular vision.",
+" wildebeests are famous for their annual migration across the Serengeti, seeking fresh grazing grounds.",
+" they are herd animals and rely on each other for protection against predators."],
+
+'zebra':[
+" a zebra is a large, striped equine with a black and white coat.",
+" zebras have a stocky build with long legs and a long neck.",
+" they have a distinctive pattern of black and white stripes that varies between individuals.",
+" zebras have a small head with large, round ears and a black muzzle.",
+" their hooves are hard and adapted for running on rough terrain.",
+" zebras are social animals and live in herds, using their stripes for camouflage and recognition.",
+" they are herbivores, primarily feeding on grasses and leaves."],
+
+'zorilla':[
+" a zorilla is a small, carnivorous mammal closely related to the skunk, known for its potent spray.",
+" zorillas have a black and white striped coat that resembles a skunk, providing a warning signal to predators.",
+" they have a small head with a long snout and small, rounded ears.",
+" zorillas have short legs and a bushy tail.",
+" their anal glands produce a strong-smelling secretion as a defense mechanism.",
+" zorillas are nocturnal and feed on insects, small mammals, and birds.",
+" they are found in grasslands and savannas, where they burrow for shelter."],
+    }
+
+camera_trap_templates_terra_Qwen = {
+'badger':[
+"a badger is a mammal with a stout body and short sturdy legs",
+"a badger’s fur is coarse and typically grayish-black",
+"badgers often feature a white stripe running from the nose to the back of the head dividing into two stripes along the sides of the body to the base of the tail",
+"badgers have broad flat heads with small eyes and ears",
+"badger noses are elongated and tapered ending in a black muzzle",
+"badgers possess strong well-developed claws adapted for digging burrows",
+"overall badgers have a rugged and muscular appearance suited for their burrowing lifestyle"],
+
+'bird':[
+"birds are warm-blooded vertebrates with feathers covering their bodies",
+"they have a beak or bill instead of teeth, which varies in shape depending on diet",
+"most birds have two wings and two legs, though some species have adaptations like flightless wings",
+"their eyes are large and prominent, aiding in vision and often featuring colorful irises",
+"birds have lightweight skeletons made primarily of hollow bones, which help them fly",
+"they lay eggs, usually in nests, which can vary greatly in construction and location",
+"birds exhibit a wide range of behaviors including migration, territoriality, and social interaction"],
+
+'bobcat':[
+"a bobcat is a medium-sized wild cat native to North America",
+"it has a tawny coat with dark spots and streaks, providing camouflage in its woodland habitat",
+"bobcats have a short, bobbed tail, which is how they got their name",
+"their ears are tufted at the tips, giving them excellent hearing",
+"bobcats have sharp, retractable claws and powerful jaws adapted for hunting",
+"they are solitary animals and are known for their agility and stealth",
+"bobcats can climb trees and swim, but they prefer to hunt on the ground"],
+
+'car':[
+"a car is a four-wheeled motor vehicle designed for transporting people and goods",
+"cars come in various sizes and styles, including sedans, SUVs, and convertibles",
+"they are powered by internal combustion engines or electric motors",
+"cars have a closed cabin with windows and doors",
+"they are equipped with a steering wheel, pedals for acceleration and braking, and a gear shift",
+"cars are typically painted in a variety of colors and often have distinctive designs",
+"cars are a common mode of transportation in urban and rural areas"],
+
+'cat':[
+"a cat is a small, typically furry, carnivorous mammal",
+"cats have soft, dense fur that comes in a variety of colors and patterns",
+"they have sharp, retractable claws and keen senses, particularly sight and hearing",
+"cats have a flexible body and long, slender legs that allow them to jump great heights",
+"their faces are characterized by whiskers, large eyes, and a small nose",
+"cats are known for being independent and often playful",
+"they communicate through vocalizations such as meowing and purring"],
+
+'coyote':[
+"a coyote is a medium-sized wild canid found throughout North America",
+"its fur is typically grayish-brown, with lighter underparts and darker patches on the face and back",
+"coyotes have a bushy tail that is often carried low when walking",
+"they have large, pointed ears and yellow eyes",
+"coyotes have strong jaws and sharp teeth, ideal for tearing meat",
+"they are highly adaptable and can thrive in a variety of habitats, including forests, deserts, and urban areas",
+"coyotes are known for their howling calls, which can be heard over long distances"],
+
+'deer':[
+"deer are herbivorous mammals known for their graceful movements and antlers in males",
+"their coats are usually reddish-brown in summer and grayish-brown in winter, providing camouflage",
+"deer have slender legs, allowing them to run quickly to escape predators",
+"they have large, expressive eyes and a small nose with a prehensile upper lip",
+"males grow antlers annually, which they shed and regrow each year",
+"deer are generally shy and live in herds for protection",
+"they feed on vegetation such as grasses, leaves, and twigs"],
+
+'dog':[
+"a dog is a domesticated carnivorous mammal known for its loyalty and companionship",
+"dogs have a wide variety of coat types and colors, ranging from short and smooth to long and fluffy",
+"they have sharp senses, including smell, hearing, and vision",
+"dogs have a strong sense of pack hierarchy and communicate through body language and vocalizations",
+"they are known for their ability to perform tasks such as guarding, herding, and assisting in search and rescue operations",
+"dogs require regular exercise and socialization to maintain good health and behavior",
+"they form strong bonds with humans and are often referred to as 'man's best friend'"],
+
+'empty':[
+"an empty space is devoid of physical objects or contents",
+"it represents a lack of matter within a given area",
+"empty spaces can vary in size, from microscopic to vast cosmic voids",
+"they are crucial in physics for understanding concepts like vacuum and pressure",
+"empty spaces allow for movement and are essential for the functioning of many systems",
+"they can symbolize absence or emptiness in philosophical and artistic contexts",
+"empty spaces are also important in design and architecture for functionality and aesthetics"],
+
+'fox':[
+"a fox is a small to medium-sized carnivorous mammal known for its cunning and agility",
+"its fur is typically red or orange, though some species have gray or silver coats",
+"foxes have bushy tails, which they use for balance and communication",
+"they have large, expressive eyes and a narrow snout",
+"foxes have sharp teeth and claws, which they use for hunting small animals and insects",
+"they are highly adaptable and can be found in various habitats, including forests, grasslands, and urban areas",
+"foxes are known for their intelligence and are often depicted in folklore and literature"],
+
+'opossum':[
+"an opossum is a small, nocturnal marsupial found in North and South America",
+"its fur is grayish-white with black guard hairs, giving it a grizzled appearance",
+"opossums have a long, pointed snout and large, round ears",
+"they have a prehensile tail that they use for climbing and grasping objects",
+"opossums are known for playing dead (playing possum) as a defense mechanism",
+"they have opposable thumbs on their hind feet, which helps them grasp branches and food",
+"opossums are omnivorous and eat a variety of foods, including fruits, insects, and small animals"],
+
+'rabbit':[
+"a rabbit is a small, herbivorous mammal known for its long ears and hopping gait",
+"its fur is soft and can be various shades of brown, gray, or white",
+"rabbits have large, sensitive ears that can rotate independently to detect sounds",
+"they have long, powerful hind legs that enable them to leap great distances",
+"rabbits have small front paws and sharp claws used for digging burrows and grooming",
+"they are primarily nocturnal or crepuscular, feeding on grasses, leaves, and bark",
+"rabbits are known for their rapid reproduction and are a favorite prey for many predators"],
+
+'raccoon':[
+"a raccoon is a medium-sized nocturnal mammal with a distinctive black mask around its eyes",
+"its fur is thick and usually grayish-brown with black rings around its tail",
+"raccoons have dexterous front paws with five fingers, which they use for manipulating objects",
+"they have large, expressive eyes and a pointed snout",
+"raccoons are omnivorous and eat a variety of foods, including fruits, insects, and small animals",
+"they are known for their intelligence and problem-solving skills",
+"raccoons are adaptable and can be found in both urban and rural environments"],
+
+'rodent':[
+"a rodent is a small mammal characterized by continuously growing incisors",
+"they have a wide range of appearances, from tiny mice to larger species like beavers",
+"rodents have long, gnawing incisors that they use to cut through hard materials",
+"their fur can vary in color and texture, providing camouflage in their respective habitats",
+"rodents are known for their prolific breeding and are found in almost every part of the world",
+"they are omnivorous, eating plants, insects, and other small animals",
+"rodents play important roles in ecosystems, serving as both predator and prey"],
+
+'skunk':[
+"a skunk is a small, nocturnal mammal known for its potent odor as a defense mechanism",
+"its fur is typically black with white stripes running down its body",
+"skunks have short legs and a squat posture",
+"they have large, dark eyes and a small, pointed snout",
+"skunks can spray a foul-smelling liquid from their anal glands to deter predators",
+"they are omnivorous and eat a variety of foods, including insects, small animals, and plants",
+"skunks are generally solitary animals and are found in various habitats, including forests, grasslands, and suburban areas"],
+
+'squirrel':[
+"a squirrel is a small, agile mammal known for its bushy tail and ability to climb trees",
+"its fur can be various colors, including gray, brown, and red",
+"squirrels have large, bushy tails that they use for balance and communication",
+"they have sharp claws and teeth, which they use for climbing and gnawing",
+"squirrels are diurnal and are active during the day, especially in the morning and evening",
+"they are omnivorous and eat a variety of foods, including nuts, seeds, and fruits",
+"squirrels are known for their gathering behavior, storing food for the winter",]
+}
+
+model_clip, preprocess_clip = clip.load(f'ViT-B/16', device)
+model_clip.to(device)
+
+LLMs ={'LLAMA':[camera_trap_templates_serengeti_LLAMA,camera_trap_templates_terra_LLAMA],'Phi':[camera_trap_templates_serengeti_Phi,camera_trap_templates_terra_Phi],'Qwen':[camera_trap_templates_serengeti_Qwen,camera_trap_templates_terra_Qwen]}
+for LLM_i in LLMs.keys():
+    serengeti_templates=LLMs[LLM_i][0]
+    terra_templates= LLMs[LLM_i][1]
+
+    zeroshot_weights = zeroshot_classifier(class_indices_serengeti, camera_trap_templates1, serengeti_templates)
+    torch.save(zeroshot_weights,f'../features/Features_serengeti/standard_features/Text_features_16_{LLM_i}.pt')
+
+    zeroshot_weights = zeroshot_classifier(list(class_indices_terra.keys()), camera_trap_templates1, terra_templates)
+    torch.save(zeroshot_weights,f'../features/Features_terra/standard_features/Text_features_16_{LLM_i}.pt')
