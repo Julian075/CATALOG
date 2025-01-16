@@ -834,7 +834,7 @@ camera_trap_templates_serengeti_Phi = {
 "hyenas striped have a long, bushy tail that is used for balance and communication.",
 "overall hyenas striped have a sleek and agile appearance suited for their fast-paced lifestyle."],
 
-"hmpala":[
+"impala":[
 "an impala is a medium-sized antelope with a slender body and long, graceful legs.",
 "impalas have a reddish-brown coat with white underparts and a black stripe running from the face to the rump.",
 "impalas have long, slender ears that can move independently to detect predators.",

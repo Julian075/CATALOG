@@ -114,7 +114,7 @@ if __name__ == "__main__":
                 epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test=mode_model(model, model_params_path, mode)
                 Ablation_omg[LLM_i]=[epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test]
 
-            with open("Ablation_LLMis.json", "w") as json_file:
+            with open("Ablation_LLMs.json", "w") as json_file:
                 json.dump(Ablation_omg, json_file, indent=4)
 
 
