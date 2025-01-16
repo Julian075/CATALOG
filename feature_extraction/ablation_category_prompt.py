@@ -736,7 +736,7 @@ camera_trap_templates_serengeti = {
 }
 
 
-omg = np.arange(0, 1.1, 0.1)
+omg = round(np.arange(0, 1.1, 0.1),2)
 for mode_clip_i in mode_clip:
     model_clip, preprocess_clip = clip.load(f'ViT-B/{mode_clip_i}', device)
     model_clip.to(device)
