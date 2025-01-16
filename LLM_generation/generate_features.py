@@ -1730,7 +1730,7 @@ for LLM_i in LLMs.keys():
     terra_templates= LLMs[LLM_i][1]
 
     zeroshot_weights = zeroshot_classifier(class_indices_serengeti, camera_trap_templates1, serengeti_templates)
-    torch.save(zeroshot_weights,f'../features/Features_serengeti/standard_features/Text_features_16_{LLM_i}.pt')
+    torch.save(zeroshot_weights,f'features/Features_serengeti/standard_features/Text_features_16_{LLM_i}.pt')
 
     zeroshot_weights = zeroshot_classifier(list(class_indices_terra.keys()), camera_trap_templates1, terra_templates)
-    torch.save(zeroshot_weights,f'../features/Features_terra/standard_features/Text_features_16_{LLM_i}.pt')
+    torch.save(zeroshot_weights,f'features/Features_terra/standard_features/Text_features_16_{LLM_i}.pt')
