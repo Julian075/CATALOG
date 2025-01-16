@@ -1167,7 +1167,7 @@ camera_trap_templates_serengeti_Qwen ={
 " aardvarks have a unique zigzag pattern of muscles in their tongue, which helps them to flick it rapidly in and out of ant and termite nests.",
 " overall, aardvarks have a somewhat awkward appearance but are highly adapted for their underground lifestyle."],
 
-'ardwolf':[
+'aardwolf':[
 " an aardwolf is a small, nocturnal mammal with a slender body and long legs.",
 " aardwolves have short, dense fur that is typically a yellowish-brown or tawny color with black vertical stripes.",
 " they have a bushy tail that is often held upright when standing.",
