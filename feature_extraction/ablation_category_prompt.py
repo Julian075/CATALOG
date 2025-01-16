@@ -14,7 +14,7 @@ def zeroshot_classifier(classnames, templates1, templates2,omg):
             template_embeddings /= template_embeddings.norm(dim=-1, keepdim=True)
             template_embeddings = template_embeddings.mean(dim=0)
             template_embeddings /= template_embeddings.norm(dim=-1, keepdim=True)
-
+            template_embeddings = template_embeddings.unsqueeze(0)
 
             texts2 = [template for template in templates2[classname]]  # format with class
             texts2 = clip.tokenize(texts2).to(device)
@@ -22,6 +22,7 @@ def zeroshot_classifier(classnames, templates1, templates2,omg):
             description_embeddings /= description_embeddings.norm(dim=-1, keepdim=True)
             description_embeddings = description_embeddings.mean(dim=0)
             description_embeddings /= description_embeddings.norm(dim=-1, keepdim=True)
+            description_embeddings = description_embeddings.unsqueeze(0)
 
             class_embedding = torch.cat ((template_embeddings *(1-omg),description_embeddings * omg), dim = 0)
             class_embedding = class_embedding.mean(dim=0)
