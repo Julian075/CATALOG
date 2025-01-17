@@ -10,7 +10,6 @@ from models import CATALOG_Projections_fine_tuning as projections_fine_tuning
 from models import CATALOG_Projections_fine_tuning_last_layer as projections_fine_tuning_layer
 
 import json
-
 import argparse
 from utils import BaselineDataset,dataloader_baseline,TuningDataset,dataloader_Tuning,build_optimizer
 
@@ -21,6 +20,8 @@ from train.Base.Train_CATALOG_Base_out_domain import CATALOG_base
 
 from train.Fine_tuning.Train_CATALOG_Base_In_domain_Serengeti import CATALOG_base_In_domain_serengeti
 from train.Fine_tuning.Train_CATALOG_Base_In_domain_Terra import CATALOG_base_In_domain_terra
+
+import wandb
 
 def mode_model(model,model_params_path,mode):
     if mode == 'train':
@@ -38,7 +39,7 @@ if __name__ == "__main__":
     parser.add_argument('--model_version', type=str, default="Base", help='Model version')
     parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
-    parser.add_argument('--mode', type=str, default="train", help='define if you want train or test')
+    parser.add_argument('--mode', type=str, default="Out_domain_wanb", help='define if you want train or test')
     args = parser.parse_args()
 
     model_version = args.model_version
@@ -113,9 +114,104 @@ if __name__ == "__main__":
                 model_params_path = f'models/CATALOG_Base.pth'
                 epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test=mode_model(model, model_params_path, mode)
                 Ablation_omg[omg_i]=[epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test]
-
             with open("Ablation_Tem_vs_Des_op3.json", "w") as json_file:
                 json.dump(Ablation_omg, json_file, indent=4)
+
+        elif train_type == "Out_domain_wanb":
+            LLM='LLAMA'
+            wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
+            sweep_config = {
+                'method': 'random',
+                'metric': {
+                    'goal': 'minimize',
+                    'name': 'epoch_loss_val'
+                },
+                'name': 'LLAMA',
+                'parameters': {
+                    'batch_size': {
+                        'distribution': 'int_uniform',
+                        'min': 4,
+                        'max': 256
+                    },
+                    'dropout': {
+                        'distribution': 'uniform',
+                        'min': 0.1,
+                        'max': 0.5
+                    },
+                    'hidden_dim': {
+                        'distribution': 'int_uniform',
+                        'min': 512,
+                        'max': 2048
+                    },
+                    'lr': {
+                        'distribution': 'uniform',
+                        'min': 0,
+                        'max': 0.1
+                    },
+                    'momentum': {
+                        'distribution': 'uniform',
+                        'min': 0.8,
+                        'max': 0.99
+                    },
+                    'num_epochs': {
+                        'distribution': 'int_uniform',
+                        'min': 1,
+                        'max': 200
+                    },
+                    'num_layers': {
+                        'distribution': 'int_uniform',
+                        'min': 1,
+                        'max': 7
+                    },
+                    'opt': {
+                        'values': ['sgd']
+                    },
+                    'patience': {
+                        'value': 10
+                    },
+                    't': {
+                        'values': [0.1]
+                    },
+                    'weight_Clip': {
+                        'distribution': 'uniform',
+                        'min': 0.4,
+                        'max': 0.6
+                    }
+                }
+            }
+
+
+            ruta_features_train = "features/Features_serengeti/standard_features/Features_CATALOG_train_16.pt"
+            ruta_features_val = "features/Features_serengeti/standard_features/Features_CATALOG_val_16.pt"
+            ruta_features_test1 = "features/Features_terra/standard_features/Features_CATALOG_cis_test_16.pt"
+            ruta_features_test2 = "features/Features_terra/standard_features/Features_CATALOG_trans_test_16.pt"
+            path_text_feat1 = f"features/Features_serengeti/standard_features/Text_features_16_{LLM}.pt"#
+            path_text_feat2 = f"features/Features_terra/standard_features/Text_features_16_{LLM}.pt"#
+
+            # Crear el sweep
+            sweep_id = wandb.sweep(sweep_config, project="Ablation_LLMs")
+
+            def wanb_train(config=None):
+                with wandb.init(config=config):
+                    config=wandb.config
+
+                    model = CATALOG_base(weight_Clip=config.weight_Clip, num_epochs=config.num_epochs, batch_size=config.batch_size, num_layers=config.num_layers,
+                                         dropout=config.dropout, hidden_dim=config.hidden_dim, lr=config.hidden_dim, t=config.t, momentum=config.momentum
+                                         , patience=5, model=base, Dataset=BaselineDataset,
+                                         Dataloader=dataloader_baseline, version='base',
+                                         ruta_features_train=ruta_features_train,
+                                         ruta_features_val=ruta_features_val, ruta_features_test1=ruta_features_test1,
+                                         ruta_features_test2=ruta_features_test2, path_text_feat1=path_text_feat1,
+                                         path_text_feat2=path_text_feat2, build_optimizer=build_optimizer,
+                                         exp_name=f'LLAMA_{model_version}_{train_type}')
+
+                    model_params_path = f'models/CATALOG_Base_LLAMA.pth'
+                    epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test = mode_model(model,model_params_path,mode)
+                    wandb.log({"epoch_loss_cis_test": epoch_loss_cis_test,"epoch_acc_cis_test": epoch_acc_cis_test,"epoch_loss_trans_test": epoch_loss_trans_test,"epoch_acc_trans_test": epoch_acc_trans_test})
+            wandb.agent(sweep_id, function=wanb_train, count=100)
+
+
+
 
 
     elif model_version == "Fine_tuning":

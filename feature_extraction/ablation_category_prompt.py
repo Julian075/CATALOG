@@ -24,7 +24,7 @@ def zeroshot_classifier(classnames, templates1, templates2,omg):
             description_embeddings /= description_embeddings.norm(dim=-1, keepdim=True)
             description_embeddings = description_embeddings.unsqueeze(0)
 
-            class_embedding = torch.cat ((template_embeddings *(1-omg),description_embeddings * omg), dim = 0)
+            class_embedding = torch.cat ((template_embeddings *omg,description_embeddings * omg), dim = 0)
             class_embedding = class_embedding.mean(dim=0)
             class_embedding /= class_embedding.norm()  # Normalize final embedding
 
