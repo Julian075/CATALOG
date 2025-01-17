@@ -37,9 +37,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
     parser.add_argument('--model_version', type=str, default="Base", help='Model version')
-    parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
+    parser.add_argument('--train_type', type=str, default="Out_domain_wanb", help='Type of training')
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
-    parser.add_argument('--mode', type=str, default="Out_domain_wanb", help='define if you want train or test')
+    parser.add_argument('--mode', type=str, default="train", help='define if you want train or test')
     args = parser.parse_args()
 
     model_version = args.model_version
@@ -118,8 +118,10 @@ if __name__ == "__main__":
                 json.dump(Ablation_omg, json_file, indent=4)
 
         elif train_type == "Out_domain_wanb":
+            import os
             LLM='LLAMA'
-            wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
+            token = os.getenv("WandB_TOKE")
+            wandb.login(key=token)
             sweep_config = {
                 'method': 'random',
                 'metric': {
