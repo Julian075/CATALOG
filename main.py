@@ -135,7 +135,7 @@ if __name__ == "__main__":
                     'batch_size': {
                         'distribution': 'int_uniform',
                         'min': 4,
-                        'max': 256
+                        'max': 64
                     },
                     'dropout': {
                         'distribution': 'uniform',
