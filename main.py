@@ -140,6 +140,7 @@ if __name__ == "__main__":
                     'dropout': {
                         'distribution': 'uniform',
                         'min': 0.1,
+
                         'max': 0.5
                     },
                     'hidden_dim': {
@@ -179,7 +180,7 @@ if __name__ == "__main__":
                     'weight_Clip': {
                         'distribution': 'uniform',
                         'min': 0.4,
-                        'max': 0.6
+                        'max': 0.8
                     }
                 }
             }
@@ -207,9 +208,9 @@ if __name__ == "__main__":
                                          ruta_features_val=ruta_features_val, ruta_features_test1=ruta_features_test1,
                                          ruta_features_test2=ruta_features_test2, path_text_feat1=path_text_feat1,
                                          path_text_feat2=path_text_feat2, build_optimizer=build_optimizer,
-                                         exp_name=f'LLAMA_{model_version}_{train_type}')
+                                         exp_name=f'{LLM}_{model_version}_{train_type}')
 
-                    model_params_path = f'models/CATALOG_Base_LLAMA.pth'
+                    model_params_path = f'models/CATALOG_Base_{LLM}.pth'
                     epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test = mode_model(model,model_params_path,mode)
                     wandb.log({"epoch_loss_cis_test": epoch_loss_cis_test,"epoch_acc_cis_test": epoch_acc_cis_test,"epoch_loss_trans_test": epoch_loss_trans_test,"epoch_acc_trans_test": epoch_acc_trans_test})
             wandb.agent(sweep_id, function=wanb_train, count=100)
