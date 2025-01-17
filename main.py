@@ -40,12 +40,15 @@ if __name__ == "__main__":
     parser.add_argument('--train_type', type=str, default="Out_domain_wanb", help='Type of training')
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
     parser.add_argument('--mode', type=str, default="train", help='define if you want train or test')
+
+    parser.add_argument('--LLM', type=str, default="LLAMA", help='define LLM')
     args = parser.parse_args()
 
     model_version = args.model_version
     train_type = args.train_type
     dataset=args.dataset
     mode = args.mode
+    LLM=args.LLM
 
 
 
@@ -119,7 +122,6 @@ if __name__ == "__main__":
 
         elif train_type == "Out_domain_wanb":
             import os
-            LLM='LLAMA'
             token = os.getenv("WandB_TOKE")
             wandb.login(key=token)
             sweep_config = {
@@ -128,7 +130,7 @@ if __name__ == "__main__":
                     'goal': 'minimize',
                     'name': 'epoch_loss_val'
                 },
-                'name': 'LLAMA',
+                'name': LLM,
                 'parameters': {
                     'batch_size': {
                         'distribution': 'int_uniform',
@@ -172,7 +174,7 @@ if __name__ == "__main__":
                         'value': 10
                     },
                     't': {
-                        'values': [0.1]
+                        'values': [1,0.1,0.01]
                     },
                     'weight_Clip': {
                         'distribution': 'uniform',
