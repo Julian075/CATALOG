@@ -222,7 +222,7 @@ if __name__ == "__main__":
                     model_params_path_wb = f'models/CATALOG_Base_{LLM}.pth'
                     loss_cis_test, acc_cis_test, loss_trans_test, acc_trans_test = mode_model(model_wb,model_params_path_wb,mode)
                     wandb.log({"loss_cis_test": loss_cis_test,"acc_cis_test": acc_cis_test,"loss_trans_test": loss_trans_test,"acc_trans_test": acc_trans_test})
-            wandb.agent(sweep_id, function=wanb_train, count=1)
+            wandb.agent(sweep_id, function=wanb_train, count=100)
 
 
 
