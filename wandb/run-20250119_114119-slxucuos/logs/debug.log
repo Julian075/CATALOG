@@ -1,0 +1,47 @@
+2025-01-19 11:41:19,291 INFO    Thread-4  :9836 [wandb_setup.py:_flush():71] setting env: {'project': 'Ablation_LLMs', 'entity': 'maestria-julian', 'root_dir': '/home/julian/CATALOG', 'sweep_id': 'rlk6nju4', 'run_id': 'slxucuos', 'sweep_param_path': '/home/julian/CATALOG/wandb/sweep-rlk6nju4/config-slxucuos.yaml'}
+2025-01-19 11:41:19,292 INFO    Thread-4  :9836 [wandb_setup.py:_flush():71] setting login settings: {}
+2025-01-19 11:41:19,292 INFO    Thread-4  :9836 [wandb_init.py:_log_setup():357] Logging user logs to /home/julian/CATALOG/wandb/run-20250119_114119-slxucuos/logs/debug.log
+2025-01-19 11:41:19,292 INFO    Thread-4  :9836 [wandb_init.py:_log_setup():358] Logging internal logs to /home/julian/CATALOG/wandb/run-20250119_114119-slxucuos/logs/debug-internal.log
+2025-01-19 11:41:19,292 INFO    Thread-4  :9836 [wandb_init.py:init():390] calling init triggers
+2025-01-19 11:41:19,292 INFO    Thread-4  :9836 [wandb_init.py:init():395] wandb.init called with sweep_config: {'batch_size': 10, 'dropout': 0.11496455469944832, 'hidden_dim': 1152, 'lr': 0.016397341294798997, 'momentum': 0.8333991918412704, 'num_epochs': 55, 'num_layers': 2, 'opt': 'sgd', 'patience': 10, 't': 0.1, 'weight_Clip': 0.5515189282901923}
+config: {}
+2025-01-19 11:41:19,292 INFO    Thread-4  :9836 [wandb_init.py:init():435] starting backend
+2025-01-19 11:41:19,293 INFO    Thread-4  :9836 [backend.py:_multiprocessing_setup():94] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2025-01-19 11:41:19,299 INFO    Thread-4  :9836 [backend.py:ensure_launched():198] starting backend process...
+2025-01-19 11:41:19,303 INFO    Thread-4  :9836 [backend.py:ensure_launched():203] started backend process with pid: 9873
+2025-01-19 11:41:19,304 INFO    Thread-4  :9836 [wandb_init.py:init():444] backend started and connected
+2025-01-19 11:41:19,306 INFO    Thread-4  :9836 [wandb_run.py:_config_callback():911] config_cb None None {'batch_size': 10, 'dropout': 0.11496455469944832, 'hidden_dim': 1152, 'lr': 0.016397341294798997, 'momentum': 0.8333991918412704, 'num_epochs': 55, 'num_layers': 2, 'opt': 'sgd', 'patience': 10, 't': 0.1, 'weight_Clip': 0.5515189282901923}
+2025-01-19 11:41:19,307 INFO    Thread-4  :9836 [wandb_init.py:init():503] updated telemetry
+2025-01-19 11:41:19,319 INFO    Thread-4  :9836 [wandb_init.py:init():533] communicating current version
+2025-01-19 11:41:19,928 INFO    Thread-4  :9836 [wandb_init.py:init():538] got version response upgrade_message: "wandb version 0.19.4 is available!  To upgrade, please run:\n $ pip install wandb --upgrade"
+
+2025-01-19 11:41:19,929 INFO    Thread-4  :9836 [wandb_init.py:init():548] communicating run to backend with 30 second timeout
+2025-01-19 11:41:20,279 INFO    Thread-4  :9836 [wandb_init.py:init():576] starting run threads in backend
+2025-01-19 11:41:21,642 INFO    Thread-4  :9836 [wandb_run.py:_console_start():1693] atexit reg
+2025-01-19 11:41:21,643 INFO    Thread-4  :9836 [wandb_run.py:_redirect():1567] redirect: SettingsConsole.REDIRECT
+2025-01-19 11:41:21,643 INFO    Thread-4  :9836 [wandb_run.py:_redirect():1572] Redirecting console.
+2025-01-19 11:41:21,643 ERROR   Thread-4  :9836 [wandb_run.py:_redirect():1631] Failed to redirect.
+Traceback (most recent call last):
+  File "/home/julian/miniconda3/envs/CATALOG/lib/python3.8/site-packages/wandb/sdk/wandb_run.py", line 1624, in _redirect
+    out_redir.install()
+  File "/home/julian/miniconda3/envs/CATALOG/lib/python3.8/site-packages/wandb/sdk/lib/redirect.py", line 709, in install
+    _WSCH.add_fd(self._pipe_read_fd)
+  File "/home/julian/miniconda3/envs/CATALOG/lib/python3.8/site-packages/wandb/sdk/lib/redirect.py", line 659, in add_fd
+    self._register()
+  File "/home/julian/miniconda3/envs/CATALOG/lib/python3.8/site-packages/wandb/sdk/lib/redirect.py", line 644, in _register
+    old_handler = signal.signal(signal.SIGWINCH, lambda *_: None)
+  File "/home/julian/miniconda3/envs/CATALOG/lib/python3.8/signal.py", line 47, in signal
+    handler = _signal.signal(_enum_to_int(signalnum), _enum_to_int(handler))
+ValueError: signal only works in main thread
+2025-01-19 11:41:21,644 INFO    Thread-4  :9836 [wandb_init.py:init():603] run started, returning control to user process
+2025-01-19 11:43:57,801 INFO    Thread-4  :9836 [wandb_run.py:finish():1347] finishing run maestria-julian/Ablation_LLMs/slxucuos
+2025-01-19 11:43:57,801 INFO    Thread-4  :9836 [wandb_run.py:_atexit_cleanup():1663] got exitcode: 1
+2025-01-19 11:43:57,802 INFO    Thread-4  :9836 [wandb_run.py:_restore():1635] restore
+2025-01-19 11:43:57,805 INFO    Thread-4  :9836 [wandb_run.py:_wait_for_finish():1793] got exit ret: file_counts {
+  wandb_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 762
+  total_bytes: 762
+}
+

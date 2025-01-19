@@ -1,0 +1,374 @@
+2025-01-19 12:12:42,388 INFO    MainThread:12007 [internal.py:wandb_internal():88] W&B internal server running at pid: 12007, started at: 2025-01-19 12:12:42.387938
+2025-01-19 12:12:42,390 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: check_version
+2025-01-19 12:12:42,390 INFO    WriterThread:12007 [datastore.py:open_for_write():77] open: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/run-iricm0in.wandb
+2025-01-19 12:12:42,391 DEBUG   SenderThread:12007 [sender.py:send():185] send: header
+2025-01-19 12:12:42,391 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: check_version
+2025-01-19 12:12:43,123 DEBUG   SenderThread:12007 [sender.py:send():185] send: run
+2025-01-19 12:12:43,389 INFO    SenderThread:12007 [dir_watcher.py:__init__():169] watching files in: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files
+2025-01-19 12:12:43,389 INFO    SenderThread:12007 [sender.py:_start_run_threads():768] run started: iricm0in with start time 1737285162
+2025-01-19 12:12:43,390 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:12:43,390 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:12:43,392 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: run_start
+2025-01-19 12:12:43,403 DEBUG   HandlerThread:12007 [meta.py:__init__():40] meta init
+2025-01-19 12:12:43,403 DEBUG   HandlerThread:12007 [meta.py:__init__():54] meta init done
+2025-01-19 12:12:43,403 DEBUG   HandlerThread:12007 [meta.py:probe():212] probe
+2025-01-19 12:12:43,417 DEBUG   HandlerThread:12007 [meta.py:_setup_git():202] setup git
+2025-01-19 12:12:43,434 DEBUG   HandlerThread:12007 [meta.py:_setup_git():209] setup git done
+2025-01-19 12:12:43,434 DEBUG   HandlerThread:12007 [meta.py:_save_pip():58] save pip
+2025-01-19 12:12:43,434 DEBUG   HandlerThread:12007 [meta.py:_save_pip():72] save pip done
+2025-01-19 12:12:43,435 DEBUG   HandlerThread:12007 [meta.py:_save_conda():79] save conda
+2025-01-19 12:12:44,390 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_created():217] file/dir created: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/requirements.txt
+2025-01-19 12:12:44,391 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_created():217] file/dir created: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/conda-environment.yaml
+2025-01-19 12:12:44,391 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_created():217] file/dir created: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:12:44,746 DEBUG   HandlerThread:12007 [meta.py:_save_conda():87] save conda done
+2025-01-19 12:12:44,746 DEBUG   HandlerThread:12007 [meta.py:probe():250] probe done
+2025-01-19 12:12:44,748 DEBUG   SenderThread:12007 [sender.py:send():185] send: files
+2025-01-19 12:12:44,749 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-metadata.json with policy now
+2025-01-19 12:12:44,752 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:12:44,753 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:12:45,306 INFO    Thread-11 :12007 [upload_job.py:push():137] Uploaded file /tmp/tmphcekzlk5wandb/m2h48zgs-wandb-metadata.json
+2025-01-19 12:12:45,390 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/conda-environment.yaml
+2025-01-19 12:12:45,390 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_created():217] file/dir created: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/output.log
+2025-01-19 12:12:45,390 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_created():217] file/dir created: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-metadata.json
+2025-01-19 12:13:00,611 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:13:00,611 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:13:11,582 DEBUG   SenderThread:12007 [sender.py:send():185] send: stats
+2025-01-19 12:13:16,006 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:13:16,006 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:13:31,240 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:13:31,241 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:13:41,734 DEBUG   SenderThread:12007 [sender.py:send():185] send: stats
+2025-01-19 12:13:43,656 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:13:43,656 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:13:43,657 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:13:44,407 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:13:44,654 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:13:44,654 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:13:44,655 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:13:45,408 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:13:46,477 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:13:46,478 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:14:01,955 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:14:01,955 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:14:11,886 DEBUG   SenderThread:12007 [sender.py:send():185] send: stats
+2025-01-19 12:14:17,322 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:14:17,322 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:14:19,909 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:14:19,910 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:14:19,910 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:14:20,415 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:14:20,896 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:14:20,897 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:14:20,897 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:14:21,416 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:14:32,674 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:14:32,674 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:14:42,053 DEBUG   SenderThread:12007 [sender.py:send():185] send: stats
+2025-01-19 12:14:48,041 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:14:48,041 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:14:56,446 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:14:56,446 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:14:56,447 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:14:57,424 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:14:57,452 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:14:57,453 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:14:57,453 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:14:58,425 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:15:03,526 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:15:03,526 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:15:12,192 DEBUG   SenderThread:12007 [sender.py:send():185] send: stats
+2025-01-19 12:15:19,001 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:15:19,001 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:15:32,836 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:15:32,837 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:15:32,837 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:15:33,434 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:15:33,831 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:15:33,831 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:15:33,832 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:15:34,245 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:15:34,245 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:15:34,434 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:15:42,339 DEBUG   SenderThread:12007 [sender.py:send():185] send: stats
+2025-01-19 12:15:49,721 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:15:49,721 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:16:05,088 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:16:05,088 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:16:09,092 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:16:09,092 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:16:09,094 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:16:09,443 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:16:10,108 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:16:10,108 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:16:10,109 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:16:10,443 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:16:12,496 DEBUG   SenderThread:12007 [sender.py:send():185] send: stats
+2025-01-19 12:16:20,413 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:16:20,414 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:16:35,640 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:16:35,640 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:16:42,648 DEBUG   SenderThread:12007 [sender.py:send():185] send: stats
+2025-01-19 12:16:45,835 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:16:45,836 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:16:45,836 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:16:46,451 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:16:46,865 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:16:46,866 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:16:46,866 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:16:47,452 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:16:50,854 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:16:50,855 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:17:06,042 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:17:06,042 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:17:12,814 DEBUG   SenderThread:12007 [sender.py:send():185] send: stats
+2025-01-19 12:17:21,216 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:17:21,216 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:17:23,024 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:17:23,024 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:17:23,026 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:17:23,460 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:17:24,035 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:17:24,035 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:17:24,036 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:17:24,461 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:17:36,447 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:17:36,447 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:17:42,966 DEBUG   SenderThread:12007 [sender.py:send():185] send: stats
+2025-01-19 12:17:51,661 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:17:51,661 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:18:00,277 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:18:00,277 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:18:00,278 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:18:00,470 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:18:01,311 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:18:01,311 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:18:01,311 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:18:01,470 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:18:06,888 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:18:06,888 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:18:13,124 DEBUG   SenderThread:12007 [sender.py:send():185] send: stats
+2025-01-19 12:18:22,080 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:18:22,080 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:18:37,346 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:18:37,346 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:18:37,678 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:18:37,678 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:18:37,679 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:18:38,481 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:18:38,695 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:18:38,695 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:18:38,695 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:18:39,481 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:18:43,287 DEBUG   SenderThread:12007 [sender.py:send():185] send: stats
+2025-01-19 12:18:52,578 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:18:52,579 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:19:07,824 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:19:07,825 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:19:13,444 DEBUG   SenderThread:12007 [sender.py:send():185] send: stats
+2025-01-19 12:19:14,446 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:19:14,446 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:19:14,446 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:19:14,490 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:19:15,448 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:19:15,448 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:19:15,448 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:19:15,490 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:19:23,289 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:19:23,290 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:19:38,533 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:19:38,534 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:19:43,605 DEBUG   SenderThread:12007 [sender.py:send():185] send: stats
+2025-01-19 12:19:50,388 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:19:50,388 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:19:50,389 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:19:50,499 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:19:51,390 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:19:51,390 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:19:51,391 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:19:51,499 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:19:54,016 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:19:54,017 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:20:09,499 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:20:09,499 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:20:13,757 DEBUG   SenderThread:12007 [sender.py:send():185] send: stats
+2025-01-19 12:20:24,984 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:20:24,984 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:20:27,186 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:20:27,186 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:20:27,187 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:20:27,508 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:20:28,185 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:20:28,185 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:20:28,185 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:20:28,508 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:20:40,399 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:20:40,399 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:20:43,902 DEBUG   SenderThread:12007 [sender.py:send():185] send: stats
+2025-01-19 12:20:55,827 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:20:55,827 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:21:03,456 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:21:03,456 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:21:03,457 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:21:03,517 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:21:04,460 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:21:04,460 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:21:04,460 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:21:04,517 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:21:11,309 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:21:11,310 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:21:14,060 DEBUG   SenderThread:12007 [sender.py:send():185] send: stats
+2025-01-19 12:21:26,791 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:21:26,791 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:21:40,202 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:21:40,203 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:21:40,203 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:21:40,527 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:21:41,200 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:21:41,200 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:21:41,200 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:21:41,527 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:21:42,121 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:21:42,121 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:21:44,213 DEBUG   SenderThread:12007 [sender.py:send():185] send: stats
+2025-01-19 12:21:57,759 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:21:57,759 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:22:13,511 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:22:13,511 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:22:14,418 DEBUG   SenderThread:12007 [sender.py:send():185] send: stats
+2025-01-19 12:22:28,749 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:22:28,749 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:22:44,033 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 12:22:44,034 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 12:22:44,515 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:22:44,516 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:22:44,519 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:22:44,548 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:22:44,636 DEBUG   SenderThread:12007 [sender.py:send():185] send: stats
+2025-01-19 12:22:46,236 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:22:46,237 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:22:46,237 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:22:46,549 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:22:49,200 DEBUG   SenderThread:12007 [sender.py:send():185] send: history
+2025-01-19 12:22:49,202 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:22:49,202 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:22:49,205 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: poll_exit
+2025-01-19 12:22:49,205 DEBUG   SenderThread:12007 [sender.py:send():185] send: telemetry
+2025-01-19 12:22:49,205 DEBUG   SenderThread:12007 [sender.py:send():185] send: exit
+2025-01-19 12:22:49,205 INFO    SenderThread:12007 [sender.py:send_exit():317] handling exit code: 0
+2025-01-19 12:22:49,205 INFO    SenderThread:12007 [sender.py:send_exit():319] handling runtime: 605
+2025-01-19 12:22:49,206 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:22:49,206 INFO    SenderThread:12007 [sender.py:send_exit():329] send defer
+2025-01-19 12:22:49,206 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: poll_exit
+2025-01-19 12:22:49,206 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: defer
+2025-01-19 12:22:49,206 INFO    HandlerThread:12007 [handler.py:handle_request_defer():147] handle defer: 0
+2025-01-19 12:22:49,207 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: defer
+2025-01-19 12:22:49,207 INFO    SenderThread:12007 [sender.py:send_request_defer():338] handle sender defer: 0
+2025-01-19 12:22:49,207 INFO    SenderThread:12007 [sender.py:transition_state():342] send defer: 1
+2025-01-19 12:22:49,207 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: defer
+2025-01-19 12:22:49,207 INFO    HandlerThread:12007 [handler.py:handle_request_defer():147] handle defer: 1
+2025-01-19 12:22:49,279 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: defer
+2025-01-19 12:22:49,279 INFO    SenderThread:12007 [sender.py:send_request_defer():338] handle sender defer: 1
+2025-01-19 12:22:49,279 INFO    SenderThread:12007 [sender.py:transition_state():342] send defer: 2
+2025-01-19 12:22:49,279 DEBUG   SenderThread:12007 [sender.py:send():185] send: stats
+2025-01-19 12:22:49,281 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: defer
+2025-01-19 12:22:49,281 INFO    HandlerThread:12007 [handler.py:handle_request_defer():147] handle defer: 2
+2025-01-19 12:22:49,281 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: defer
+2025-01-19 12:22:49,281 INFO    SenderThread:12007 [sender.py:send_request_defer():338] handle sender defer: 2
+2025-01-19 12:22:49,281 INFO    SenderThread:12007 [sender.py:transition_state():342] send defer: 3
+2025-01-19 12:22:49,282 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: defer
+2025-01-19 12:22:49,282 INFO    HandlerThread:12007 [handler.py:handle_request_defer():147] handle defer: 3
+2025-01-19 12:22:49,282 DEBUG   SenderThread:12007 [sender.py:send():185] send: summary
+2025-01-19 12:22:49,283 INFO    SenderThread:12007 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 12:22:49,283 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: defer
+2025-01-19 12:22:49,283 INFO    SenderThread:12007 [sender.py:send_request_defer():338] handle sender defer: 3
+2025-01-19 12:22:49,283 INFO    SenderThread:12007 [sender.py:transition_state():342] send defer: 4
+2025-01-19 12:22:49,284 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: defer
+2025-01-19 12:22:49,284 INFO    HandlerThread:12007 [handler.py:handle_request_defer():147] handle defer: 4
+2025-01-19 12:22:49,284 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: defer
+2025-01-19 12:22:49,284 INFO    SenderThread:12007 [sender.py:send_request_defer():338] handle sender defer: 4
+2025-01-19 12:22:49,308 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: poll_exit
+2025-01-19 12:22:49,550 INFO    Thread-8  :12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:22:49,665 INFO    SenderThread:12007 [sender.py:transition_state():342] send defer: 5
+2025-01-19 12:22:49,665 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: poll_exit
+2025-01-19 12:22:49,666 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: defer
+2025-01-19 12:22:49,666 INFO    HandlerThread:12007 [handler.py:handle_request_defer():147] handle defer: 5
+2025-01-19 12:22:49,666 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: defer
+2025-01-19 12:22:49,666 INFO    SenderThread:12007 [sender.py:send_request_defer():338] handle sender defer: 5
+2025-01-19 12:22:49,667 INFO    SenderThread:12007 [dir_watcher.py:finish():283] shutting down directory watcher
+2025-01-19 12:22:49,768 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: poll_exit
+2025-01-19 12:22:50,552 INFO    SenderThread:12007 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/config.yaml
+2025-01-19 12:22:50,553 INFO    SenderThread:12007 [dir_watcher.py:finish():313] scan: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files
+2025-01-19 12:22:50,553 INFO    SenderThread:12007 [dir_watcher.py:finish():327] scan save: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/output.log output.log
+2025-01-19 12:22:50,554 INFO    SenderThread:12007 [dir_watcher.py:finish():327] scan save: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json wandb-summary.json
+2025-01-19 12:22:50,554 INFO    SenderThread:12007 [dir_watcher.py:finish():327] scan save: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/requirements.txt requirements.txt
+2025-01-19 12:22:50,561 INFO    SenderThread:12007 [dir_watcher.py:finish():327] scan save: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/conda-environment.yaml conda-environment.yaml
+2025-01-19 12:22:50,561 INFO    SenderThread:12007 [dir_watcher.py:finish():327] scan save: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-metadata.json wandb-metadata.json
+2025-01-19 12:22:50,565 INFO    SenderThread:12007 [dir_watcher.py:finish():327] scan save: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/config.yaml config.yaml
+2025-01-19 12:22:50,570 INFO    SenderThread:12007 [sender.py:transition_state():342] send defer: 6
+2025-01-19 12:22:50,571 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: poll_exit
+2025-01-19 12:22:50,571 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: defer
+2025-01-19 12:22:50,577 INFO    HandlerThread:12007 [handler.py:handle_request_defer():147] handle defer: 6
+2025-01-19 12:22:50,577 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: defer
+2025-01-19 12:22:50,577 INFO    SenderThread:12007 [sender.py:send_request_defer():338] handle sender defer: 6
+2025-01-19 12:22:50,577 INFO    SenderThread:12007 [file_pusher.py:finish():177] shutting down file pusher
+2025-01-19 12:22:50,678 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: poll_exit
+2025-01-19 12:22:50,679 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: poll_exit
+2025-01-19 12:22:50,781 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: poll_exit
+2025-01-19 12:22:50,782 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: poll_exit
+2025-01-19 12:22:50,885 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: poll_exit
+2025-01-19 12:22:50,885 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: poll_exit
+2025-01-19 12:22:50,988 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: poll_exit
+2025-01-19 12:22:50,988 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: poll_exit
+2025-01-19 12:22:51,094 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: poll_exit
+2025-01-19 12:22:51,094 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: poll_exit
+2025-01-19 12:22:51,197 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: poll_exit
+2025-01-19 12:22:51,197 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: poll_exit
+2025-01-19 12:22:51,300 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: poll_exit
+2025-01-19 12:22:51,301 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: poll_exit
+2025-01-19 12:22:51,404 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: poll_exit
+2025-01-19 12:22:51,404 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: poll_exit
+2025-01-19 12:22:51,507 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: poll_exit
+2025-01-19 12:22:51,507 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: poll_exit
+2025-01-19 12:22:51,572 INFO    Thread-15 :12007 [upload_job.py:push():137] Uploaded file /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/config.yaml
+2025-01-19 12:22:51,577 INFO    Thread-14 :12007 [upload_job.py:push():137] Uploaded file /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/conda-environment.yaml
+2025-01-19 12:22:51,610 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: poll_exit
+2025-01-19 12:22:51,610 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: poll_exit
+2025-01-19 12:22:51,628 INFO    Thread-12 :12007 [upload_job.py:push():137] Uploaded file /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/wandb-summary.json
+2025-01-19 12:22:51,713 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: poll_exit
+2025-01-19 12:22:51,713 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: poll_exit
+2025-01-19 12:22:51,775 INFO    Thread-13 :12007 [upload_job.py:push():137] Uploaded file /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/files/requirements.txt
+2025-01-19 12:22:51,816 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: poll_exit
+2025-01-19 12:22:51,817 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: poll_exit
+2025-01-19 12:22:51,919 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: poll_exit
+2025-01-19 12:22:51,920 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: poll_exit
+2025-01-19 12:22:51,977 INFO    Thread-7  :12007 [sender.py:transition_state():342] send defer: 7
+2025-01-19 12:22:51,978 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: defer
+2025-01-19 12:22:51,978 INFO    HandlerThread:12007 [handler.py:handle_request_defer():147] handle defer: 7
+2025-01-19 12:22:51,979 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: defer
+2025-01-19 12:22:51,979 INFO    SenderThread:12007 [sender.py:send_request_defer():338] handle sender defer: 7
+2025-01-19 12:22:52,022 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: poll_exit
+2025-01-19 12:22:52,405 INFO    SenderThread:12007 [sender.py:transition_state():342] send defer: 8
+2025-01-19 12:22:52,405 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: poll_exit
+2025-01-19 12:22:52,406 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: defer
+2025-01-19 12:22:52,407 INFO    HandlerThread:12007 [handler.py:handle_request_defer():147] handle defer: 8
+2025-01-19 12:22:52,407 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: defer
+2025-01-19 12:22:52,407 INFO    SenderThread:12007 [sender.py:send_request_defer():338] handle sender defer: 8
+2025-01-19 12:22:52,407 INFO    SenderThread:12007 [sender.py:transition_state():342] send defer: 9
+2025-01-19 12:22:52,409 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: defer
+2025-01-19 12:22:52,409 DEBUG   SenderThread:12007 [sender.py:send():185] send: final
+2025-01-19 12:22:52,409 INFO    HandlerThread:12007 [handler.py:handle_request_defer():147] handle defer: 9
+2025-01-19 12:22:52,409 DEBUG   SenderThread:12007 [sender.py:send():185] send: footer
+2025-01-19 12:22:52,410 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: defer
+2025-01-19 12:22:52,410 INFO    SenderThread:12007 [sender.py:send_request_defer():338] handle sender defer: 9
+2025-01-19 12:22:52,510 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: poll_exit
+2025-01-19 12:22:52,511 DEBUG   SenderThread:12007 [sender.py:send_request():199] send_request: poll_exit
+2025-01-19 12:22:52,511 INFO    SenderThread:12007 [file_pusher.py:join():182] waiting for file pusher
+2025-01-19 12:22:52,896 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: get_summary
+2025-01-19 12:22:52,898 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: sampled_history
+2025-01-19 12:22:52,900 DEBUG   HandlerThread:12007 [handler.py:handle_request():130] handle_request: shutdown
+2025-01-19 12:22:52,900 INFO    HandlerThread:12007 [handler.py:finish():731] shutting down handler
+2025-01-19 12:22:53,409 INFO    WriterThread:12007 [datastore.py:close():281] close: /home/julian/CATALOG/wandb/run-20250119_121242-iricm0in/run-iricm0in.wandb
+2025-01-19 12:22:53,895 INFO    SenderThread:12007 [sender.py:finish():1029] shutting down sender
+2025-01-19 12:22:53,895 INFO    SenderThread:12007 [file_pusher.py:finish():177] shutting down file pusher
+2025-01-19 12:22:53,895 INFO    SenderThread:12007 [file_pusher.py:join():182] waiting for file pusher
+2025-01-19 12:22:53,897 INFO    MainThread:12007 [internal.py:handle_exit():78] Internal process exited

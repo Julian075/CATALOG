@@ -122,7 +122,7 @@ if __name__ == "__main__":
 
         elif train_type == "Out_domain_wanb":
             import os
-            token = os.getenv("WandB_TOKE")
+            token ="282780c770de0083eddfa3c56402f555ee60e108" #os.getenv("WandB_TOKE")
             wandb.login(key=token)
             sweep_config = {
                 'method': 'random',
@@ -199,9 +199,18 @@ if __name__ == "__main__":
             def wanb_train(config=None):
                 with wandb.init(config=config):
                     config=wandb.config
+                    weight_clip = config.weight_Clip
+                    num_epochs = config.num_epochs
+                    batch_size = config.batch_size
+                    num_layers = config.num_layers
+                    dropout = config.dropout
+                    hidden_dim = config.hidden_dim
+                    learning_rate = config.lr
+                    temperature = config.t
+                    momentum = config.momentum
 
-                    model = CATALOG_base(weight_Clip=config.weight_Clip, num_epochs=config.num_epochs, batch_size=config.batch_size, num_layers=config.num_layers,
-                                         dropout=config.dropout, hidden_dim=config.hidden_dim, lr=config.hidden_dim, t=config.t, momentum=config.momentum
+                    model_wb = CATALOG_base(weight_Clip=weight_clip, num_epochs=num_epochs, batch_size=batch_size, num_layers=num_layers,
+                                         dropout=dropout, hidden_dim=hidden_dim, lr=learning_rate, t=temperature, momentum=momentum
                                          , patience=5, model=base, Dataset=BaselineDataset,
                                          Dataloader=dataloader_baseline, version='base',
                                          ruta_features_train=ruta_features_train,
@@ -210,10 +219,10 @@ if __name__ == "__main__":
                                          path_text_feat2=path_text_feat2, build_optimizer=build_optimizer,
                                          exp_name=f'{LLM}_{model_version}_{train_type}')
 
-                    model_params_path = f'models/CATALOG_Base_{LLM}.pth'
-                    epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test = mode_model(model,model_params_path,mode)
-                    wandb.log({"epoch_loss_cis_test": epoch_loss_cis_test,"epoch_acc_cis_test": epoch_acc_cis_test,"epoch_loss_trans_test": epoch_loss_trans_test,"epoch_acc_trans_test": epoch_acc_trans_test})
-            wandb.agent(sweep_id, function=wanb_train, count=100)
+                    model_params_path_wb = f'models/CATALOG_Base_{LLM}.pth'
+                    loss_cis_test, acc_cis_test, loss_trans_test, acc_trans_test = mode_model(model_wb,model_params_path_wb,mode)
+                    wandb.log({"loss_cis_test": loss_cis_test,"acc_cis_test": acc_cis_test,"loss_trans_test": loss_trans_test,"acc_trans_test": acc_trans_test})
+            wandb.agent(sweep_id, function=wanb_train, count=1)
 
 
 

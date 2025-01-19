@@ -1,0 +1,36 @@
+2025-01-19 13:02:40,600 INFO    Thread-10 :14205 [wandb_setup.py:_flush():71] setting env: {'project': 'Ablation_LLMs', 'entity': 'maestria-julian', 'root_dir': '/home/julian/CATALOG', 'sweep_id': '7udf7url', 'run_id': 'oc2u2y25', 'sweep_param_path': '/home/julian/CATALOG/wandb/sweep-7udf7url/config-oc2u2y25.yaml'}
+2025-01-19 13:02:40,601 INFO    Thread-10 :14205 [wandb_setup.py:_flush():71] setting login settings: {}
+2025-01-19 13:02:40,601 INFO    Thread-10 :14205 [wandb_init.py:_log_setup():357] Logging user logs to /home/julian/CATALOG/wandb/run-20250119_130240-oc2u2y25/logs/debug.log
+2025-01-19 13:02:40,601 INFO    Thread-10 :14205 [wandb_init.py:_log_setup():358] Logging internal logs to /home/julian/CATALOG/wandb/run-20250119_130240-oc2u2y25/logs/debug-internal.log
+2025-01-19 13:02:40,602 INFO    Thread-10 :14205 [wandb_init.py:init():390] calling init triggers
+2025-01-19 13:02:40,602 INFO    Thread-10 :14205 [wandb_init.py:init():395] wandb.init called with sweep_config: {'batch_size': 58, 'dropout': 0.4182656074571146, 'hidden_dim': 1605, 'lr': 0.03515418659464296, 'momentum': 0.8629653924769622, 'num_epochs': 134, 'num_layers': 3, 'opt': 'sgd', 'patience': 10, 't': 0.1, 'weight_Clip': 0.5745497655793873}
+config: {}
+2025-01-19 13:02:40,603 INFO    Thread-10 :14205 [wandb_init.py:init():435] starting backend
+2025-01-19 13:02:40,603 INFO    Thread-10 :14205 [backend.py:_multiprocessing_setup():94] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2025-01-19 13:02:40,635 INFO    Thread-10 :14205 [backend.py:ensure_launched():198] starting backend process...
+2025-01-19 13:02:40,646 INFO    Thread-10 :14205 [backend.py:ensure_launched():203] started backend process with pid: 14316
+2025-01-19 13:02:40,650 INFO    Thread-10 :14205 [wandb_init.py:init():444] backend started and connected
+2025-01-19 13:02:40,658 INFO    Thread-10 :14205 [wandb_run.py:_config_callback():911] config_cb None None {'batch_size': 58, 'dropout': 0.4182656074571146, 'hidden_dim': 1605, 'lr': 0.03515418659464296, 'momentum': 0.8629653924769622, 'num_epochs': 134, 'num_layers': 3, 'opt': 'sgd', 'patience': 10, 't': 0.1, 'weight_Clip': 0.5745497655793873}
+2025-01-19 13:02:40,660 INFO    Thread-10 :14205 [wandb_init.py:init():503] updated telemetry
+2025-01-19 13:02:40,690 INFO    Thread-10 :14205 [wandb_init.py:init():533] communicating current version
+2025-01-19 13:02:43,375 INFO    Thread-10 :14205 [wandb_init.py:init():538] got version response upgrade_message: "wandb version 0.19.4 is available!  To upgrade, please run:\n $ pip install wandb --upgrade"
+
+2025-01-19 13:02:43,376 INFO    Thread-10 :14205 [wandb_init.py:init():548] communicating run to backend with 30 second timeout
+2025-01-19 13:02:43,917 INFO    Thread-10 :14205 [wandb_init.py:init():576] starting run threads in backend
+2025-01-19 13:02:46,236 INFO    Thread-10 :14205 [wandb_run.py:_console_start():1693] atexit reg
+2025-01-19 13:02:46,237 INFO    Thread-10 :14205 [wandb_run.py:_redirect():1567] redirect: SettingsConsole.REDIRECT
+2025-01-19 13:02:46,237 INFO    Thread-10 :14205 [wandb_run.py:_redirect():1572] Redirecting console.
+2025-01-19 13:02:46,237 ERROR   Thread-10 :14205 [wandb_run.py:_redirect():1631] Failed to redirect.
+Traceback (most recent call last):
+  File "/home/julian/miniconda3/envs/CATALOG/lib/python3.8/site-packages/wandb/sdk/wandb_run.py", line 1624, in _redirect
+    out_redir.install()
+  File "/home/julian/miniconda3/envs/CATALOG/lib/python3.8/site-packages/wandb/sdk/lib/redirect.py", line 709, in install
+    _WSCH.add_fd(self._pipe_read_fd)
+  File "/home/julian/miniconda3/envs/CATALOG/lib/python3.8/site-packages/wandb/sdk/lib/redirect.py", line 659, in add_fd
+    self._register()
+  File "/home/julian/miniconda3/envs/CATALOG/lib/python3.8/site-packages/wandb/sdk/lib/redirect.py", line 644, in _register
+    old_handler = signal.signal(signal.SIGWINCH, lambda *_: None)
+  File "/home/julian/miniconda3/envs/CATALOG/lib/python3.8/signal.py", line 47, in signal
+    handler = _signal.signal(_enum_to_int(signalnum), _enum_to_int(handler))
+ValueError: signal only works in main thread
+2025-01-19 13:02:46,239 INFO    Thread-10 :14205 [wandb_init.py:init():603] run started, returning control to user process

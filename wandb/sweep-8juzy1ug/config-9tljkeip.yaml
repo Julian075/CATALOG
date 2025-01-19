@@ -1,0 +1,24 @@
+wandb_version: 1
+
+batch_size:
+  value: 49
+dropout:
+  value: 0.43075851385614505
+hidden_dim:
+  value: 1268
+lr:
+  value: 0.07581304559613355
+momentum:
+  value: 0.820064835191683
+num_epochs:
+  value: 163
+num_layers:
+  value: 1
+opt:
+  value: sgd
+patience:
+  value: 10
+t:
+  value: 0.01
+weight_Clip:
+  value: 0.4478668922175658

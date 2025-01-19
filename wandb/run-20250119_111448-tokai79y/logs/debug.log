@@ -1,0 +1,164 @@
+2025-01-19 11:14:48,696 INFO    Thread-4  :8045 [wandb_setup.py:_flush():71] setting env: {'project': 'Ablation_LLMs', 'entity': 'maestria-julian', 'root_dir': '/home/julian/CATALOG', 'sweep_id': '8juzy1ug', 'run_id': 'tokai79y', 'sweep_param_path': '/home/julian/CATALOG/wandb/sweep-8juzy1ug/config-tokai79y.yaml'}
+2025-01-19 11:14:48,697 INFO    Thread-4  :8045 [wandb_setup.py:_flush():71] setting login settings: {}
+2025-01-19 11:14:48,697 INFO    Thread-4  :8045 [wandb_init.py:_log_setup():357] Logging user logs to /home/julian/CATALOG/wandb/run-20250119_111448-tokai79y/logs/debug.log
+2025-01-19 11:14:48,697 INFO    Thread-4  :8045 [wandb_init.py:_log_setup():358] Logging internal logs to /home/julian/CATALOG/wandb/run-20250119_111448-tokai79y/logs/debug-internal.log
+2025-01-19 11:14:48,697 INFO    Thread-4  :8045 [wandb_init.py:init():390] calling init triggers
+2025-01-19 11:14:48,697 INFO    Thread-4  :8045 [wandb_init.py:init():395] wandb.init called with sweep_config: {'batch_size': 15, 'dropout': 0.3049558631452358, 'hidden_dim': 1370, 'lr': 0.07204830516987791, 'momentum': 0.9015101600955, 'num_epochs': 109, 'num_layers': 3, 'opt': 'sgd', 'patience': 10, 't': 0.01, 'weight_Clip': 0.5220160068880686}
+config: {}
+2025-01-19 11:14:48,697 INFO    Thread-4  :8045 [wandb_init.py:init():435] starting backend
+2025-01-19 11:14:48,697 INFO    Thread-4  :8045 [backend.py:_multiprocessing_setup():94] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2025-01-19 11:14:48,708 INFO    Thread-4  :8045 [backend.py:ensure_launched():198] starting backend process...
+2025-01-19 11:14:48,717 INFO    Thread-4  :8045 [backend.py:ensure_launched():203] started backend process with pid: 8085
+2025-01-19 11:14:48,719 INFO    Thread-4  :8045 [wandb_init.py:init():444] backend started and connected
+2025-01-19 11:14:48,722 INFO    Thread-4  :8045 [wandb_run.py:_config_callback():911] config_cb None None {'batch_size': 15, 'dropout': 0.3049558631452358, 'hidden_dim': 1370, 'lr': 0.07204830516987791, 'momentum': 0.9015101600955, 'num_epochs': 109, 'num_layers': 3, 'opt': 'sgd', 'patience': 10, 't': 0.01, 'weight_Clip': 0.5220160068880686}
+2025-01-19 11:14:48,723 INFO    Thread-4  :8045 [wandb_init.py:init():503] updated telemetry
+2025-01-19 11:14:48,740 INFO    Thread-4  :8045 [wandb_init.py:init():533] communicating current version
+2025-01-19 11:14:49,345 INFO    Thread-4  :8045 [wandb_init.py:init():538] got version response upgrade_message: "wandb version 0.19.4 is available!  To upgrade, please run:\n $ pip install wandb --upgrade"
+
+2025-01-19 11:14:49,345 INFO    Thread-4  :8045 [wandb_init.py:init():548] communicating run to backend with 30 second timeout
+2025-01-19 11:14:49,675 INFO    Thread-4  :8045 [wandb_init.py:init():576] starting run threads in backend
+2025-01-19 11:14:50,995 INFO    Thread-4  :8045 [wandb_run.py:_console_start():1693] atexit reg
+2025-01-19 11:14:50,996 INFO    Thread-4  :8045 [wandb_run.py:_redirect():1567] redirect: SettingsConsole.REDIRECT
+2025-01-19 11:14:50,996 INFO    Thread-4  :8045 [wandb_run.py:_redirect():1572] Redirecting console.
+2025-01-19 11:14:50,996 ERROR   Thread-4  :8045 [wandb_run.py:_redirect():1631] Failed to redirect.
+Traceback (most recent call last):
+  File "/home/julian/miniconda3/envs/CATALOG/lib/python3.8/site-packages/wandb/sdk/wandb_run.py", line 1624, in _redirect
+    out_redir.install()
+  File "/home/julian/miniconda3/envs/CATALOG/lib/python3.8/site-packages/wandb/sdk/lib/redirect.py", line 709, in install
+    _WSCH.add_fd(self._pipe_read_fd)
+  File "/home/julian/miniconda3/envs/CATALOG/lib/python3.8/site-packages/wandb/sdk/lib/redirect.py", line 659, in add_fd
+    self._register()
+  File "/home/julian/miniconda3/envs/CATALOG/lib/python3.8/site-packages/wandb/sdk/lib/redirect.py", line 644, in _register
+    old_handler = signal.signal(signal.SIGWINCH, lambda *_: None)
+  File "/home/julian/miniconda3/envs/CATALOG/lib/python3.8/signal.py", line 47, in signal
+    handler = _signal.signal(_enum_to_int(signalnum), _enum_to_int(handler))
+ValueError: signal only works in main thread
+2025-01-19 11:14:50,997 INFO    Thread-4  :8045 [wandb_init.py:init():603] run started, returning control to user process
+2025-01-19 11:14:50,997 INFO    Thread-4  :8045 [wandb_run.py:finish():1347] finishing run maestria-julian/Ablation_LLMs/tokai79y
+2025-01-19 11:14:50,997 INFO    Thread-4  :8045 [wandb_run.py:_atexit_cleanup():1663] got exitcode: 1
+2025-01-19 11:14:50,998 INFO    Thread-4  :8045 [wandb_run.py:_restore():1635] restore
+2025-01-19 11:14:51,544 INFO    Thread-4  :8045 [wandb_run.py:_wait_for_finish():1793] got exit ret: file_counts {
+  wandb_count: 1
+}
+pusher_stats {
+  total_bytes: 762
+}
+
+2025-01-19 11:14:52,038 INFO    Thread-4  :8045 [wandb_run.py:_wait_for_finish():1793] got exit ret: file_counts {
+  wandb_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 762
+  total_bytes: 762
+}
+
+2025-01-19 11:14:52,680 INFO    Thread-4  :8045 [wandb_run.py:_wait_for_finish():1793] got exit ret: file_counts {
+  wandb_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 762
+  total_bytes: 762
+}
+
+2025-01-19 11:14:52,782 INFO    Thread-4  :8045 [wandb_run.py:_wait_for_finish():1793] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 762
+  total_bytes: 7935
+}
+
+2025-01-19 11:14:52,885 INFO    Thread-4  :8045 [wandb_run.py:_wait_for_finish():1793] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 762
+  total_bytes: 7935
+}
+
+2025-01-19 11:14:52,989 INFO    Thread-4  :8045 [wandb_run.py:_wait_for_finish():1793] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 762
+  total_bytes: 7935
+}
+
+2025-01-19 11:14:53,093 INFO    Thread-4  :8045 [wandb_run.py:_wait_for_finish():1793] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 762
+  total_bytes: 7935
+}
+
+2025-01-19 11:14:53,196 INFO    Thread-4  :8045 [wandb_run.py:_wait_for_finish():1793] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 762
+  total_bytes: 7935
+}
+
+2025-01-19 11:14:53,298 INFO    Thread-4  :8045 [wandb_run.py:_wait_for_finish():1793] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 762
+  total_bytes: 7935
+}
+
+2025-01-19 11:14:53,402 INFO    Thread-4  :8045 [wandb_run.py:_wait_for_finish():1793] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 7935
+  total_bytes: 7935
+}
+
+2025-01-19 11:14:53,504 INFO    Thread-4  :8045 [wandb_run.py:_wait_for_finish():1793] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 7935
+  total_bytes: 7935
+}
+
+2025-01-19 11:14:53,607 INFO    Thread-4  :8045 [wandb_run.py:_wait_for_finish():1793] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 7935
+  total_bytes: 7935
+}
+
+2025-01-19 11:14:53,710 INFO    Thread-4  :8045 [wandb_run.py:_wait_for_finish():1793] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 7935
+  total_bytes: 7935
+}
+
+2025-01-19 11:14:53,945 INFO    Thread-4  :8045 [wandb_run.py:_wait_for_finish():1793] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 7935
+  total_bytes: 7935
+}
+
+2025-01-19 11:14:54,365 INFO    Thread-4  :8045 [wandb_run.py:_wait_for_finish():1793] got exit ret: done: true
+exit_result {
+}
+file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 7935
+  total_bytes: 7935
+}
+local_info {
+}
+
+2025-01-19 11:14:55,438 INFO    Thread-4  :8045 [wandb_run.py:_append_files():2061] logging synced files
