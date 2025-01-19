@@ -350,3 +350,52 @@
 2025-01-19 13:24:52,966 DEBUG   SenderThread:14316 [sender.py:send():185] send: stats
 2025-01-19 13:25:03,685 DEBUG   HandlerThread:14316 [handler.py:handle_request():130] handle_request: stop_status
 2025-01-19 13:25:03,686 DEBUG   SenderThread:14316 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 13:25:19,294 DEBUG   HandlerThread:14316 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 13:25:19,295 DEBUG   SenderThread:14316 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 13:25:23,251 DEBUG   SenderThread:14316 [sender.py:send():185] send: stats
+2025-01-19 13:25:33,447 DEBUG   SenderThread:14316 [sender.py:send():185] send: history
+2025-01-19 13:25:33,447 DEBUG   SenderThread:14316 [sender.py:send():185] send: summary
+2025-01-19 13:25:33,448 INFO    SenderThread:14316 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 13:25:33,872 INFO    Thread-13 :14316 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_130240-oc2u2y25/files/wandb-summary.json
+2025-01-19 13:25:34,777 DEBUG   HandlerThread:14316 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 13:25:34,777 DEBUG   SenderThread:14316 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 13:25:36,027 DEBUG   SenderThread:14316 [sender.py:send():185] send: history
+2025-01-19 13:25:36,028 DEBUG   SenderThread:14316 [sender.py:send():185] send: summary
+2025-01-19 13:25:36,055 INFO    SenderThread:14316 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 13:25:36,874 INFO    Thread-13 :14316 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_130240-oc2u2y25/files/wandb-summary.json
+2025-01-19 13:25:50,251 DEBUG   HandlerThread:14316 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 13:25:50,251 DEBUG   SenderThread:14316 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 13:25:53,519 DEBUG   SenderThread:14316 [sender.py:send():185] send: stats
+2025-01-19 13:26:05,990 DEBUG   HandlerThread:14316 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 13:26:05,990 DEBUG   SenderThread:14316 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 13:26:21,449 DEBUG   HandlerThread:14316 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 13:26:21,449 DEBUG   SenderThread:14316 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 13:26:23,755 DEBUG   SenderThread:14316 [sender.py:send():185] send: stats
+2025-01-19 13:26:37,080 DEBUG   HandlerThread:14316 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 13:26:37,080 DEBUG   SenderThread:14316 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 13:26:52,349 DEBUG   HandlerThread:14316 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 13:26:52,350 DEBUG   SenderThread:14316 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 13:26:54,011 DEBUG   SenderThread:14316 [sender.py:send():185] send: stats
+2025-01-19 13:27:05,157 DEBUG   SenderThread:14316 [sender.py:send():185] send: history
+2025-01-19 13:27:05,158 DEBUG   SenderThread:14316 [sender.py:send():185] send: summary
+2025-01-19 13:27:05,159 INFO    SenderThread:14316 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 13:27:05,930 INFO    Thread-13 :14316 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_130240-oc2u2y25/files/wandb-summary.json
+2025-01-19 13:27:07,676 DEBUG   HandlerThread:14316 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 13:27:07,676 DEBUG   SenderThread:14316 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 13:27:08,079 DEBUG   SenderThread:14316 [sender.py:send():185] send: history
+2025-01-19 13:27:08,080 DEBUG   SenderThread:14316 [sender.py:send():185] send: summary
+2025-01-19 13:27:08,080 INFO    SenderThread:14316 [sender.py:_save_file():901] saving file wandb-summary.json with policy end
+2025-01-19 13:27:08,932 INFO    Thread-13 :14316 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/julian/CATALOG/wandb/run-20250119_130240-oc2u2y25/files/wandb-summary.json
+2025-01-19 13:27:22,898 DEBUG   HandlerThread:14316 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 13:27:22,899 DEBUG   SenderThread:14316 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 13:27:24,281 DEBUG   SenderThread:14316 [sender.py:send():185] send: stats
+2025-01-19 13:27:38,127 DEBUG   HandlerThread:14316 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 13:27:38,128 DEBUG   SenderThread:14316 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 13:27:53,443 DEBUG   HandlerThread:14316 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 13:27:53,444 DEBUG   SenderThread:14316 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 13:27:54,582 DEBUG   SenderThread:14316 [sender.py:send():185] send: stats
+2025-01-19 13:28:08,726 DEBUG   HandlerThread:14316 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 13:28:08,727 DEBUG   SenderThread:14316 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 13:28:24,330 DEBUG   HandlerThread:14316 [handler.py:handle_request():130] handle_request: stop_status
+2025-01-19 13:28:24,330 DEBUG   SenderThread:14316 [sender.py:send_request():199] send_request: stop_status
+2025-01-19 13:28:24,846 DEBUG   SenderThread:14316 [sender.py:send():185] send: stats
