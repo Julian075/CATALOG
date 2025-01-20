@@ -122,7 +122,7 @@ if __name__ == "__main__":
 
         elif train_type == "Out_domain_wanb":
             import os
-            token ="282780c770de0083eddfa3c56402f555ee60e108" #os.getenv("WandB_TOKE")
+            token =os.getenv("WandB_TOKE")
             wandb.login(key=token)
             sweep_config = {
                 'method': 'random',
@@ -190,11 +190,13 @@ if __name__ == "__main__":
             ruta_features_val = "features/Features_serengeti/standard_features/Features_CATALOG_val_16.pt"
             ruta_features_test1 = "features/Features_terra/standard_features/Features_CATALOG_cis_test_16.pt"
             ruta_features_test2 = "features/Features_terra/standard_features/Features_CATALOG_trans_test_16.pt"
-            path_text_feat1 = f"features/Features_serengeti/standard_features/Text_features_16_{LLM}.pt"#
-            path_text_feat2 = f"features/Features_terra/standard_features/Text_features_16_{LLM}.pt"#
+            #path_text_feat1 = f"features/Features_serengeti/standard_features/Text_features_16_{LLM}.pt"#
+            #path_text_feat2 = f"features/Features_terra/standard_features/Text_features_16_{LLM}.pt"#
+            path_text_feat1 = f"features/Features_serengeti/standard_features/Text_16_Ab3_{LLM}.pt"  # Text_features_16_{LLM_i}.pt"#
+            path_text_feat2 = f"features/Features_terra/standard_features/Text_16_Ab3_{LLM}.pt"  # Text_features_16_{LLM_i}.pt"#
 
             # Crear el sweep
-            sweep_id = wandb.sweep(sweep_config, project="Ablation_LLMs")
+            sweep_id = wandb.sweep(sweep_config, project="Ablation_Tem_vs_Des")
 
             def wanb_train(config=None):
                 with wandb.init(config=config):
