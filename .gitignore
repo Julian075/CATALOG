@@ -5,7 +5,8 @@ __pycache__/
 *.pth
 *.jpg
 *.png
-*.cvs
+*.csv
 *.json
 *.zip
+scatter_search_optimizer.py
 wandb/
