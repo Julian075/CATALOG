@@ -3,7 +3,6 @@ import torch
 import clip
 import numpy as np
 
-
 def zeroshot_classifier(classnames, templates1, templates2,omg):
     with torch.no_grad():
         zeroshot_weights = []
@@ -33,28 +32,6 @@ def zeroshot_classifier(classnames, templates1, templates2,omg):
         zeroshot_weights = torch.stack(zeroshot_weights, dim=1).to(device)
     return zeroshot_weights
 
-def zeroshot_classifier_op2(classnames, templates1, templates2,omg):
-    with torch.no_grad():
-        zeroshot_weights = []
-        for classname in classnames:
-            texts = [template.format(classname) for template in templates1]
-            texts = clip.tokenize(texts).to(device)
-            template_embeddings = model_clip.encode_text(texts)  # embed with text encoder
-            template_embeddings /= template_embeddings.norm(dim=-1, keepdim=True)
-
-            texts2 = [template for template in templates2[classname]]  # format with class
-            texts2 = clip.tokenize(texts2).to(device)
-            description_embeddings = model_clip.encode_text(texts2)  # embed with text encoder
-            description_embeddings /= description_embeddings.norm(dim=-1, keepdim=True)
-
-            class_embedding = torch.cat ((template_embeddings *omg,description_embeddings * omg), dim = 0)
-            class_embedding = class_embedding.mean(dim=0)
-            class_embedding /= class_embedding.norm()  # Normalize final embedding
-
-
-            zeroshot_weights.append(class_embedding)
-        zeroshot_weights = torch.stack(zeroshot_weights, dim=1).to(device)
-    return zeroshot_weights
 
 
 
@@ -759,17 +736,17 @@ camera_trap_templates_serengeti = {
 }
 
 
-#omg = np.round(np.arange(0, 1.1, 0.1),2)
-omg=[0.9,1.0]
+omg = np.round(np.arange(0, 1.1, 0.1),2)
+
 for mode_clip_i in mode_clip:
     model_clip, preprocess_clip = clip.load(f'ViT-B/{mode_clip_i}', device)
     model_clip.to(device)
     for omg_i in omg:
-        zeroshot_weights = zeroshot_classifier(class_indices_serengeti, camera_trap_templates1, camera_trap_templates_serengeti,omg_i)
-        torch.save(zeroshot_weights,f'features/Features_serengeti/standard_features/Text_{mode_clip_i}_Ab3_{omg_i}_2.pt')
+        zeroshot_weights = zeroshot_classifier(class_indices_serengeti, camera_trap_templates1,  camera_trap_templates_serengeti, omg_i)
+        torch.save(zeroshot_weights, f'/home/julian/CATALOG/features/Features_serengeti/standard_features/Text_{mode_clip_i}_Ab3_{omg_i}.pt')
 
-        zeroshot_weights = zeroshot_classifier(list(class_indices_terra.keys()), camera_trap_templates1, camera_trap_templates_terra,omg_i)
-        torch.save(zeroshot_weights,f'features/Features_terra/standard_features/Text_{mode_clip_i}_Ab3_{omg_i}_2.pt')
+        zeroshot_weights = zeroshot_classifier(list(class_indices_terra.keys()), camera_trap_templates1, camera_trap_templates_terra, omg_i)
+        torch.save(zeroshot_weights,f'/home/julian/CATALOG/features/Features_terra/standard_features/Text_{mode_clip_i}_Ab3_{omg_i}.pt')
 
 
 

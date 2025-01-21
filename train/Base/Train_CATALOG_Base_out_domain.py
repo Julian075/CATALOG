@@ -103,7 +103,7 @@ class CATALOG_base:
 
             epoch_loss = running_loss / len(dataloader)
             epoch_acc = (running_corrects / size) * 100
-            wandb.log({"train_loss": epoch_loss, "train_acc": epoch_acc})
+            #wandb.log({"train_loss": epoch_loss, "train_acc": epoch_acc})
 
             # validation
             projection_model.eval()
@@ -129,7 +129,7 @@ class CATALOG_base:
 
             epoch_loss_val = running_loss_val / len(dataloader_val)
             epoch_acc_val = (running_corrects_val / size_val) * 100
-            wandb.log({"val_loss": epoch_loss_val, "val_acc": epoch_acc_val})
+            #wandb.log({"val_loss": epoch_loss_val, "val_acc": epoch_acc_val})
 
 
             time_end = time.time()

@@ -37,7 +37,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
     parser.add_argument('--model_version', type=str, default="Base", help='Model version')
-    parser.add_argument('--train_type', type=str, default="Out_domain_wanb", help='Type of training')
+    parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
     parser.add_argument('--mode', type=str, default="train", help='define if you want train or test')
 
@@ -98,27 +98,18 @@ if __name__ == "__main__":
             ruta_features_val    = "features/Features_serengeti/standard_features/Features_CATALOG_val_16.pt"
             ruta_features_test1  = "features/Features_terra/standard_features/Features_CATALOG_cis_test_16.pt"
             ruta_features_test2  = "features/Features_terra/standard_features/Features_CATALOG_trans_test_16.pt"
+            path_text_feat1      = f"features/Features_serengeti/standard_features/Text_features_16.pt" #Text_features_16_{LLM_i}.pt"#
+            path_text_feat2      = f"features/Features_terra/standard_features/Text_features_16.pt"#Text_features_16_{LLM_i}.pt"#
+            model = CATALOG_base(weight_Clip=0.6, num_epochs=8, batch_size=48, num_layers=1,
+                                                  dropout=0.27822, hidden_dim=1045, lr=0.07641, t=0.1, momentum=0.8409
+                                                  , patience=5, model=base, Dataset=BaselineDataset,
+                                                  Dataloader=dataloader_baseline,version='base',ruta_features_train=ruta_features_train,
+                                                  ruta_features_val=ruta_features_val,ruta_features_test1=ruta_features_test1,
+                                                  ruta_features_test2=ruta_features_test2,path_text_feat1=path_text_feat1,
+                                                  path_text_feat2=path_text_feat2,build_optimizer=build_optimizer,exp_name=f'exp_{model_version}_{train_type}')
 
-            omg = np.round(np.arange(0, 1.1, 0.1), 2)
-            #LLMs=['LLAMA','Phi','Qwen']
-            Ablation_omg={}
-            for omg_i in omg:
-
-                path_text_feat1      = f"features/Features_serengeti/standard_features/Text_16_Ab3_{omg_i}.pt" #Text_features_16_{LLM_i}.pt"#
-                path_text_feat2      = f"features/Features_terra/standard_features/Text_16_Ab3_{omg_i}.pt"#Text_features_16_{LLM_i}.pt"#
-                model = CATALOG_base(weight_Clip=0.6, num_epochs=8, batch_size=48, num_layers=1,
-                                                      dropout=0.27822, hidden_dim=1045, lr=0.07641, t=0.1, momentum=0.8409
-                                                      , patience=5, model=base, Dataset=BaselineDataset,
-                                                      Dataloader=dataloader_baseline,version='base',ruta_features_train=ruta_features_train,
-                                                      ruta_features_val=ruta_features_val,ruta_features_test1=ruta_features_test1,
-                                                      ruta_features_test2=ruta_features_test2,path_text_feat1=path_text_feat1,
-                                                      path_text_feat2=path_text_feat2,build_optimizer=build_optimizer,exp_name=f'exp_{model_version}_{train_type}')
-
-                model_params_path = f'models/CATALOG_Base.pth'
-                epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test=mode_model(model, model_params_path, mode)
-                Ablation_omg[omg_i]=[epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test]
-            with open("Ablation_Tem_vs_Des_op3.json", "w") as json_file:
-                json.dump(Ablation_omg, json_file, indent=4)
+            model_params_path = f'models/CATALOG_Base.pth'
+            epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test=mode_model(model, model_params_path, mode)
 
         elif train_type == "Out_domain_wanb":
             import os
