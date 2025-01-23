@@ -81,7 +81,7 @@ def extract_features(dataset,mode_clip):
     root=f'data/{dataset}/img'
     carpetas=os.listdir(root)
 
-    f = open(f'data/{dataset}/info_{dataset}.json')
+    f = open(f'data/info_{dataset}.json')
     data = json.load(f)
     camera_trap_templates2 = data['llm_descriptions']
     f.close()
