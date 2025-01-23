@@ -1,5 +1,7 @@
 import numpy as np
 
+from feature_extraction.Base.CATALOG_feature_extraction import extract_features
+
 from models import CATALOG_Base as base
 from models import CATALOG_Base_fine_tuning as base_fine_tuning
 from models import CATALOG_Base_fine_tuning_last_layer as base_fine_tuning_layer
@@ -9,7 +11,7 @@ from models import CATALOG_Projections as projections
 from models import CATALOG_Projections_fine_tuning as projections_fine_tuning
 from models import CATALOG_Projections_fine_tuning_last_layer as projections_fine_tuning_layer
 
-import json
+
 import argparse
 from utils import BaselineDataset,dataloader_baseline,TuningDataset,dataloader_Tuning,build_optimizer
 
@@ -36,10 +38,12 @@ def mode_model(model,model_params_path,mode):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
-    parser.add_argument('--model_version', type=str, default="Base", help='Model version')
-    parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
+    parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
-    parser.add_argument('--mode', type=str, default="train", help='define if you want train or test')
+    parser.add_argument('--model_version', type=str, default="Base", help='Model version')
+    parser.add_argument('--train_type', type=str, default="In_domain", help='Type of training')
+
+
 
     parser.add_argument('--LLM', type=str, default="LLAMA", help='define LLM')
     args = parser.parse_args()
@@ -50,9 +54,10 @@ if __name__ == "__main__":
     mode = args.mode
     LLM=args.LLM
 
+    if model_version == "feature_extraction":
+        extract_features(dataset=dataset,mode_clip='16')
 
-
-    if model_version=="Base":
+    elif model_version=="Base":
         if train_type=="In_domain":
             if dataset=="serengeti":
                 ruta_features_train = "features/Features_serengeti/standard_features/Features_CATALOG_train_16.pt"
@@ -101,7 +106,7 @@ if __name__ == "__main__":
             path_text_feat1      = f"features/Features_serengeti/standard_features/Text_features_16.pt" #Text_features_16_{LLM_i}.pt"#
             path_text_feat2      = f"features/Features_terra/standard_features/Text_features_16.pt"#Text_features_16_{LLM_i}.pt"#
             model = CATALOG_base(weight_Clip=0.6, num_epochs=8, batch_size=48, num_layers=1,
-                                                  dropout=0.27822, hidden_dim=1045, lr=0.07641, t=0.1, momentum=0.8409
+                                                  dropout=0.27, hidden_dim=1045, lr=0.08, t=0.1, momentum=0.8
                                                   , patience=5, model=base, Dataset=BaselineDataset,
                                                   Dataloader=dataloader_baseline,version='base',ruta_features_train=ruta_features_train,
                                                   ruta_features_val=ruta_features_val,ruta_features_test1=ruta_features_test1,

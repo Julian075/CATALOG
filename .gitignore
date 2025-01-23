@@ -7,6 +7,12 @@ __pycache__/
 *.png
 *.csv
 *.json
+!info_terra.json
+!info_serengeti.json
 *.zip
 scatter_search_optimizer.py
+graficas.py
+graficas_wandb.py
 wandb/
+Best/
+No_subir_repo/
