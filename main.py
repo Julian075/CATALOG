@@ -39,8 +39,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
     parser.add_argument('--model_version', type=str, default="Base", help='Model version')
-    parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
+    parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
     parser.add_argument('--train_type', type=str, default="In_domain", help='Type of training')
 
 
