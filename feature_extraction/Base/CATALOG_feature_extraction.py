@@ -144,6 +144,13 @@ def extract_features(dataset,mode_clip):
             features_dataset[mode]=data_dict
             #torch.save(data_dict,f'features/Features_{dataset}/standard_features/Features_CATALOG_{mode}_{mode_clip}.pt')
 
+    if dataset=='serengeti':
+        #This is a particular case of serengeti dataset
+        repeated_keys = features_dataset['train'].keys() & features_dataset['val'].keys()
+
+        for key in repeated_keys:
+            del features_dataset['train'][key]
+
     torch.save(features_dataset, f'features/Features_{dataset}/standard_features/Features_{dataset}.pt')
     zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2,model_clip,device)
     torch.save(zeroshot_weights,f'features/Features_{dataset}/standard_features/Prompts_{dataset}.pt')

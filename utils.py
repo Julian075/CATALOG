@@ -6,16 +6,16 @@ import torch.optim as optim
 
 #Datasets and Dataloaders
 class BaselineDataset(Dataset):
-    def __init__(self,json_path):
-        self.root_dir = json_path
+    def __init__(self,_dict):
+        self.data_dict = _dict
         self.samples = self._load_samples()
 
 
     def _load_samples(self):
         samples=[]
-        data_dict=torch.load(self.root_dir)
-        for key in data_dict.keys():
-            samples.append([data_dict[key]['image_features'][0],data_dict[key]['description_embeddings'][0],data_dict[key]['target_index']])
+        #data_dict=torch.load(self.root_dir)
+        for key in self.data_dict.keys():
+            samples.append([self.data_dict[key]['image_features'][0],self.data_dict[key]['description_embeddings'][0],self.data_dict[key]['target_index']])
         return samples
 
     def __len__(self):
