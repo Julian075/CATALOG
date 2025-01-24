@@ -38,8 +38,8 @@ def wandb_train(model, model_version,train_type,path_features, seeds, config=Non
                                          num_layers=num_layers, dropout=dropout, hidden_dim=hidden_dim, lr=learning_rate,
                                          t=temperature,
                                          momentum=momentum, patience=5, path_features_D=features[0][0],
-                                         path_propmts_D=features[0][1], path_features_S=features[1][0],
-                                         path_propmts_S=features[1][1], exp_name=f'{seed}_{model_version}_{train_type}', wnb=1)
+                                         path_prompts_D=features[0][1], path_features_S=features[1][0],
+                                         path_prompts_S=features[1][1], exp_name=f'{seed}_{model_version}_{train_type}', wnb=1)
 
             best_acc_val=model.train(seed=seed, test=0)
             results_val_seeds.append(best_acc_val)
