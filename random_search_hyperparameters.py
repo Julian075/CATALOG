@@ -33,7 +33,7 @@ def wandb_train(model, model_version,train_type,path_features, seeds, config=Non
                 features = [[monte_carlo_partition( path_features[0][0], seed), path_features[0][1]]]
 
             if model_version == 'Base':
-                if train_type == 'Out_Domain':
+                if train_type == 'Out_domain':
                     model.set_parameters(weight_Clip=weight_clip, num_epochs=num_epochs, batch_size=batch_size,
                                          num_layers=num_layers, dropout=dropout, hidden_dim=hidden_dim, lr=learning_rate,
                                          t=temperature,
@@ -77,7 +77,7 @@ def random_search(path_features,train_type, model_version,model, name_exp, name_
                             'momentum': {'distribution': 'uniform','min': 0.8, 'max': 0.99 },
                             'num_epochs': {'distribution': 'int_uniform', 'min': 1, 'max': 200 },
                             'num_layers': {'distribution': 'int_uniform','min': 1,'max': 7 },
-                            't': {'distribution': 'log_uniform', 'min': 0.01,'max': 1},
+                            't': {'distribution': 'log_uniform_values', 'min': 0.01, 'max': 1},
                             'weight_Clip': { 'distribution': 'uniform','min': 0.4,'max': 0.8}
                         }
                     }
