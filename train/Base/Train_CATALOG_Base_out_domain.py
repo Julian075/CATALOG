@@ -84,7 +84,6 @@ class CATALOG_base:
 
         text_features = torch.load(self.path_prompts_D)
         text_features = text_features.to(device)
-
         text_features2 = torch.load(self.path_prompts_S)
         text_features2 = text_features2.to(device)
 
@@ -94,7 +93,10 @@ class CATALOG_base:
         projection_model = projection_model.to(device)
 
         # Get your DataLoader
-        dataset_D=torch.load(self.path_features_D)
+        if self.wnb==1:  # randon search and monte carlo partition activate
+            dataset_D=self.path_features_D
+        else:
+            dataset_D = torch.load(self.path_features_D)
         dataset_S = torch.load(self.path_features_S)
         dataloader = self.dataloader(dataset_D['train'], self.batch_size,self.dataset)
         dataloader_val = self.dataloader(dataset_D['val'],self.batch_size,self.dataset)
