@@ -69,14 +69,14 @@ def random_search(path_features,train_type, model_version,model, name_exp, name_
                         'method': 'random', 'metric': {'goal': 'minimize','name': 'epoch_loss_val' },
                         'name': name_exp,
                         'parameters': {
-                            'batch_size': { 'distribution': 'int_uniform','min': 4, 'max': 256  },
+                            'batch_size': { 'distribution': 'categorical', 'values': [2 ** i for i in range(2, 9)] },
                             'dropout': {'distribution': 'uniform','min': 0.1,'max': 0.5 },
-                            'hidden_dim': { 'distribution': 'int_uniform', 'min': 512,'max': 2048 },
+                            'hidden_dim': {'distribution': 'categorical', 'values': [2**i for i in range(9, 12)]},
                             'lr': {'distribution': 'uniform', 'min': 0, 'max': 0.1 },
                             'momentum': {'distribution': 'uniform','min': 0.8, 'max': 0.99 },
                             'num_epochs': {'distribution': 'int_uniform', 'min': 1, 'max': 200 },
                             'num_layers': {'distribution': 'int_uniform','min': 1,'max': 7 },
-                            't': {'values': [1,0.1,0.01] },
+                            't': {'distribution': 'log_uniform', 'min': 0.01,'max': 1},
                             'weight_Clip': { 'distribution': 'uniform','min': 0.4,'max': 0.8}
                         }
                     }
