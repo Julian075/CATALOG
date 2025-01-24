@@ -25,12 +25,12 @@ def wandb_train(model, model_version,train_type,path_features, seeds, config=Non
 
             if train_type == 'Out_domain':
                 features_D = [monte_carlo_partition(path_features[0][0], seed), path_features[0][1]]
-                features_S = [monte_carlo_partition( path_features[1][0], seed), path_features[1][1]]
+                features_S = [path_features[1][0], path_features[1][1]]
                 features = [features_D, features_S]
 
 
             elif train_type == 'In_domain':
-                features = [[monte_carlo_partition(model_version, path_features[0][0], seed), path_features[0][1]]]
+                features = [[monte_carlo_partition( path_features[0][0], seed), path_features[0][1]]]
 
             if model_version == 'Base':
                 if train_type == 'Out_Domain':
@@ -64,7 +64,7 @@ def wandb_train(model, model_version,train_type,path_features, seeds, config=Non
             ])
 def random_search(path_features,train_type, model_version,model, name_exp, name_project, seeds):
 
-        token =os.getenv("WandB_TOKE")
+        token ="282780c770de0083eddfa3c56402f555ee60e108"#os.getenv("WandB_TOKE")
         wandb.login(key=token)
         sweep_config = {
                         'method': 'random', 'metric': {'goal': 'maximize','name': 'epoch_acc_val' },
