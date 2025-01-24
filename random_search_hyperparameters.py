@@ -24,8 +24,8 @@ def wandb_train(model, model_version,train_type,path_features, seeds, config=Non
 
 
             if train_type == 'Out_domain':
-                features_D = [monte_carlo_partition(model_version, path_features[0][0], seed), path_features[0][1]]
-                features_S = [monte_carlo_partition(model_version, path_features[1][1], seed), path_features[1][1]]
+                features_D = [monte_carlo_partition(path_features[0][0], seed), path_features[0][1]]
+                features_S = [monte_carlo_partition( path_features[1][0], seed), path_features[1][1]]
                 features = [features_D, features_S]
 
 

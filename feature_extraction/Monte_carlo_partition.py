@@ -4,19 +4,10 @@ import random
 
 
 
-def monte_carlo_partition(model_version,dataset,seed):
-
-    if model_version=='Base':
-        type_feats='standard_features'
-    elif model_version=='Fine_tuning':
-        type_feats='finetuning_features'
-    elif model_version=='Base_long':
-        type_feats='long_standard_features'
-    else:
-        type_feats = 'standard_features'
+def monte_carlo_partition(path_features,seed):
 
     random.seed(seed)
-    features=torch.load(f'features/Features_{dataset}/{type_feats}/Features_{dataset}.pt')
+    features=torch.load(path_features)
     features_dev= {**features['train'], **features['val']}
 
     monte_carlo_partitions={}
