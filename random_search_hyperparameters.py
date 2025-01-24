@@ -84,4 +84,5 @@ def random_search(path_features,train_type, model_version,model, name_exp, name_
 
         sweep_id = wandb.sweep(sweep_config, project=name_project)
 
-        wandb.agent(sweep_id, function=wandb_train(model, model_version,train_type,path_features,seeds), count=100)
+
+        wandb.agent(sweep_id, function=lambda: wandb_train(model, model_version, train_type, path_features, seeds), count=100)
