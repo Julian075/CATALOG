@@ -8,6 +8,7 @@ import numpy as np
 def wandb_train(model, model_version,train_type,path_features, seeds, config=None):
     with wandb.init(config=config):
         config = wandb.config
+
         weight_clip = config.weight_Clip
         num_epochs = config.num_epochs
         batch_size = config.batch_size
@@ -66,13 +67,13 @@ def random_search(path_features,train_type, model_version,model, name_exp, name_
         token =os.getenv("WandB_TOKE")
         wandb.login(key=token)
         sweep_config = {
-                        'method': 'random', 'metric': {'goal': 'minimize','name': 'epoch_loss_val' },
+                        'method': 'random', 'metric': {'goal': 'maximize','name': 'epoch_acc_val' },
                         'name': name_exp,
                         'parameters': {
                             'batch_size': { 'distribution': 'categorical', 'values': [2 ** i for i in range(2, 9)] },
                             'dropout': {'distribution': 'uniform','min': 0.1,'max': 0.5 },
                             'hidden_dim': {'distribution': 'categorical', 'values': [2**i for i in range(9, 12)]},
-                            'lr': {'distribution': 'uniform', 'min': 0, 'max': 0.1 },
+                            'lr': {'distribution': 'uniform', 'min': 1e-5, 'max': 0.1 },
                             'momentum': {'distribution': 'uniform','min': 0.8, 'max': 0.99 },
                             'num_epochs': {'distribution': 'int_uniform', 'min': 1, 'max': 200 },
                             'num_layers': {'distribution': 'int_uniform','min': 1,'max': 7 },
