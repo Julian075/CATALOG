@@ -5,7 +5,7 @@ from feature_extraction.Monte_carlo_partition import monte_carlo_partition
 import numpy as np
 
 
-def wandb_train(model, model_version,train_type,path_features, seeds, config=None):
+def wandb_train(model, model_version,train_type,path_features, name_exp, seeds, config=None):
     with wandb.init(config=config):
         config = wandb.config
 
@@ -47,7 +47,7 @@ def wandb_train(model, model_version,train_type,path_features, seeds, config=Non
 
         avg_acc_val=np.mean(results_val_seeds)
         std_acc_val=np.std(results_val_seeds)
-        results_file='random_search_results.csv'
+        results_file=f'random_search_results_{name_exp}.csv'
         results_exist = os.path.isfile(results_file)
         with open(results_file, mode='a', newline='') as file:
             writer = csv.writer(file)
@@ -85,4 +85,4 @@ def random_search(path_features,train_type, model_version,model, name_exp, name_
         sweep_id = wandb.sweep(sweep_config, project=name_project)
 
 
-        wandb.agent(sweep_id, function=lambda: wandb_train(model, model_version, train_type, path_features, seeds), count=100)
+        wandb.agent(sweep_id, function=lambda: wandb_train(model, model_version, train_type, path_features,name_exp, seeds), count=100)

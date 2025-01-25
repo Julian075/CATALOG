@@ -105,7 +105,7 @@ if __name__ == "__main__":
 
                 model = CATALOG_base( model=base, Dataset=BaselineDataset,Dataloader=dataloader_baseline, version='base',build_optimizer=build_optimizer)
 
-                random_search([features_D, features_S], train_type, model_version,model, f'hp_{train_type}',f'Hp_{model_version}',seeds)
+                random_search([features_D, features_S], train_type, model_version,model, f'hp_{train_type}_{dataset}',f'Hp_{model_version}',seeds)
             else:
                 model = CATALOG_base(model=base, Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
                 model.set_parameters(weight_Clip=0.6, num_epochs=8, batch_size=48,num_layers=8, dropout=0.27, hidden_dim=1045, lr=0.08,

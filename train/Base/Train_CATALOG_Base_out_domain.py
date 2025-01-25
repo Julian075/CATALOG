@@ -106,7 +106,7 @@ class CATALOG_base:
 
         #Configurate optimazer for training
         optimizer,scheduler = self.build_optimizer(projection_model,'sgd',self.lr,self.momentum,self.version)
-        acc_best = 0 #Variable to check the best model
+        acc_best = -float('inf') #Variable to check the best model
         counter = 0  #Variable to verify the number of epoch without an improvement in the val acc
         for epoch in range(self.num_epochs):
             print(epoch)
