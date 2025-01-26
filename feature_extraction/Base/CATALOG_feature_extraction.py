@@ -65,7 +65,7 @@ def zeroshot_classifier(classnames, templates1, templates2,model_clip,device):
         zeroshot_weights = torch.stack(zeroshot_weights, dim=1).to(device)
     return zeroshot_weights
 
-def extract_features(dataset,mode_clip):
+def extract_features(model_version,dataset,mode_clip):
     #path where is located the images
     #dataset='serengeti'
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -113,11 +113,13 @@ def extract_features(dataset,mode_clip):
                     else:
                         target_index = class_indices.index(category)
 
-                    images = preprocess_clip(Image.open(img_path).convert("RGB")).unsqueeze(0).to(device)
+                    if model_version == 'Base':
+                        images = preprocess_clip(Image.open(img_path).convert("RGB")).unsqueeze(0).to(device)
 
-                    with torch.no_grad():
-                        image_features = model_clip.encode_image(images)
-                        image_features /= image_features.norm(dim=-1, keepdim=True)
+                        with torch.no_grad():
+                            image_features = model_clip.encode_image(images)
+                            image_features /= image_features.norm(dim=-1, keepdim=True)
+
 
                     # images = images.unsqueeze(0)[0]
                     f = open(json_path)
@@ -135,11 +137,18 @@ def extract_features(dataset,mode_clip):
                         output_bert = model_Bert(token_ids, attention_mask=attention_mask)
                         description_embeddings = output_bert.pooler_output
 
-                    data_dict[img_name] = {
-                        "image_features": image_features,
-                        "description_embeddings": description_embeddings,
-                        "target_index": target_index
-                    }
+                    if model_version == 'Base':
+                        data_dict[img_name] = {
+                            "image_features": image_features,
+                            "description_embeddings": description_embeddings,
+                            "target_index": target_index
+                        }
+                    elif model_version == 'Fine_tuning':
+                        data_dict[img_name] = {
+                            "image_features": img_path,
+                            "description_embeddings": description_embeddings,
+                            "target_index": target_index
+                        }
             # Save the dict in a .pt file
             features_dataset[mode]=data_dict
             #torch.save(data_dict,f'features/Features_{dataset}/standard_features/Features_CATALOG_{mode}_{mode_clip}.pt')
@@ -151,9 +160,14 @@ def extract_features(dataset,mode_clip):
         for key in repeated_keys:
             del features_dataset['train'][key]
 
-    torch.save(features_dataset, f'features/Features_{dataset}/standard_features/Features_{dataset}.pt')
-    zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2,model_clip,device)
-    torch.save(zeroshot_weights,f'features/Features_{dataset}/standard_features/Prompts_{dataset}.pt')
+    if model_version== 'Base':
+        torch.save(features_dataset, f'features/Features_{dataset}/standard_features/Features_{dataset}.pt')
+        zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2,model_clip,device)
+        torch.save(zeroshot_weights,f'features/Features_{dataset}/standard_features/Prompts_{dataset}.pt')
+    elif accepted_modes == 'Fine_tunnig':
+        torch.save(features_dataset, f'features/Features_{dataset}/finetuning_features/Features_{dataset}.pt')
+        zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device)
+        torch.save(zeroshot_weights, f'features/Features_{dataset}/finetuning_features/Prompts_{dataset}.pt')
 
 
 

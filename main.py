@@ -58,7 +58,7 @@ if __name__ == "__main__":
     LLM=args.LLM
 
     if model_version == "feature_extraction":
-        extract_features(dataset=dataset,mode_clip='16')
+        extract_features(model_version=model_version,dataset=dataset,mode_clip='16')
 
     elif model_version=="Base":
         path_features_D = f"features/Features_{dataset}/standard_features/Features_{dataset}.pt"
