@@ -121,49 +121,47 @@ if __name__ == "__main__":
 
 
     elif model_version == "Fine_tuning":
+
+        path_features_D = f"features/Features_{dataset}/finetuning_features/Features_{dataset}.pt"
+        path_prompts_D = f"features/Features_{dataset}/finetuning_features/Prompts_{dataset}.pt"
+
         if train_type=="In_domain":
             if dataset=="serengeti":
-                ruta_features_train = "features/Features_serengeti/finetuning_features/Features_CATALOG_train_16.pt"
-                ruta_features_val = "features/Features_serengeti/finetuning_features/Features_CATALOG_val_16.pt"
-                ruta_features_test = "features/Features_serengeti/finetuning_features/Features_CATALOG_test_16.pt"
-                path_text_feat = "features/Features_serengeti/finetuning_features/Text_features_16.pt"
 
-                model=CATALOG_base_In_domain_serengeti(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=4,
-                                                dropout=0.4,hidden_dim=1743,lr=1e-3,t=0.1,momentum=0.8409
-                                                    , patience=20, model=base_fine_tuning, Dataset=TuningDataset,
-                                                    Dataloader=dataloader_Tuning, version='fine_tuning',
-                                                    ruta_features_train=ruta_features_train,
-                                                    ruta_features_val=ruta_features_val,
-                                                    ruta_features_test=ruta_features_test,
-                                                    path_text_feat=path_text_feat,build_optimizer=build_optimizer,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
+                if hyperparameterTuning_mode == 1:
+                    seeds=val_seeds
+                    features_D=[path_features_D,path_prompts_D]
 
 
+                    model = CATALOG_base_In_domain_serengeti( model=base_fine_tuning, Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
 
-                model_params_path = 'models/CATALOG_finetuning_Base_Serengeti.pth'
-                mode_model(model, model_params_path, mode)
+                    random_search([features_D], train_type, model_version,model, f'{train_type}_{dataset}',f'Hp_{model_version}_{train_type}_{dataset}',seeds)
+                else:
+                    model = CATALOG_base_In_domain_serengeti( model=base_fine_tuning, Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
+                    model.set_parameters(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=4, dropout=0.4,hidden_dim=1743,lr=1e-3,t=0.1,momentum=0.8409
+                                                        , patience=20, path_features_D= path_features_D, path_prompts_D=path_prompts_D,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
+
+
+                    model_params_path = 'models/CATALOG_finetuning_Base_Serengeti.pth'
+                    mode_model(model, model_params_path, mode)
 
             elif dataset=="terra":
-                ruta_features_train = "features/Features_terra/finetuning_features/Features_CATALOG_train_16.pt"
-                ruta_features_cis_val = "features/Features_terra/finetuning_features/Features_CATALOG_cis_val_16.pt"
-                ruta_features_trans_val = "features/Features_terra/finetuning_features/Features_CATALOG_trans_val_16.pt"
-                ruta_features_cis_test = "features/Features_terra/finetuning_features/Features_CATALOG_cis_test_16.pt"
-                ruta_features_trans_test = "features/Features_terra/finetuning_features/Features_CATALOG_trans_test_16.pt"
-                path_text_feat = "features/Features_terra/finetuning_features/Text_features_16.pt"
-                #dropout=0.27822
-                model=CATALOG_base_In_domain_terra(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=1,
-                                                dropout=0.5,hidden_dim=1045,lr=1e-4,t=0.1,momentum=0.8409
-                                                    , patience=20, model=base_fine_tuning, Dataset=TuningDataset,
-                                                    Dataloader=dataloader_Tuning, version='fine_tuning',
-                                                       ruta_features_train=ruta_features_train,
-                                                       ruta_features_val1=ruta_features_cis_val,
-                                                       ruta_features_val2=ruta_features_trans_val,
-                                                       ruta_features_test1=ruta_features_cis_test,
-                                                       ruta_features_test2=ruta_features_trans_test,
-                                                    path_text_feat=path_text_feat,build_optimizer=build_optimizer,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
+                if hyperparameterTuning_mode == 1:
+                    seeds=val_seeds
+                    features_D=[path_features_D,path_prompts_D]
 
 
-                model_params_path = 'models/CATALOG_finetuning_Base_Terra.pth'
-                mode_model(model, model_params_path, mode)
+                    model = CATALOG_base_In_domain_terra( model=base_fine_tuning, Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
+
+                    random_search([features_D], train_type, model_version,model, f'{train_type}_{dataset}',f'Hp_{model_version}_{train_type}_{dataset}',seeds)
+                else:
+                    model = CATALOG_base_In_domain_serengeti( model=base_fine_tuning, Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
+                    model.set_parameters(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=1, dropout=0.45,hidden_dim=1045,lr=1e-4,t=0.1,momentum=0.8409
+                                                        , patience=20, path_features_D= path_features_D, path_prompts_D=path_prompts_D,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
+
+
+                    model_params_path = 'models/CATALOG_finetuning_Base_Terra.pth'
+                    mode_model(model, model_params_path, mode)
         elif train_type=="Out_domain":
             ruta_features_train = "features/Features_serengeti/finetuning_features/Features_CATALOG_train_16.pt"
             ruta_features_val = "features/Features_serengeti/finetuning_features/Features_CATALOG_val_16.pt"
