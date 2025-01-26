@@ -164,7 +164,7 @@ def extract_features(model_version,dataset,mode_clip):
         torch.save(features_dataset, f'features/Features_{dataset}/standard_features/Features_{dataset}.pt')
         zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2,model_clip,device)
         torch.save(zeroshot_weights,f'features/Features_{dataset}/standard_features/Prompts_{dataset}.pt')
-    elif accepted_modes == 'Fine_tuning':
+    elif model_version == 'Fine_tuning':
         torch.save(features_dataset, f'features/Features_{dataset}/finetuning_features/Features_{dataset}.pt')
         zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device)
         torch.save(zeroshot_weights, f'features/Features_{dataset}/finetuning_features/Prompts_{dataset}.pt')
