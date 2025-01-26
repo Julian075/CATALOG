@@ -84,12 +84,14 @@ class CATALOG_base_In_domain_terra:
         # Get your DataLoader
         if self.wnb == 1:  # randon search and monte carlo partition activate
             dataset_D = self.path_features_D
+            dataloader = self.dataloader(dataset_D['train'], self.batch_size, self.dataset)
+            dataloader_cis_val = self.dataloader(dataset_D['val'], self.batch_size, self.dataset)
         else:
             dataset_D = torch.load(self.path_features_D)
 
-        dataloader = self.dataloader(dataset_D['train'], self.batch_size, self.dataset)
-        dataloader_cis_val = self.dataloader(dataset_D['cis_val'], self.batch_size, self.dataset)
-        dataloader_trans_val = self.dataloader(dataset_D['trans_val'], self.batch_size, self.dataset)
+            dataloader = self.dataloader(dataset_D['train'], self.batch_size, self.dataset)
+            dataloader_cis_val = self.dataloader(dataset_D['cis_val'], self.batch_size, self.dataset)
+            dataloader_trans_val = self.dataloader(dataset_D['trans_val'], self.batch_size, self.dataset)
 
         if test:
             dataloader_cis_test = self.dataloader(dataset_D['cis_test'], self.batch_size, self.dataset)
@@ -164,26 +166,27 @@ class CATALOG_base_In_domain_terra:
             if self.wnb == 1:
                 wandb.log({"epoch_loss_cis_val": epoch_loss_cis_val, "epoch_acc_cis_val": epoch_acc_cis_val})
 
-            with torch.no_grad():
-                for batch_trans_val in dataloader_trans_val:
-                    image_features_trans_val, description_embeddings_trans_val, target_index_trans_val = batch_trans_val
-                    size_trans_val+=len(image_features_trans_val)
-                    image_features_trans_val = image_features_trans_val.to(device)
-                    description_embeddings_trans_val = description_embeddings_trans_val.to(device)
+            if self.wnb == 0:
+                with torch.no_grad():
+                    for batch_trans_val in dataloader_trans_val:
+                        image_features_trans_val, description_embeddings_trans_val, target_index_trans_val = batch_trans_val
+                        size_trans_val+=len(image_features_trans_val)
+                        image_features_trans_val = image_features_trans_val.to(device)
+                        description_embeddings_trans_val = description_embeddings_trans_val.to(device)
 
 
 
-                    loss_val, acc_val,_ = projection_model(description_embeddings_trans_val, image_features_trans_val, text_features,
-                                                 self.weight_Clip,target_index_trans_val,self.t)
+                        loss_val, acc_val,_ = projection_model(description_embeddings_trans_val, image_features_trans_val, text_features,
+                                                     self.weight_Clip,target_index_trans_val,self.t)
 
-                    running_loss_trans_val += loss_val.item()
-                    running_corrects_trans_val += float(acc_val)
+                        running_loss_trans_val += loss_val.item()
+                        running_corrects_trans_val += float(acc_val)
 
-            epoch_loss_trans_val = running_loss_trans_val / len(dataloader_trans_val)
-            epoch_acc_trans_val = (running_corrects_trans_val / size_trans_val) * 100
+                epoch_loss_trans_val = running_loss_trans_val / len(dataloader_trans_val)
+                epoch_acc_trans_val = (running_corrects_trans_val / size_trans_val) * 100
 
-            if self.wnb == 1:
-                wandb.log({"epoch_loss_trans_val": epoch_loss_trans_val, "epoch_acc_trans_val": epoch_acc_trans_val})
+               # if self.wnb == 1:
+               #     wandb.log({"epoch_loss_trans_val": epoch_loss_trans_val, "epoch_acc_trans_val": epoch_acc_trans_val})
 
 
             time_end = time.time()
@@ -194,7 +197,8 @@ class CATALOG_base_In_domain_terra:
                 print(f"Epoch [{epoch + 1}/{self.num_epochs}]")
                 print('Train loss: {:.4f}, acc: {:.4f}'.format(epoch_loss, epoch_acc))
                 print('Val Cis loss: {:.4f},Val Cis acc: {:.4f}'.format(epoch_loss_cis_val, epoch_acc_cis_val))
-                print('Val Trans loss: {:.4f},Val acc: {:.4f}'.format(epoch_loss_trans_val, epoch_acc_trans_val))
+                if self.wnb == 0:
+                    print('Val Trans loss: {:.4f},Val acc: {:.4f}'.format(epoch_loss_trans_val, epoch_acc_trans_val))
                 print(f"Time for epoch [{total_time}]")
                 if epoch_acc_cis_val > acc_best:
                     print('Save model')

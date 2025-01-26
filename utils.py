@@ -36,8 +36,9 @@ def dataloader_baseline(root_dir, batch_size,BaselineDataset):
 
 #Tuning version
 class TuningDataset(Dataset):
-    def __init__(self,json_path):
-        self.root_dir = json_path
+    def __init__(self,_dict):
+        #self.root_dir = json_path
+        self.data_dict = _dict
         self.samples = self._load_samples()
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         _, self.preprocess_clip = clip.load('ViT-B/16', self.device)
@@ -45,9 +46,9 @@ class TuningDataset(Dataset):
 
     def _load_samples(self):
         samples=[]
-        data_dict=torch.load(self.root_dir)
-        for key in data_dict.keys():
-            samples.append([data_dict[key]['image_features'],data_dict[key]['description_embeddings'][0],data_dict[key]['target_index']])
+        #data_dict=torch.load(self.root_dir)
+        for key in self.data_dict.keys():
+            samples.append([self.data_dict[key]['image_features'],self.data_dict[key]['description_embeddings'][0],self.data_dict[key]['target_index']])
         return samples
 
     def __len__(self):
