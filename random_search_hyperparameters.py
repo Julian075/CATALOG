@@ -6,7 +6,7 @@ import numpy as np
 
 
 def wandb_train(model, model_version,train_type,path_features, name_exp, seeds, config=None):
-    with wandb.init(config=config):
+    with wandb.init(config=config,name=name_exp):
         config = wandb.config
 
         weight_clip = config.weight_Clip
