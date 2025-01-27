@@ -1,3 +1,5 @@
+import os.path
+
 import numpy as np
 
 from feature_extraction.Base.CATALOG_feature_extraction import extract_features
@@ -48,7 +50,7 @@ if __name__ == "__main__":
 
 
 
-    parser.add_argument('--LLM', type=str, default="LLAMA", help='define LLM')
+    parser.add_argument('--LLM', type=str, default="ChatGPT", help='define LLM')
     args = parser.parse_args()
 
     model_version = args.model_version
@@ -60,15 +62,19 @@ if __name__ == "__main__":
     LLM=args.LLM
 
     if feature_extraction :
-        extract_features(model_version=model_version,dataset=dataset,mode_clip='16')
+        extract_features(model_version=model_version,dataset=dataset,mode_clip='16',LLM=LLM,only_text=0)
     else:
 
             if model_version=="Base":
                 path_features_D = f"features/Features_{dataset}/standard_features/Features_{dataset}.pt"
-                path_prompts_D = f"features/Features_{dataset}/standard_features/Prompts_{dataset}.pt"
+                path_prompts_D = f"features/Features_{dataset}/standard_features/Prompts_{dataset}_{LLM}.pt"
+                if not os.path.isfile(path_prompts_D):
+                    path_prompts_D = f"features/Features_{dataset}/standard_features/Prompts_{dataset}.pt"
 
                 path_features_S = "features/Features_terra/standard_features/Features_terra.pt"
-                path_prompts_S = f"features/Features_terra/standard_features/Prompts_terra.pt"
+                path_prompts_S = f"features/Features_terra/standard_features/Prompts_terra_{LLM}.pt"
+                if not os.path.isfile(path_prompts_S):
+                    path_prompts_S = f"features/Features_{dataset}/standard_features/Prompts_{dataset}.pt"
                 if train_type=="In_domain":
                     if dataset!="terra":
 
@@ -108,7 +114,7 @@ if __name__ == "__main__":
 
                         model = CATALOG_base( model=base, Dataset=BaselineDataset,Dataloader=dataloader_baseline, version='base',build_optimizer=build_optimizer)
 
-                        random_search([features_D, features_S], train_type, model_version,model, f'{train_type}',f'Hp_{model_version}',seeds)
+                        random_search([features_D, features_S], train_type, model_version,model, f'{train_type}_{LLM}',f'Hp_{model_version}_{LLM}',seeds)
                     else:
                         model = CATALOG_base(model=base, Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
                         model.set_parameters(weight_Clip=0.6, num_epochs=8, batch_size=48,num_layers=8, dropout=0.27, hidden_dim=1045, lr=0.08,
@@ -126,7 +132,9 @@ if __name__ == "__main__":
             elif model_version == "Fine_tuning":
 
                 path_features_D = f"features/Features_{dataset}/finetuning_features/Features_{dataset}.pt"
-                path_prompts_D = f"features/Features_{dataset}/finetuning_features/Prompts_{dataset}.pt"
+                path_prompts_D = f"features/Features_{dataset}/finetuning_features/Prompts_{dataset}_{LLM}.pt"
+                if not os.path.isfile(path_prompts_D):
+                    path_prompts_D = f"features/Features_{dataset}/standard_features/Prompts_{dataset}.pt"
 
                 if train_type=="In_domain":
                     if dataset=="serengeti":

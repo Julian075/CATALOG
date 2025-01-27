@@ -7,8 +7,14 @@ __pycache__/
 *.png
 *.csv
 *.json
-!info_terra.json
-!info_serengeti.json
+!info_terra_ChatGPT.json
+!info_serengeti_ChatGPT.json
+!info_terra_LLAMA.json
+!info_serengeti_LLAMA.json
+!info_terra_Phi.json
+!info_serengeti_Phi.json
+!info_terra_Qwen.json
+!info_serengeti_Qwen.json
 *.zip
 scatter_search_optimizer.py
 graficas.py

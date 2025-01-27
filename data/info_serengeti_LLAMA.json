@@ -1,0 +1,374 @@
+{"llm_descriptions": {
+    
+"aardvark":
+            [
+            " aardvarks are nocturnal mammals with a long snout, pointed ears, and a long, thin tail.",
+            " their fur is thick and velvety, ranging in color from yellow to brown.",
+            " aardvarks have powerful claws for digging and breaking open termite mounds.",
+            " they are solitary animals and live in burrows.",
+            " aardvarks are insectivores and feed on ants, termites, and other invertebrates.",
+            " overall, aardvarks have a unique appearance and behavior adapted to their underground lifestyle."
+        ], "aardwolf":
+            [
+            " aardwolves are nocturnal mammals with a long, pointed snout, and a long, thin tail.",
+            " their fur is thick and velvety, ranging in color from yellow to brown.",
+            " aardwolves have powerful claws for digging and breaking open termite mounds.",
+            " they are solitary animals and live in burrows.",
+            " aardwolves are insectivores and feed on ants, termites, and other invertebrates.",
+            " overall, aardwolves have a unique appearance and behavior adapted to their underground lifestyle."
+        ], "baboon":
+            [
+            " baboons are primates that live in large troops.",
+            " they have thick, coarse fur that ranges in color from brown to gray.",
+            " baboons have a distinctive muzzle and a prominent forehead.",
+            " they are omnivores and feed on a variety of plants and animals.",
+            " baboons are known for their intelligence and complex social behavior.",
+            " overall, baboons have a unique appearance and behavior adapted to their social lifestyle."
+        ], "batEaredFox":
+            [
+            " bat-eared foxes are nocturnal mammals with a distinctive pair of ear-like structures on their head.",
+            " their fur is thick and coarse, ranging in color from yellow to brown.",
+            " bat-eared foxes have powerful claws for digging and breaking open termite mounds.",
+            " they are solitary animals and live in burrows.",
+            " bat-eared foxes are insectivores and feed on ants, termites, and other invertebrates.",
+            " overall, bat-eared foxes have a unique appearance and behavior adapted to their underground lifestyle."
+        ], "buffalo":
+            [
+            " buffalo are large, hooved mammals that live in herds.",
+            " they have thick, coarse fur that ranges in color from brown to gray.",
+            " buffalo have a distinctive hump on their back and a prominent horn.",
+            " they are herbivores and feed on a variety of plants.",
+            " buffalo are known for their strength and agility.",
+            " overall, buffalo have a unique appearance and behavior adapted to their social lifestyle."
+        ], "bushbuck":
+            [
+            " bushbucks are antelopes that live in dense forests.",
+            " they have reddish-brown coats with white markings on their face and throat.",
+            " bushbucks have large, curved horns.",
+            " they are herbivores and feed on a variety of plants.",
+            " bushbucks are known for their agility and ability to climb trees.",
+            " overall, bushbucks have a unique appearance and behavior adapted to their forest lifestyle."
+        ], "caracal":
+            [
+            " caracals are wild cats with a distinctive tuft of hair on their ears.",
+            " their fur is thick and coarse, ranging in color from yellow to brown.",
+            " caracals have powerful claws and sharp teeth.",
+            " they are solitary animals and live in burrows.",
+            " caracals are carnivores and feed on a variety of small animals.",
+            " overall, caracals have a unique appearance and behavior adapted to their hunting lifestyle."
+        ], "cheetah":
+            [
+            " cheetahs are wild cats with a distinctive coat pattern featuring black spots on a yellow background.",
+            " their fur is thin and smooth, ranging in color from yellow to brown.",
+            " cheetahs have powerful claws and sharp teeth.",
+            " they are solitary animals and live in open grasslands.",
+            " cheetahs are carnivores and feed on a variety of small animals.",
+            " overall, cheetahs have a unique appearance and behavior adapted to their hunting lifestyle."
+        ], "civet":
+            [
+            " civets are mammals with a distinctive coat pattern featuring black and white markings.",
+            " their fur is thick and coarse, ranging in color from yellow to brown.",
+            " civets have powerful claws and a long, thin tail.",
+            " they are solitary animals and live in forests.",
+            " civets are omnivores and feed on a variety of plants and animals.",
+            " overall, civets have a unique appearance and behavior adapted to their forest lifestyle."
+        ], "dikDik":
+            [
+            " dik-diks are small antelopes that live in dry, open grasslands.",
+            " they have reddish-brown coats with white markings on their face and throat.",
+            " dik-diks have large, curved horns.",
+            " they are herbivores and feed on a variety of plants.",
+            " dik-diks are known for their agility and ability to run quickly.",
+            " overall, dik-diks have a unique appearance and behavior adapted to their grassland lifestyle."
+        ], "eland":
+            [
+            " elands are large, hooved mammals that live in herds.",
+            " they have reddish-brown coats with white markings on their face and throat.",
+            " elands have large, curved horns.",
+            " they are herbivores and feed on a variety of plants.",
+            " elands are known for their strength and agility.",
+            " overall, elands have a unique appearance and behavior adapted to their grassland lifestyle."
+        ], "elephant":
+            [
+            " elephants are large, hooved mammals that live in herds.",
+            " they have thick, coarse fur that ranges in color from gray to brown.",
+            " elephants have large, curved tusks.",
+            " they are herbivores and feed on a variety of plants.",
+            " elephants are known for their intelligence and complex social behavior.",
+            " overall, elephants have a unique appearance and behavior adapted to their social lifestyle."
+        ], "gazelleGrants":
+            [
+            " Grant's gazelles are antelopes that live in open grasslands.",
+            " they have reddish-brown coats with white markings on their face and throat.",
+            " Grant's gazelles have large, curved horns.",
+            " they are herbivores and feed on a variety of plants.",
+            " Grant's gazelles are known for their agility and ability to run quickly.",
+            " overall, Grant's gazelles have a unique appearance and behavior adapted to their grassland lifestyle."
+        ], "gazelleThomsons":
+            [
+            " Thomson's gazelles are antelopes that live in open grasslands.",
+            " they have reddish-brown coats with white markings on their face and throat.",
+            " Thomson's gazelles have large, curved horns.",
+            " they are herbivores and feed on a variety of plants.",
+            " Thomson's gazelles are known for their agility and ability to run quickly.",
+            " overall, Thomson's gazelles have a unique appearance and behavior adapted to their grassland lifestyle."
+        ], "genet":
+            [
+            " genets are mammals with a distinctive coat pattern featuring black and white markings.",
+            " their fur is thick and coarse, ranging in color from yellow to brown.",
+            " genets have powerful claws and a long, thin tail.",
+            " they are solitary animals and live in forests.",
+            " genets are omnivores and feed on a variety of plants and animals.",
+            " overall, genets have a unique appearance and behavior adapted to their forest lifestyle."
+        ], "giraffe":
+            [
+            " giraffes are large, hooved mammals that live in herds.",
+            " they have distinctive coats featuring brown or reddish-brown patches on a cream or white background.",
+            " giraffes have long, thin necks and legs.",
+            " they are herbivores and feed on a variety of plants.",
+            " giraffes are known for their height and ability to reach high branches.",
+            " overall, giraffes have a unique appearance and behavior adapted to their grassland lifestyle."
+        ], "guineaFowl":
+            [
+            " guinea fowl are birds that live in groups.",
+            " they have distinctive coats featuring brown or reddish-brown feathers with white or black markings.",
+            " guinea fowl have long, pointed beaks.",
+            " they are omnivores and feed on a variety of plants and insects.",
+            " guinea fowl are known for their distinctive calls and ability to forage for food.",
+            " overall, guinea fowl have a unique appearance and behavior adapted to their social lifestyle."
+        ], "hare":
+            [
+            " hares are long-legged, furry mammals that live in open grasslands.",
+            " they have reddish-brown coats with white markings on their face and throat.",
+            " hares have long, powerful hind legs and sharp teeth.",
+            " they are herbivores and feed on a variety of plants.",
+            " hares are known for their speed and ability to run quickly.",
+            " overall, hares have a unique appearance and behavior adapted to their grassland lifestyle."
+        ], "hartebeest":
+            [
+            " hartebeests are antelopes that live in open grasslands.",
+            " they have reddish-brown coats with white markings on their face and throat.",
+            " hartebeests have large, curved horns.",
+            " they are herbivores and feed on a variety of plants.",
+            " hartebeests are known for their agility and ability to run quickly.",
+            " overall, hartebeests have a unique appearance and behavior adapted to their grassland lifestyle."
+        ], "hippopotamus":
+            [
+            " hippos are large, semi-aquatic mammals that live in rivers and lakes.",
+            " they have thick, coarse fur that ranges in color from gray to brown.",
+            " hippos have large, rounded bodies and short legs.",
+            " they are herbivores and feed on a variety of plants.",
+            " hippos are known for their ability to hold their breath underwater.",
+            " overall, hippos have a unique appearance and behavior adapted to their aquatic lifestyle."
+        ], "honeyBadger":
+            [
+            " honey badgers are mammals with a distinctive coat pattern featuring black and white markings.",
+            " their fur is thick and coarse, ranging in color from yellow to brown.",
+            " honey badgers have powerful claws and a long, thin tail.",
+            " they are solitary animals and live in forests.",
+            " honey badgers are omnivores and feed on a variety of plants and animals.",
+            " overall, honey badgers have a unique appearance and behavior adapted to their forest lifestyle."
+        ], "hyenaSpotted":
+            [
+            " spotted hyenas are carnivorous mammals that live in groups.",
+            " they have distinctive coats featuring yellowish-brown fur with black spots.",
+            " spotted hyenas have powerful jaws and sharp teeth.",
+            " they are scavengers and feed on a variety of carrion.",
+            " spotted hyenas are known for their distinctive laugh-like calls.",
+            " overall, spotted hyenas have a unique appearance and behavior adapted to their scavenging lifestyle."
+        ], "hyenaStriped":
+            [
+            " striped hyenas are carnivorous mammals that live in groups.",
+            " they have distinctive coats featuring yellowish-brown fur with black stripes.",
+            " striped hyenas have powerful jaws and sharp teeth.",
+            " they are scavengers and feed on a variety of carrion.",
+            " striped hyenas are known for their distinctive calls.",
+            " overall, striped hyenas have a unique appearance and behavior adapted to their scavenging lifestyle."
+        ], "impala":
+            [
+            " impalas are antelopes that live in open grasslands.",
+            " they have reddish-brown coats with white markings on their face and throat.",
+            " impalas have large, curved horns.",
+            " they are herbivores and feed on a variety of plants.",
+            " impalas are known for their agility and ability to run quickly.",
+            " overall, impalas have a unique appearance and behavior adapted to their grassland lifestyle."
+        ], "jackal":
+            [
+            " jackals are carnivorous mammals that live in groups.",
+            " they have distinctive coats featuring yellowish-brown fur with black markings.",
+            " jackals have powerful jaws and sharp teeth.",
+            " they are scavengers and feed on a variety of carrion.",
+            " jackals are known for their distinctive howls.",
+            " overall, jackals have a unique appearance and behavior adapted to their scavenging lifestyle."
+        ], "koriBustard":
+            [
+            " kori bustards are large, flightless birds that live in open grasslands.",
+            " they have distinctive coats featuring brown or reddish-brown feathers with white or black markings.",
+            " kori bustards have long, powerful legs and sharp beaks.",
+            " they are omnivores and feed on a variety of plants and insects.",
+            " kori bustards are known for their distinctive calls and ability to run quickly.",
+            " overall, kori bustards have a unique appearance and behavior adapted to their grassland lifestyle."
+        ], "leopard":
+            [
+            " leopards are wild cats with distinctive coats featuring black spots on a yellow or golden background.",
+            " their fur is thick and coarse, ranging in color from yellow to brown.",
+            " leopards have powerful claws and sharp teeth.",
+            " they are solitary animals and live in forests.",
+            " leopards are carnivores and feed on a variety of small animals.",
+            " overall, leopards have a unique appearance and behavior adapted to their hunting lifestyle."
+        ], "lionFemale":
+            [
+            " lionesses are female lions that live in prides.",
+            " they have distinctive coats featuring golden or tawny fur with a long mane.",
+            " lionesses have powerful jaws and sharp teeth.",
+            " they are carnivores and feed on a variety of small animals.",
+            " lionesses are known for their social behavior and cooperative hunting.",
+            " overall, lionesses have a unique appearance and behavior adapted to their social lifestyle."
+        ], "lionMale":
+            [
+            " lions are male lions that live in prides.",
+            " they have distinctive coats featuring golden or tawny fur with a long mane.",
+            " lions have powerful jaws and sharp teeth.",
+            " they are carnivores and feed on a variety of small animals.",
+            " lions are known for their social behavior and dominant role in their prides.",
+            " overall, lions have a unique appearance and behavior adapted to their social lifestyle."
+        ],"mongoose":
+            [
+            " mongooses are mammals with a distinctive coat pattern featuring black and white markings.",
+            " their fur is thick and coarse, ranging in color from yellow to brown.",
+            " mongooses have powerful claws and a long, thin tail.",
+            " they are solitary animals and live in forests.",
+            " mongooses are omnivores and feed on a variety of plants and animals.",
+            " overall, mongooses have a unique appearance and behavior adapted to their forest lifestyle."
+        ], "ostrich":
+            [
+            " ostriches are large, flightless birds that live in open grasslands.",
+            " they have distinctive coats featuring brown or reddish-brown feathers with white or black markings.",
+            " ostriches have long, powerful legs and sharp beaks.",
+            " they are omnivores and feed on a variety of plants and insects.",
+            " ostriches are known for their distinctive calls and ability to run quickly.",
+            " overall, ostriches have a unique appearance and behavior adapted to their grassland lifestyle."
+        ], "porcupine":
+            [
+            " porcupines are mammals with a distinctive coat pattern featuring black and white quills.",
+            " their fur is thick and coarse, ranging in color from yellow to brown.",
+            " porcupines have powerful claws and a long, thin tail.",
+            " they are solitary animals and live in forests.",
+            " porcupines are herbivores and feed on a variety of plants.",
+            " overall, porcupines have a unique appearance and behavior adapted to their forest lifestyle."
+        ],"reedbuck":
+            [
+            " reedbuck are antelopes that live in open grasslands.",
+            " they have reddish-brown coats with white markings on their face and throat.",
+            " reedbuck have large, curved horns.",
+            " they are herbivores and feed on a variety of plants.",
+            " reedbuck are known for their agility and ability to run quickly.",
+            " overall, reedbuck have a unique appearance and behavior adapted to their grassland lifestyle."
+        ],"reptiles":
+            [
+            " reptiles are a group of animals that include snakes, lizards, and turtles.",
+            " they have scaly skin and lay eggs.",
+            " reptiles have a wide range of sizes, shapes, and colors.",
+            " they are found in a variety of habitats, including forests, grasslands, and deserts.",
+            " reptiles are carnivores and feed on a variety of small animals.",
+            " overall, reptiles have a unique appearance and behavior adapted to their environments."
+        ], "rhinoceros":
+            [
+            " rhinoceroses are large, hooved mammals that live in herds.",
+            " they have distinctive coats featuring gray or brown fur with white or black markings.",
+            " rhinoceroses have large, curved horns.",
+            " they are herbivores and feed on a variety of plants.",
+            " rhinoceroses are known for their strength and ability to run quickly.",
+            " overall, rhinoceroses have a unique appearance and behavior adapted to their grassland lifestyle."
+        ], "rodents":
+            [
+            " rodents are a group of mammals that include mice, rats, and squirrels.",
+            " they have distinctive coats featuring brown or gray fur with white or black markings.",
+            " rodents have large, prominent eyes and ears.",
+            " they are herbivores and feed on a variety of plants.",
+            " rodents are known for their ability to store food and adapt to their environments.",
+            " overall, rodents have a unique appearance and behavior adapted to their environments."
+        ],"secretaryBird":
+            [
+            " secretary birds are large, predatory birds that live in open grasslands.",
+            " they have distinctive coats featuring brown or reddish-brown feathers with white or black markings.",
+            " secretary birds have long, powerful legs and sharp beaks.",
+            " they are carnivores and feed on a variety of small animals.",
+            " secretary birds are known for their distinctive calls and ability to run quickly.",
+            " overall, secretary birds have a unique appearance and behavior adapted to their grassland lifestyle."
+        ],"serval":
+            [
+            " servals are wild cats with distinctive coats featuring black spots on a yellow or golden background.",
+            " their fur is thick and coarse, ranging in color from yellow to brown.",
+            " servals have powerful claws and sharp teeth.",
+            " they are solitary animals and live in forests.",
+            " servals are carnivores and feed on a variety of small animals.",
+            " overall, servals have a unique appearance and behavior adapted to their hunting lifestyle."
+        ], "topi":
+            [
+            " topi are antelopes that live in open grasslands.",
+            " they have reddish-brown coats with white markings on their face and throat.",
+            " topi have large, curved horns.",
+            " they are herbivores and feed on a variety of plants.",
+            " topi are known for their agility and ability to run quickly.",
+            " overall, topi have a unique appearance and behavior adapted to their grassland lifestyle."
+        ],"vervetMonkey":
+            [
+            " vervet monkeys are primates that live in groups.",
+            " they have distinctive coats featuring brown or gray fur with white or black markings.",
+            " vervet monkeys have long, thin tails and large, prominent eyes.",
+            " they are omnivores and feed on a variety of plants and animals.",
+            " vervet monkeys are known for their intelligence and complex social behavior.",
+            " overall, vervet monkeys have a unique appearance and behavior adapted to their social lifestyle."
+        ], "warthog":
+            [
+            " warthogs are large, hooved mammals that live in herds.",
+            " they have distinctive coats featuring gray or brown fur with white or black markings.",
+            " warthogs have large, curved tusks.",
+            " they are herbivores and feed on a variety of plants.",
+            " warthogs are known for their strength and ability to run quickly.",
+            " overall, warthogs have a unique appearance and behavior adapted to their grassland lifestyle."
+        ], "waterbuck":
+            [
+            " waterbucks are antelopes that live in open grasslands.",
+            " they have reddish-brown coats with white markings on their face and throat.",
+            " waterbucks have large, curved horns.",
+            " they are herbivores and feed on a variety of plants.",
+            " waterbucks are known for their agility and ability to run quickly.",
+            " overall, waterbucks have a unique appearance and behavior adapted to their grassland lifestyle."
+        ], "wildcat":
+            [
+            " wildcats are small, carnivorous mammals that live in forests.",
+            " they have distinctive coats featuring brown or gray fur with white or black markings.",
+            " wildcats have powerful claws and sharp teeth.",
+            " they are solitary animals and feed on a variety of small animals.",
+            " wildcats are known for their agility and ability to climb trees.",
+            " overall, wildcats have a unique appearance and behavior adapted to their forest lifestyle."
+        ], "wildebeest":
+            [
+            " wildebeest are large, hooved mammals that live in herds.",
+            " they have distinctive coats featuring gray or brown fur with white or black markings.",
+            " wildebeest have large, curved horns.",
+            " they are herbivores and feed on a variety of plants.",
+            " wildebeest are known for their strength and ability to run quickly.",
+            " overall, wildebeest have a unique appearance and behavior adapted to their grassland lifestyle."
+        ], "zebra":
+            [
+            " zebras are equines that live in open grasslands.",
+            " they have distinctive coats featuring black and white stripes.",
+            " zebras have large, prominent eyes and ears.",
+            " they are herbivores and feed on a variety of plants.",
+            " zebras are known for their agility and ability to run quickly.",
+            " overall, zebras have a unique appearance and behavior adapted to their grassland lifestyle."
+        ], "zorilla":
+            [
+            " zorillas are mammals with a distinctive coat pattern featuring black and white markings.",
+            " their fur is thick and coarse, ranging in color from yellow to brown.",
+            " zorillas have powerful claws and a long, thin tail.",
+            " they are solitary animals and live in forests.",
+            " zorillas are omnivores and feed on a variety of plants and animals.",
+            " overall, zorillas have a unique appearance and behavior adapted to their forest lifestyle."
+    ]
+}
+
+}
