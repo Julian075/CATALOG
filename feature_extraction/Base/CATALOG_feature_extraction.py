@@ -4,6 +4,7 @@ from transformers import BertModel, BertTokenizer
 import clip
 import json
 from PIL import Image
+import numpy as np
 
 
 camera_trap_templates1 = [
@@ -64,8 +65,36 @@ def zeroshot_classifier(classnames, templates1, templates2,model_clip,device):
             zeroshot_weights.append(class_embedding)
         zeroshot_weights = torch.stack(zeroshot_weights, dim=1).to(device)
     return zeroshot_weights
+def zeroshot_classifier_2(classnames, templates1, templates2,model_clip,device,omg):
+    with torch.no_grad():
+        zeroshot_weights = []
+        for classname in classnames:
+            texts = [template.format(classname) for template in templates1]
+            texts = clip.tokenize(texts).to(device)
+            template_embeddings = model_clip.encode_text(texts)  # embed with text encoder
+            template_embeddings /= template_embeddings.norm(dim=-1, keepdim=True)
+            template_embeddings = template_embeddings.mean(dim=0)
+            template_embeddings /= template_embeddings.norm(dim=-1, keepdim=True)
+            template_embeddings = template_embeddings.unsqueeze(0)
 
-def extract_features(model_version,dataset,mode_clip,LLM='ChatGPT',only_text=0):
+            texts2 = [template for template in templates2[classname]]  # format with class
+            texts2 = clip.tokenize(texts2).to(device)
+            description_embeddings = model_clip.encode_text(texts2)  # embed with text encoder
+            description_embeddings /= description_embeddings.norm(dim=-1, keepdim=True)
+            description_embeddings = description_embeddings.mean(dim=0)
+            description_embeddings /= description_embeddings.norm(dim=-1, keepdim=True)
+            description_embeddings = description_embeddings.unsqueeze(0)
+
+            class_embedding = torch.cat ((template_embeddings *(1-omg),description_embeddings * omg), dim = 0)
+            class_embedding = class_embedding.mean(dim=0)
+            class_embedding /= class_embedding.norm()  # Normalize final embedding
+
+
+            zeroshot_weights.append(class_embedding)
+        zeroshot_weights = torch.stack(zeroshot_weights, dim=1).to(device)
+    return zeroshot_weights
+
+def extract_features(model_version,dataset,mode_clip,LLM='ChatGPT',only_text=0,AB_omg=0):
     #path where is located the images
     #dataset='serengeti'
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -171,8 +200,14 @@ def extract_features(model_version,dataset,mode_clip,LLM='ChatGPT',only_text=0):
     else:
 
         if model_version== 'Base':
-            zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2,model_clip,device)
-            torch.save(zeroshot_weights,f'features/Features_{dataset}/standard_features/Prompts_{dataset}_{LLM}.pt')
+            if AB_omg:
+                omg = np.round(np.arange(0, 1.1, 0.1),2)
+                for omg_i in omg:
+                    zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2,model_clip,device,omg_i)
+                    torch.save(zeroshot_weights,f'features/Features_{dataset}/standard_features/Prompts_{dataset}_{LLM}_{omg_i}.pt')
+            else:
+                zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2,model_clip,device)
+                torch.save(zeroshot_weights,f'features/Features_{dataset}/standard_features/Prompts_{dataset}_{LLM}.pt')
         elif model_version == 'Fine_tuning':
             zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device)
             torch.save(zeroshot_weights, f'features/Features_{dataset}/finetuning_features/Prompts_{dataset}_{LLM}.pt')

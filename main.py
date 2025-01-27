@@ -46,7 +46,7 @@ if __name__ == "__main__":
     parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
     parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
-    parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')
+    parser.add_argument('--feature_extraction', type=int, default=1, help='Type of training')
 
 
 
@@ -62,7 +62,7 @@ if __name__ == "__main__":
     LLM=args.LLM
 
     if feature_extraction :
-        extract_features(model_version=model_version,dataset=dataset,mode_clip='16',LLM=LLM,only_text=0)
+        extract_features(model_version=model_version,dataset=dataset,mode_clip='16',LLM=LLM,only_text=1,AB_omg=1)
     else:
 
             if model_version=="Base":
