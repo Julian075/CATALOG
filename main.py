@@ -3,7 +3,7 @@ import os.path
 import numpy as np
 
 from feature_extraction.Base.CATALOG_feature_extraction import extract_features
-from random_search_hyperparameters import random_search,test_best_model
+from random_search_hyperparameters import random_search,test_best_model,random_search2
 
 from models import CATALOG_Base as base
 from models import CATALOG_Base_fine_tuning as base_fine_tuning
@@ -114,7 +114,10 @@ if __name__ == "__main__":
 
                         if hyperparameterTuning_mode == 1:
                             seeds = val_seeds
-                            random_search([features_D, features_S], train_type, model_version,model, f'{train_type}_{LLM}',f'Hp_{model_version}_{LLM}',seeds)
+                            if not LLM =="ChatGPT":
+                                random_search([features_D, features_S], train_type, model_version,model, f'{train_type}_{LLM}',f'Hp_{model_version}_{LLM}',seeds)
+                            else:
+                                random_search2([features_D, features_S], train_type, model_version,model, f'{train_type}_{LLM}',f'Hp_{model_version}_{LLM}',seeds)
                         else:
                             config = {"weight_Clip": 0.501,"num_epochs": 91,"batch_size": 8,"num_layers": 1,"dropout": 0.262, "hidden_dim": 512,
                                         "lr": 0.029,"t": 0.106,"momentum": 0.835}
