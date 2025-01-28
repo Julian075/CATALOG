@@ -93,6 +93,32 @@ def random_search(path_features,train_type, model_version,model, name_exp, name_
 
         wandb.agent(sweep_id, function=lambda: wandb_train(model, model_version, train_type, path_features,name_exp, seeds), count=100)
 
+
+def random_search2(path_features, train_type, model_version, model, name_exp, name_project, seeds):
+    token = "282780c770de0083eddfa3c56402f555ee60e108"  # os.getenv("WandB_TOKE")
+    wandb.login(key=token)
+    sweep_config = {
+        'method': 'random', 'metric': {'goal': 'maximize', 'name': 'epoch_acc_val'},
+        'name': name_exp,
+        'parameters': {
+            'batch_size': {'distribution': 'categorical', 'values': [2 ** i for i in range(2, 9)]},
+            'dropout': {'distribution': 'uniform', 'min': 0.1, 'max': 0.5},
+            'hidden_dim': {'distribution': 'uniform', 'min': 512, 'max': 1400},
+            'lr': {'distribution': 'uniform', 'min': 1e-3, 'max': 0.1},
+            'momentum': {'distribution': 'uniform', 'min': 0.8, 'max': 0.99},
+            'num_epochs': {'distribution': 'int_uniform', 'min': 1, 'max': 200},
+            'num_layers': {'distribution': 'int_uniform', 'min': 1, 'max': 1},
+            't': {'distribution': 'log_uniform_values', 'min': 0.01, 'max': 1},
+            'weight_Clip': {'distribution': 'uniform', 'min': 0.4, 'max': 0.6}
+        }
+    }
+
+    sweep_id = wandb.sweep(sweep_config, project=name_project)
+
+    wandb.agent(sweep_id,
+                function=lambda: wandb_train(model, model_version, train_type, path_features, name_exp, seeds),
+                count=100)
+
 def test_best_model(path_features,train_type, model_version,model, name_exp,config, seeds):
     weight_clip = config['weight_Clip']
     num_epochs = config['num_epochs']

@@ -60,7 +60,7 @@ if __name__ == "__main__":
     LLM=args.LLM
 
     if feature_extraction :
-        extract_features(model_version=model_version,dataset=dataset,mode_clip='16',LLM=LLM,only_text=0,AB_omg=0)
+        extract_features(model_version=model_version,dataset=dataset,mode_clip='16',LLM=LLM,only_text=1,AB_omg=1)
     else:
 
             if model_version=="Base":
@@ -123,7 +123,7 @@ if __name__ == "__main__":
 
                     else:
                         model = CATALOG_base(model=base, Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
-                        model.set_parameters(weight_Clip=0.501, num_epochs=91, batch_size=8,num_layers=1, dropout=0.262, hidden_dim=512, lr=0.029,
+                        model.set_parameters(weight_Clip=0.501, num_epochs=91, batch_size=8,num_layers=1, dropout=0.262, hidden_dim=1045, lr=0.029,
                                              t=0.106,momentum=0.835, patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S=path_features_S,
                                              path_prompts_S=path_prompts_S, exp_name=f'{model_version}_{train_type}', wnb=0)
 
