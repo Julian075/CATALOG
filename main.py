@@ -3,7 +3,7 @@ import os.path
 import numpy as np
 
 from feature_extraction.Base.CATALOG_feature_extraction import extract_features
-from random_search_hyperparameters import random_search
+from random_search_hyperparameters import random_search,test_best_model
 
 from models import CATALOG_Base as base
 from models import CATALOG_Base_fine_tuning as base_fine_tuning
@@ -107,18 +107,26 @@ if __name__ == "__main__":
 
 
                 if train_type=="Out_domain":
-                    if hyperparameterTuning_mode == 1:
+                    if hyperparameterTuning_mode == 1 or hyperparameterTuning_mode == 2:
                         seeds=val_seeds
                         features_D=[path_features_D,path_prompts_D]
                         features_S = [path_features_S, path_prompts_S]
 
                         model = CATALOG_base( model=base, Dataset=BaselineDataset,Dataloader=dataloader_baseline, version='base',build_optimizer=build_optimizer)
 
-                        random_search([features_D, features_S], train_type, model_version,model, f'{train_type}_{LLM}',f'Hp_{model_version}_{LLM}',seeds)
+                        if hyperparameterTuning_mode == 1:
+                            seeds = val_seeds
+                            random_search([features_D, features_S], train_type, model_version,model, f'{train_type}_{LLM}',f'Hp_{model_version}_{LLM}',seeds)
+                        else:
+                            config = {"weight_Clip": 0.501,"num_epochs": 91,"batch_size": 8,"num_layers": 1,"dropout": 0.262, "hidden_dim": 512,
+                                        "lr": 0.029,"t": 0.106,"momentum": 0.835}
+                            seeds = test_seeds
+                            test_best_model([features_D, features_S],train_type, model_version,model, f'{train_type}_{LLM}',config, seeds)
+
                     else:
                         model = CATALOG_base(model=base, Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
-                        model.set_parameters(weight_Clip=0.6, num_epochs=8, batch_size=48,num_layers=8, dropout=0.27, hidden_dim=1045, lr=0.08,
-                                             t=0.1,momentum=0.8, patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S=path_features_S,
+                        model.set_parameters(weight_Clip=0.501, num_epochs=91, batch_size=8,num_layers=1, dropout=0.262, hidden_dim=512, lr=0.029,
+                                             t=0.106,momentum=0.835, patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S=path_features_S,
                                              path_prompts_S=path_prompts_S, exp_name=f'{model_version}_{train_type}', wnb=0)
 
                         model_params_path = f'models/CATALOG_Base.pth'
