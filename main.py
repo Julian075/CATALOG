@@ -62,7 +62,7 @@ if __name__ == "__main__":
     LLM=args.LLM
 
     if feature_extraction :
-        extract_features(model_version=model_version,dataset=dataset,mode_clip='16',LLM=LLM,only_text=1,AB_omg=1)
+        extract_features(model_version=model_version,dataset=dataset,mode_clip='16',LLM=LLM,only_text=0,AB_omg=0)
     else:
 
             if model_version=="Base":
