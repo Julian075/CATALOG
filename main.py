@@ -48,8 +48,6 @@ if __name__ == "__main__":
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
     parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')
 
-
-
     parser.add_argument('--LLM', type=str, default="ChatGPT", help='define LLM')
     args = parser.parse_args()
 
