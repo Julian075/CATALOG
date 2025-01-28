@@ -16,6 +16,7 @@ __pycache__/
 !info_terra_Qwen.json
 !info_serengeti_Qwen.json
 *.zip
+*.tar
 scatter_search_optimizer.py
 graficas.py
 graficas_wandb.py
