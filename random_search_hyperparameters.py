@@ -107,7 +107,7 @@ def random_search2(path_features, train_type, model_version, model, name_exp, na
             'lr': {'distribution': 'uniform', 'min': 1e-3, 'max': 0.1},
             'momentum': {'distribution': 'uniform', 'min': 0.8, 'max': 0.99},
             'num_epochs': {'distribution': 'int_uniform', 'min': 1, 'max': 200},
-            'num_layers': {'distribution': 'int_uniform', 'min': 1, 'max': 1},
+            'num_layers': 1,
             't': {'distribution': 'log_uniform_values', 'min': 0.01, 'max': 1},
             'weight_Clip': {'distribution': 'uniform', 'min': 0.4, 'max': 0.6}
         }
