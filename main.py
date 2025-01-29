@@ -41,10 +41,10 @@ def mode_model(model,model_params_path,mode):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
-    parser.add_argument('--model_version', type=str, default="Base", help='Model version')
-    parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
+    parser.add_argument('--model_version', type=str, default="Fine_tuning", help='Model version')
+    parser.add_argument('--dataset', type=str, default="terra", help='dataset')
     parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
-    parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
+    parser.add_argument('--train_type', type=str, default="In_domain", help='Type of training')
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
     parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')
 
@@ -143,7 +143,7 @@ if __name__ == "__main__":
                 path_features_D = f"features/Features_{dataset}/finetuning_features/Features_{dataset}.pt"
                 path_prompts_D = f"features/Features_{dataset}/finetuning_features/Prompts_{dataset}_{LLM}.pt"
                 if not os.path.isfile(path_prompts_D):
-                    path_prompts_D = f"features/Features_{dataset}/standard_features/Prompts_{dataset}.pt"
+                    path_prompts_D = f"features/Features_{dataset}/finetuning_features/Prompts_{dataset}.pt"
 
                 if train_type=="In_domain":
                     if dataset=="serengeti":
@@ -166,19 +166,38 @@ if __name__ == "__main__":
                             mode_model(model, model_params_path, mode)
 
                     elif dataset=="terra":
-                        if hyperparameterTuning_mode == 1:
-                            seeds=val_seeds
-                            features_D=[path_features_D,path_prompts_D]
 
+                        if hyperparameterTuning_mode == 1 or hyperparameterTuning_mode == 2:
+                            seeds = val_seeds
+                            features_D = [path_features_D, path_prompts_D]
 
                             model = CATALOG_base_In_domain_terra( model=base_fine_tuning, Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
 
-                            random_search([features_D], train_type, model_version,model, f'{train_type}_{dataset}',f'Hp_{model_version}_{train_type}_{dataset}',seeds)
-                        else:
-                            model = CATALOG_base_In_domain_serengeti( model=base_fine_tuning, Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
-                            model.set_parameters(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=1, dropout=0.45,hidden_dim=1045,lr=1e-4,t=0.1,momentum=0.8409
-                                                                , patience=20, path_features_D= path_features_D, path_prompts_D=path_prompts_D,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
 
+                            if hyperparameterTuning_mode == 1:
+                                seeds = val_seeds
+                                if not LLM == "ChatGPT":
+                                    random_search([features_D], train_type, model_version, model,
+                                                  f'{train_type}_{LLM}', f'Hp_{model_version}_{LLM}', seeds)
+                                else:
+                                    random_search2([features_D], train_type, model_version, model,
+                                                   f'{train_type}_{LLM}', f'Hp_{model_version}_{LLM}', seeds)
+                            else:
+                                config = {"weight_Clip": 0.494, "num_epochs": 109, "batch_size": 128, "num_layers": 5,
+                                          "dropout": 0.3483, "hidden_dim": 2048,
+                                          "lr": 0.01, "t": 0.7962, "momentum": 0.8266}
+                                seeds = test_seeds
+                                test_best_model([features_D], train_type, model_version, model,
+                                                f'{train_type}_{LLM}', config, seeds)
+
+                        else:
+                            model = CATALOG_base_In_domain_terra( model=base_fine_tuning, Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
+
+                            model.set_parameters(weight_Clip=0.494, num_epochs=109, batch_size=128, num_layers=5,
+                                                 dropout=0.3483, hidden_dim=2048, lr=0.01,
+                                                 t=0.7962, momentum=0.8266, patience=5,
+                                                 path_features_D=path_features_D, path_prompts_D=path_prompts_D,
+                                                 exp_name=f'{model_version}_{train_type}', wnb=0)
 
                             model_params_path = 'models/CATALOG_finetuning_Base_Terra.pth'
                             mode_model(model, model_params_path, mode)
