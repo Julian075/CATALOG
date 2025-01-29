@@ -41,14 +41,14 @@ def mode_model(model,model_params_path,mode):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
-    parser.add_argument('--model_version', type=str, default="Fine_tuning", help='Model version')
-    parser.add_argument('--dataset', type=str, default="terra", help='dataset')
+    parser.add_argument('--model_version', type=str, default="Base", help='Model version')
+    parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
     parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
-    parser.add_argument('--train_type', type=str, default="In_domain", help='Type of training')
+    parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
     parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')
 
-    parser.add_argument('--LLM', type=str, default="ChatGPT", help='define LLM')
+    parser.add_argument('--LLM', type=str, default="ChatGPT_0.0", help='define LLM')
     args = parser.parse_args()
 
     model_version = args.model_version
@@ -72,7 +72,7 @@ if __name__ == "__main__":
                 path_features_S = "features/Features_terra/standard_features/Features_terra.pt"
                 path_prompts_S = f"features/Features_terra/standard_features/Prompts_terra_{LLM}.pt"
                 if not os.path.isfile(path_prompts_S):
-                    path_prompts_S = f"features/Features_{dataset}/standard_features/Prompts_{dataset}.pt"
+                    path_prompts_S = f"features/Features_terra/standard_features/Prompts_terra.pt"
                 if train_type=="In_domain":
                     if dataset!="terra":
 
@@ -114,13 +114,15 @@ if __name__ == "__main__":
 
                         if hyperparameterTuning_mode == 1:
                             seeds = val_seeds
-                            if not LLM =="ChatGPT":
-                                random_search([features_D, features_S], train_type, model_version,model, f'{train_type}_{LLM}',f'Hp_{model_version}_{LLM}',seeds)
-                            else:
-                                random_search2([features_D, features_S], train_type, model_version,model, f'{train_type}_{LLM}',f'Hp_{model_version}_{LLM}',seeds)
+                            random_search2([features_D, features_S], train_type, model_version,model, f'{train_type}_{LLM}',f'Hp_{model_version}_{LLM}',seeds)
                         else:
-                            config = {"weight_Clip": 0.494,"num_epochs": 107,"batch_size": 128,"num_layers": 1,"dropout": 0.42656, "hidden_dim": 913,
-                                        "lr": 0.017475,"t": 0.0983,"momentum": 0.95166}
+                            config = {"weight_Clip": 0.494, "num_epochs": 107, "batch_size": 128, "num_layers": 1, "dropout": 0.42656, "hidden_dim": 913,"lr": 0.017475,"t": 0.0983,"momentum": 0.95166}
+                            #if LLM=='ChatGPT':
+                            #    config = {"weight_Clip": 0.494,"num_epochs": 107,"batch_size": 128,"num_layers": 1,"dropout": 0.42656, "hidden_dim": 913,
+                            #            "lr": 0.017475,"t": 0.0983,"momentum": 0.95166}
+                            #elif LLM=='ChatGPT_0.0':
+                            #    config = {"weight_Clip": 0.5428,"num_epochs": 107,"batch_size": 128,"num_layers": 1,"dropout": 0.42656, "hidden_dim": 913,
+                            #            "lr": 0.017475,"t": 0.0983,"momentum": 0.95166}
                             seeds = test_seeds
                             test_best_model([features_D, features_S],train_type, model_version,model, f'{train_type}_{LLM}',config, seeds)
 
