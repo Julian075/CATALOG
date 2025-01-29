@@ -119,15 +119,15 @@ if __name__ == "__main__":
                             else:
                                 random_search2([features_D, features_S], train_type, model_version,model, f'{train_type}_{LLM}',f'Hp_{model_version}_{LLM}',seeds)
                         else:
-                            config = {"weight_Clip": 0.501,"num_epochs": 91,"batch_size": 8,"num_layers": 1,"dropout": 0.262, "hidden_dim": 512,
-                                        "lr": 0.029,"t": 0.106,"momentum": 0.835}
+                            config = {"weight_Clip": 0.494,"num_epochs": 107,"batch_size": 128,"num_layers": 1,"dropout": 0.42656, "hidden_dim": 913,
+                                        "lr": 0.017475,"t": 0.0983,"momentum": 0.95166}
                             seeds = test_seeds
                             test_best_model([features_D, features_S],train_type, model_version,model, f'{train_type}_{LLM}',config, seeds)
 
                     else:
                         model = CATALOG_base(model=base, Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
-                        model.set_parameters(weight_Clip=0.501, num_epochs=91, batch_size=8,num_layers=1, dropout=0.262, hidden_dim=1045, lr=0.029,
-                                             t=0.106,momentum=0.835, patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S=path_features_S,
+                        model.set_parameters(weight_Clip=0.494, num_epochs=107, batch_size=128,num_layers=1, dropout=0.42656, hidden_dim=913, lr=0.017475,
+                                             t=0.0983,momentum=0.95166, patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S=path_features_S,
                                              path_prompts_S=path_prompts_S, exp_name=f'{model_version}_{train_type}', wnb=0)
 
                         model_params_path = f'models/CATALOG_Base.pth'
