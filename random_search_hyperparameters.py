@@ -143,8 +143,11 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
             reader = csv.reader(file)
             next(reader, None)  # Skip header
             for row in reader:
-                if row:  # Avoid empty rows
-                    existing_seeds.add(int(row[0]))  # Seed is stored in the first column
+                try:
+                    seed = int(row[0])  # Intenta convertirlo a entero
+                    existing_seeds.add(seed)
+                except ValueError:
+                    pass  # Ignora si no es un número
 
     for seed in seeds:
         if seed in existing_seeds:
