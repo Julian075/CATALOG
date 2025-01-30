@@ -163,6 +163,27 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
         epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test = model.train(seed=seed, test=1)
         results_cis_test_seeds.append(epoch_acc_cis_test)
         results_trans_test_seeds.append(epoch_acc_trans_test)
+        results_temporal= f"results_test_random_search_temporal_{name_exp}.csv"
+        results_exist_temp = os.path.isfile(results_temporal)
+
+        with open(results_temporal, mode='a', newline='') as file:
+
+            writer = csv.writer(file)
+
+            # Write header only if the file is empty or newly created
+
+            if not results_exist_temp or os.stat(results_temporal).st_size == 0:
+                writer.writerow([
+
+                    "seed", "acc_cis_test", "acc_trans_test", "weight_clip", "num_epochs", "batch_size",
+                    "num_layers", "dropout", "hidden_dim", "learning_rate", "temperature", "momentum"
+                ])
+
+            # Append new experiment results with correct number of fields
+
+            writer.writerow(
+                [name_exp, epoch_acc_cis_test, epoch_acc_trans_test, weight_clip,
+                 num_epochs, batch_size, num_layers, dropout, hidden_dim, learning_rate, temperature, momentum])
 
 
     avg_acc_cis_test = np.mean(results_cis_test_seeds)
@@ -183,7 +204,7 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
         if not results_exist or os.stat(results_file).st_size == 0:
             writer.writerow([
 
-                "Experiment", "avg_acc_val", "std_acc_val", "weight_clip", "num_epochs", "batch_size",
+                "Experiment", "avg_acc_cis_val", "std_acc_cis_val", "avg_acc_trans_val", "std_acc_trans_val" ,"weight_clip", "num_epochs", "batch_size",
                 "num_layers", "dropout", "hidden_dim", "learning_rate", "temperature", "momentum"
             ])
 

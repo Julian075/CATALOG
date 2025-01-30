@@ -31,7 +31,7 @@ import wandb
 
 def mode_model(model,model_params_path,mode):
     if mode == 'train':
-        model.train()
+        model.train(seed=75)
     elif mode == 'test':
         model.prueba_model(model_params_path=model_params_path)
 
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
     parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')
 
-    parser.add_argument('--LLM', type=str, default="ChatGPT_0.0", help='define LLM')
+    parser.add_argument('--LLM', type=str, default="ChatGPT", help='define LLM')
     args = parser.parse_args()
 
     model_version = args.model_version
