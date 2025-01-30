@@ -27,11 +27,10 @@ from train.Base.Train_CATALOG_Base_out_domain import CATALOG_base
 from train.Fine_tuning.Train_CATALOG_Base_In_domain_Serengeti import CATALOG_base_In_domain_serengeti
 from train.Fine_tuning.Train_CATALOG_Base_In_domain_Terra import CATALOG_base_In_domain_terra
 
-import wandb
 
 def mode_model(model,model_params_path,mode):
     if mode == 'train':
-        model.train(seed=75)
+        model.train()
     elif mode == 'test':
         model.prueba_model(model_params_path=model_params_path)
 

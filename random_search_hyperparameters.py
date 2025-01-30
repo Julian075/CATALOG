@@ -132,67 +132,71 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
 
     results_cis_test_seeds = []
     results_trans_test_seeds = []
+
+    results_temporal = f"results_test_random_search_temporal_{name_exp}.csv"
+    results_exist_temp = os.path.isfile(results_temporal)
+    existing_seeds = set()
+
+    # Read existing seeds from CSV if the file exists
+    if results_exist_temp:
+        with open(results_temporal, mode='r') as file:
+            reader = csv.reader(file)
+            next(reader, None)  # Skip header
+            for row in reader:
+                if row:  # Avoid empty rows
+                    existing_seeds.add(int(row[0]))  # Seed is stored in the first column
+
     for seed in seeds:
+        if seed in existing_seeds:
+            print(f"Skipping seed {seed}, already tested.")
+            continue
 
         if train_type == 'Out_domain':
             features_D = [path_features[0][0], path_features[0][1]]
             features_S = [path_features[1][0], path_features[1][1]]
             features = [features_D, features_S]
-
-
         elif train_type == 'In_domain':
             features = [[path_features[0][0], path_features[0][1]]]
 
-        if model_version == 'Base':
-            if train_type == 'Out_domain':
-                model.set_parameters(weight_Clip=weight_clip, num_epochs=num_epochs, batch_size=batch_size,
-                                     num_layers=num_layers, dropout=dropout, hidden_dim=hidden_dim, lr=learning_rate,
-                                     t=temperature, momentum=momentum, patience=5, path_features_D=features[0][0],
-                                     path_prompts_D=features[0][1], path_features_S=features[1][0],
-                                     path_prompts_S=features[1][1], exp_name=f'{seed}_{model_version}_{train_type}',
-                                     wnb=0)
+        if model_version == 'Base' and train_type == 'Out_domain':
+            model.set_parameters(weight_Clip=weight_clip, num_epochs=num_epochs, batch_size=batch_size,
+                                 num_layers=num_layers, dropout=dropout, hidden_dim=hidden_dim, lr=learning_rate,
+                                 t=temperature, momentum=momentum, patience=5, path_features_D=features[0][0],
+                                 path_prompts_D=features[0][1], path_features_S=features[1][0],
+                                 path_prompts_S=features[1][1], exp_name=f'{seed}_{model_version}_{train_type}',
+                                 wnb=0)
 
-        if model_version == 'Fine_tuning':
-            if train_type == 'In_domain':
-                model.set_parameters(weight_Clip=weight_clip, num_epochs=num_epochs, batch_size=batch_size,
-                                     num_layers=num_layers, dropout=dropout, hidden_dim=hidden_dim, lr=learning_rate,
-                                     t=temperature, momentum=momentum, patience=5, path_features_D=features[0][0],
-                                     path_prompts_D=features[0][1], exp_name=f'{seed}_{model_version}_{train_type}',
-                                     wnb=0)
+        elif model_version == 'Fine_tuning' and train_type == 'In_domain':
+            model.set_parameters(weight_Clip=weight_clip, num_epochs=num_epochs, batch_size=batch_size,
+                                 num_layers=num_layers, dropout=dropout, hidden_dim=hidden_dim, lr=learning_rate,
+                                 t=temperature, momentum=momentum, patience=5, path_features_D=features[0][0],
+                                 path_prompts_D=features[0][1], exp_name=f'{seed}_{model_version}_{train_type}',
+                                 wnb=0)
 
-        epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test = model.train(seed=seed, test=1)
+        epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test = model.train(seed=seed,
+                                                                                                           test=1)
         results_cis_test_seeds.append(epoch_acc_cis_test)
         results_trans_test_seeds.append(epoch_acc_trans_test)
-        results_temporal= f"results_test_random_search_temporal_{name_exp}.csv"
-        results_exist_temp = os.path.isfile(results_temporal)
 
+        # Append new results to CSV
         with open(results_temporal, mode='a', newline='') as file:
-
             writer = csv.writer(file)
-
-            # Write header only if the file is empty or newly created
-
             if not results_exist_temp or os.stat(results_temporal).st_size == 0:
                 writer.writerow([
-
                     "seed", "acc_cis_test", "acc_trans_test", "weight_clip", "num_epochs", "batch_size",
                     "num_layers", "dropout", "hidden_dim", "learning_rate", "temperature", "momentum"
                 ])
+            writer.writerow([
+                seed, epoch_acc_cis_test, epoch_acc_trans_test, weight_clip,
+                num_epochs, batch_size, num_layers, dropout, hidden_dim, learning_rate, temperature, momentum
+            ])
 
-            # Append new experiment results with correct number of fields
-
-            writer.writerow(
-                [seed, epoch_acc_cis_test, epoch_acc_trans_test, weight_clip,
-                 num_epochs, batch_size, num_layers, dropout, hidden_dim, learning_rate, temperature, momentum])
-
-
-    avg_acc_cis_test = np.mean(results_cis_test_seeds)
-    std_acc_cis_test = np.std(results_cis_test_seeds)
-    avg_acc_trans_test = np.mean(results_trans_test_seeds)
-    std_acc_trans_test = np.std(results_trans_test_seeds)
+    avg_acc_cis_test = np.mean(results_cis_test_seeds) if results_cis_test_seeds else 0
+    std_acc_cis_test = np.std(results_cis_test_seeds) if results_cis_test_seeds else 0
+    avg_acc_trans_test = np.mean(results_trans_test_seeds) if results_trans_test_seeds else 0
+    std_acc_trans_test = np.std(results_trans_test_seeds) if results_trans_test_seeds else 0
 
     results_file = "results_test_random_search.csv"
-
     results_exist = os.path.isfile(results_file)
 
     with open(results_file, mode='a', newline='') as file:
