@@ -182,7 +182,7 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
             # Append new experiment results with correct number of fields
 
             writer.writerow(
-                [name_exp, epoch_acc_cis_test, epoch_acc_trans_test, weight_clip,
+                [seed, epoch_acc_cis_test, epoch_acc_trans_test, weight_clip,
                  num_epochs, batch_size, num_layers, dropout, hidden_dim, learning_rate, temperature, momentum])
 
 
