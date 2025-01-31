@@ -164,7 +164,7 @@ class CATALOG_base_In_domain_terra:
             epoch_acc_cis_val = (running_corrects_cis_val / size_cis_val) * 100
 
             if self.wnb == 1:
-                wandb.log({"epoch_loss_cis_val": epoch_loss_cis_val, "epoch_acc_cis_val": epoch_acc_cis_val})
+                wandb.log({"epoch_loss_val": epoch_loss_cis_val, "epoch_acc_val": epoch_acc_cis_val})
 
             if self.wnb == 0:
                 with torch.no_grad():
