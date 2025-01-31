@@ -177,12 +177,7 @@ if __name__ == "__main__":
 
                             if hyperparameterTuning_mode == 1:
                                 seeds = val_seeds
-                                if not LLM == "ChatGPT":
-                                    random_search([features_D], train_type, model_version, model,
-                                                  f'{train_type}_{LLM}', f'Hp_{model_version}_{LLM}', seeds)
-                                else:
-                                    random_search2([features_D], train_type, model_version, model,
-                                                   f'{train_type}_{LLM}', f'Hp_{model_version}_{LLM}', seeds)
+                                random_search([features_D], train_type, model_version, model,f'{train_type}_{dataset}', f'Hp_{model_version}_{LLM}', seeds)
                             else:
                                 config = {"weight_Clip": 0.494, "num_epochs": 109, "batch_size": 128, "num_layers": 5,
                                           "dropout": 0.3483, "hidden_dim": 2048,
