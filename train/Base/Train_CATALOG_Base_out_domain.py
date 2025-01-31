@@ -287,8 +287,9 @@ class CATALOG_base:
         text_features2 = torch.load(self.path_prompts_S)
         text_features2 = text_features2.to(device)
 
-        dataloader_cis_test = self.dataloader(torch.load(self.path_features_S['cis_test']), self.batch_size, self.dataset)
-        dataloader_trans_test = self.dataloader(torch.load(self.path_features_S['trans_test']), self.batch_size, self.dataset)
+        dataset_S = torch.load(self.path_features_S)
+        dataloader_cis_test = self.dataloader(dataset_S['cis_test'], self.batch_size, self.dataset)
+        dataloader_trans_test = self.dataloader(dataset_S['trans_test'], self.batch_size, self.dataset)
 
 
         projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,device=device)
@@ -375,8 +376,9 @@ class CATALOG_base:
         text_features2 = torch.load(self.path_prompts_S)
         text_features2 = text_features2.to(device)
 
-        dataloader_cis_test = self.dataloader(torch.load(self.path_features_S['cis_test']), self.batch_size, self.dataset)
-        dataloader_trans_test = self.dataloader(torch.load(self.path_features_S['trans_test']), self.batch_size,self.dataset)
+        dataset_S = torch.load(self.path_features_S)
+        dataloader_cis_test = self.dataloader(dataset_S['cis_test'], self.batch_size, self.dataset)
+        dataloader_trans_test = self.dataloader(dataset_S['trans_test'], self.batch_size, self.dataset)
 
 
         projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,device=device)

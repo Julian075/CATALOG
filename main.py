@@ -131,7 +131,7 @@ if __name__ == "__main__":
                                              t=0.0983,momentum=0.95166, patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S=path_features_S,
                                              path_prompts_S=path_prompts_S, exp_name=f'{model_version}_{train_type}', wnb=0)
 
-                        model_params_path = f'models/CATALOG_Base.pth'
+                        model_params_path = "models/best_model_params_1_913.pth"#f'models/CATALOG_Base.pth'
                         mode_model(model, model_params_path, mode)
 
 
@@ -160,7 +160,7 @@ if __name__ == "__main__":
                         else:
                             model = CATALOG_base_In_domain_serengeti( model=base_fine_tuning, Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
                             model.set_parameters(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=4, dropout=0.4,hidden_dim=1743,lr=1e-3,t=0.1,momentum=0.8409
-                                                                , patience=20, path_features_D= path_features_D, path_prompts_D=path_prompts_D,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
+                                                                , patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
 
 
                             model_params_path = 'models/CATALOG_finetuning_Base_Serengeti.pth'
@@ -189,7 +189,7 @@ if __name__ == "__main__":
                                           "lr": 0.01, "t": 0.7962, "momentum": 0.8266}
                                 seeds = test_seeds
                                 test_best_model([features_D], train_type, model_version, model,
-                                                f'{train_type}_{LLM}', config, seeds)
+                                                f'{train_type}_{dataset}_{LLM}', config, seeds)
 
                         else:
                             model = CATALOG_base_In_domain_terra( model=base_fine_tuning, Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)

@@ -166,14 +166,14 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
                                  num_layers=num_layers, dropout=dropout, hidden_dim=hidden_dim, lr=learning_rate,
                                  t=temperature, momentum=momentum, patience=5, path_features_D=features[0][0],
                                  path_prompts_D=features[0][1], path_features_S=features[1][0],
-                                 path_prompts_S=features[1][1], exp_name=f'{seed}_{model_version}_{train_type}',
+                                 path_prompts_S=features[1][1], exp_name=f'{seed}_{model_version}_{name_exp}',
                                  wnb=0)
 
         elif model_version == 'Fine_tuning' and train_type == 'In_domain':
             model.set_parameters(weight_Clip=weight_clip, num_epochs=num_epochs, batch_size=batch_size,
                                  num_layers=num_layers, dropout=dropout, hidden_dim=hidden_dim, lr=learning_rate,
                                  t=temperature, momentum=momentum, patience=5, path_features_D=features[0][0],
-                                 path_prompts_D=features[0][1], exp_name=f'{seed}_{model_version}_{train_type}',
+                                 path_prompts_D=features[0][1], exp_name=f'{seed}_{model_version}_{name_exp}',
                                  wnb=0)
 
         epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test = model.train(seed=seed,
