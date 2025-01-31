@@ -131,7 +131,7 @@ if __name__ == "__main__":
                                              t=0.0983,momentum=0.95166, patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S=path_features_S,
                                              path_prompts_S=path_prompts_S, exp_name=f'{model_version}_{train_type}', wnb=0)
 
-                        model_params_path = "models/best_model_params_1_913.pth"#f'models/CATALOG_Base.pth'
+                        model_params_path =f'models/CATALOG_Base.pth'
                         mode_model(model, model_params_path, mode)
 
 
