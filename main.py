@@ -179,9 +179,9 @@ if __name__ == "__main__":
                                 seeds = val_seeds
                                 random_search([features_D], train_type, model_version, model,f'{train_type}_{dataset}', f'Hp_{model_version}_{train_type}_{dataset}_{LLM}', seeds)
                             else:
-                                config = {"weight_Clip": 0.494, "num_epochs": 109, "batch_size": 128, "num_layers": 5,
-                                          "dropout": 0.3483, "hidden_dim": 2048,
-                                          "lr": 0.01, "t": 0.7962, "momentum": 0.8266}
+                                config = {"weight_Clip": 0.391885, "num_epochs": 185, "batch_size": 32, "num_layers": 7,
+                                          "dropout": 0.391855, "hidden_dim": 1024,
+                                          "lr": 0.00034235, "t": 0.157429, "momentum": 0.8851568}
                                 seeds = test_seeds
                                 test_best_model([features_D], train_type, model_version, model,
                                                 f'{train_type}_{dataset}_{LLM}', config, seeds)
@@ -189,9 +189,9 @@ if __name__ == "__main__":
                         else:
                             model = CATALOG_base_In_domain_terra( model=base_fine_tuning, Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
 
-                            model.set_parameters(weight_Clip=0.494, num_epochs=109, batch_size=128, num_layers=5,
-                                                 dropout=0.3483, hidden_dim=2048, lr=0.01,
-                                                 t=0.7962, momentum=0.8266, patience=5,
+                            model.set_parameters(weight_Clip=0.391885, num_epochs=185, batch_size=32, num_layers=7,
+                                                 dropout=0.391855, hidden_dim=1024, lr=0.00034235,
+                                                 t=0.157429, momentum=0.8851568, patience=5,
                                                  path_features_D=path_features_D, path_prompts_D=path_prompts_D,
                                                  exp_name=f'{model_version}_{train_type}', wnb=0)
 
