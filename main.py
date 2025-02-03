@@ -159,7 +159,7 @@ if __name__ == "__main__":
                             random_search([features_D], train_type, model_version,model, f'{train_type}_{dataset}',f'Hp_{model_version}_{train_type}_{dataset}_{LLM}',seeds)
                         else:
                             model = CATALOG_base_In_domain_serengeti( model=base_fine_tuning, Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
-                            model.set_parameters(weight_Clip=0.5026669097446104,num_epochs=47,batch_size=128, num_layers=4, dropout=0.25553407020377744,hidden_dim=1024,lr=1e-3,t=0.14970543696433683,momentum=0.8530664134160747
+                            model.set_parameters(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=4, dropout=0.4,hidden_dim=1723,lr=1e-3,t=0.1,momentum=0.8409
                                                                 , patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
 
 
