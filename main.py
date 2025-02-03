@@ -42,7 +42,7 @@ if __name__ == "__main__":
 
     parser.add_argument('--model_version', type=str, default="Base", help='Model version')
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
-    parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
+    parser.add_argument('--mode', type=str, default="test", help='define if you want train or test or feature_extraction')
     parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
     parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')
@@ -65,13 +65,13 @@ if __name__ == "__main__":
             if model_version=="Base":
                 path_features_D = f"features/Features_{dataset}/standard_features/Features_{dataset}.pt"
                 path_prompts_D = f"features/Features_{dataset}/standard_features/Prompts_{dataset}_{LLM}.pt"
-                if not os.path.isfile(path_prompts_D):
-                    path_prompts_D = f"features/Features_{dataset}/standard_features/Prompts_{dataset}.pt"
+                #if not os.path.isfile(path_prompts_D):
+                #    path_prompts_D = f"features/Features_{dataset}/standard_features/Prompts_{dataset}.pt"
 
                 path_features_S = "features/Features_terra/standard_features/Features_terra.pt"
                 path_prompts_S = f"features/Features_terra/standard_features/Prompts_terra_{LLM}.pt"
-                if not os.path.isfile(path_prompts_S):
-                    path_prompts_S = f"features/Features_terra/standard_features/Prompts_terra.pt"
+                #if not os.path.isfile(path_prompts_S):
+                #    path_prompts_S = f"features/Features_terra/standard_features/Prompts_terra.pt"
                 if train_type=="In_domain":
                     if dataset!="terra":
 
@@ -130,7 +130,7 @@ if __name__ == "__main__":
                         model.set_parameters(weight_Clip=0.494, num_epochs=107, batch_size=128,num_layers=1, dropout=0.42656, hidden_dim=913, lr=0.017475,
                                              t=0.0983,momentum=0.95166, patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S=path_features_S,
                                              path_prompts_S=path_prompts_S, exp_name=f'{model_version}_{train_type}', wnb=0)
-
+                        #0.494
                         model_params_path =f'models/CATALOG_Base.pth'
                         mode_model(model, model_params_path, mode)
 

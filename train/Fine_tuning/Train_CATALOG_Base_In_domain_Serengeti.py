@@ -249,11 +249,11 @@ class CATALOG_base_In_domain_serengeti:
     def prueba_model(self,model_params_path):# to calculate the acc in test for a saved model
         device = "cuda" if torch.cuda.is_available() else "cpu"
 
-        text_features = torch.load(self.path_text_feat)
+        text_features = torch.load(self.path_prompts_D)
         text_features = text_features.to(device)
 
-        
-        dataloader_test = self.dataloader(self.ruta_features_test, self.batch_size,self.dataset)
+        dataset_D = torch.load(self.path_features_D)
+        dataloader_test = self.dataloader(dataset_D['test'], self.batch_size, self.dataset)
 
 
         projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,
