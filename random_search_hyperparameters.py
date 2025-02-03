@@ -199,7 +199,7 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
     avg_acc_trans_test = np.mean(results_trans_test_seeds) if results_trans_test_seeds else 0
     std_acc_trans_test = np.std(results_trans_test_seeds) if results_trans_test_seeds else 0
 
-    results_file = "results_test_random_search.csv"
+    results_file = f"results_test_random_search_{train_type}.csv"
     results_exist = os.path.isfile(results_file)
 
     with open(results_file, mode='a', newline='') as file:
