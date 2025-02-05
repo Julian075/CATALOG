@@ -30,7 +30,7 @@ from train.Fine_tuning.Train_CATALOG_Base_In_domain_Terra import CATALOG_base_In
 
 def mode_model(model,model_params_path,mode):
     if mode == 'train':
-        model.train()
+        model.train(1064200250)
     elif mode == 'test':
         model.prueba_model(model_params_path=model_params_path)
 
@@ -57,6 +57,8 @@ if __name__ == "__main__":
     hyperparameterTuning_mode=args.hyperparameterTuning_mode
     feature_extraction=args.feature_extraction
     LLM=args.LLM
+    import torch
+    print(torch.cuda.is_available())
 
     if feature_extraction :
         extract_features(model_version=model_version,dataset=dataset,mode_clip='16',LLM=LLM,only_text=1,AB_omg=1)
