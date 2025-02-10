@@ -3,7 +3,6 @@ import torch.nn as nn
 import torch
 import numpy as np
 import clip
-from PIL import Image
 
 class QuickGELU(nn.Module):
     def forward(self, x: torch.Tensor):

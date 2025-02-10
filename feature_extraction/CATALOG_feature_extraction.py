@@ -2,7 +2,7 @@ import os
 import torch
 from transformers import BertModel, BertTokenizer
 import clip
-from feature_extraction.Base.long_Clip.model import longclip
+from feature_extraction.long_Clip.model import longclip
 import json
 from PIL import Image
 import numpy as np
@@ -106,7 +106,7 @@ def extract_features(model_version,dataset,mode_clip,LLM='ChatGPT',only_text=0,A
     model_Bert.to(device)
 
     if mode_clip=='longclip-B':
-        model_clip, preprocess_clip = longclip.load(f'feature_extraction/Base/long_Clip/checkpoints/{mode_clip}.pt', device=device)
+        model_clip, preprocess_clip = longclip.load(f'feature_extraction/long_Clip/checkpoints/{mode_clip}.pt', device=device)
     else:
         model_clip, preprocess_clip = clip.load(f'ViT-B/{mode_clip}', device)
     model_clip.to(device)

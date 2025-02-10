@@ -7,19 +7,44 @@ from sklearn.metrics import confusion_matrix, classification_report
 import numpy as np
 import random
 
+import wandb
 
 
 
+class CATALOG_base_In_domain:
+    def __init__(self,model, Dataset,Dataloader, version,build_optimizer):
+        #
+        self.md = model
+        self.dataset = Dataset
+        self.dataloader = Dataloader
+        self.version = version
+        self.build_optimizer = build_optimizer
 
+        # default
+        self.wnb = 0
+        # data_dict=torch.load(self.root_dir)
+        self.path_features_D = None
+        self.path_prompts_D =  None
 
+        self.weight_Clip = None
+        self.num_epochs =  None
+        self.batch_size =  None
+        self.num_layers =  None
+        self.dropout =     None
+        self.hidden_dim =  None
+        self.lr = None
+        self.t = None
+        self.momentum = None
+        self.patience = None
+        self.exp_name = None
 
+    def set_parameters(self, weight_Clip, num_epochs, batch_size, num_layers, dropout, hidden_dim, lr, t, momentum, patience,path_features_D,path_prompts_D,exp_name,wnb=0):
 
-class CATALOG_projections_serengeti:
-    def __init__(self,weight_Clip,num_epochs,batch_size,num_layers,dropout,hidden_dim,lr,t,momentum,patience,model,Dataset,Dataloader,version,ruta_features_train,ruta_features_val,ruta_features_test,path_text_feat,build_optimizer,exp_name):
-        self.ruta_features_train = ruta_features_train
-        self.ruta_features_val   = ruta_features_val
-        self.ruta_features_test  = ruta_features_test
-        self.path_text_feat= path_text_feat
+        self.wnb=wnb
+        #data_dict=torch.load(self.root_dir)
+        self.path_features_D=  path_features_D
+        self.path_prompts_D =  path_prompts_D
+
         self.weight_Clip=weight_Clip
         self.num_epochs=num_epochs
         self.batch_size=batch_size
@@ -30,13 +55,7 @@ class CATALOG_projections_serengeti:
         self.t=t
         self.momentum=momentum
         self.patience=patience
-        self.md=model
-        self.dataset=Dataset
-        self.dataloader=Dataloader
-        self.version=version
-        self.build_optimizer = build_optimizer
         self.exp_name=exp_name
-
 
     def set_seed(self,seed):
         torch.manual_seed(seed)
@@ -48,13 +67,12 @@ class CATALOG_projections_serengeti:
         torch.backends.cudnn.deterministic = True
 
 
-
-    def train(self):
-        self.set_seed(42)
+    def train(self,seed=42,test=1):
+        self.set_seed(seed)
         unique_id = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         device = "cuda" if torch.cuda.is_available() else "cpu"
 
-        text_features=torch.load(self.path_text_feat)
+        text_features = torch.load(self.path_prompts_D)
         text_features = text_features.to(device)
 
 
@@ -63,9 +81,17 @@ class CATALOG_projections_serengeti:
         projection_model = projection_model.to(device)
 
         #DataLoader
-        dataloader = self.dataloader(self.ruta_features_train, self.batch_size,self.dataset)
-        dataloader_val = self.dataloader(self.ruta_features_val,self.batch_size,self.dataset)
-        dataloader_test = self.dataloader(self.ruta_features_test, self.batch_size,self.dataset)
+        # Get your DataLoader
+        if self.wnb == 1:  # randon search and monte carlo partition activate
+            dataset_D = self.path_features_D
+        else:
+            dataset_D = torch.load(self.path_features_D)
+
+        dataloader = self.dataloader(dataset_D['train'], self.batch_size, self.dataset)
+        dataloader_val = self.dataloader(dataset_D['val'], self.batch_size, self.dataset)
+
+        if test:
+            dataloader_test = self.dataloader(dataset_D['test'], self.batch_size, self.dataset)
 
         optimizer,scheduler = self.build_optimizer(projection_model,'sgd',self.lr,self.momentum,self.version)
         acc_best = 0
@@ -80,7 +106,7 @@ class CATALOG_projections_serengeti:
             size=0
             for batch in dataloader:
                 image_features, description_embeddings, target_index = batch
-                size+=len(image_features)
+                size+=len(description_embeddings)
                 image_features=image_features.to(device)
                 description_embeddings = description_embeddings.to(device)
 
@@ -100,18 +126,21 @@ class CATALOG_projections_serengeti:
             epoch_loss = running_loss / len(dataloader)
             epoch_acc = (running_corrects / size) * 100
 
+            if self.wnb:
+                wandb.log({"train_loss": epoch_loss, "train_acc": epoch_acc})
+
             # validation
             projection_model.eval()
 
             running_loss_val = 0
             running_corrects_val = 0.0
             size_val=0
-
+            
             with torch.no_grad():
 
                 for batch_val in dataloader_val:
                     image_features_val, description_embeddings_val, target_index_val = batch_val
-                    size_val+=len(image_features_val)
+                    size_val+=len(description_embeddings_val)
                     image_features_val = image_features_val.to(device)
                     description_embeddings_val = description_embeddings_val.to(device)
 
@@ -123,10 +152,13 @@ class CATALOG_projections_serengeti:
                     running_loss_val += loss_val.item()
                     running_corrects_val += float(acc_val)
 
-
+                
 
             epoch_loss_val = running_loss_val / len(dataloader_val)
             epoch_acc_val = (running_corrects_val / size_val) * 100
+
+            if self.wnb:
+                wandb.log({"val_loss": epoch_loss_val, "val_acc": epoch_acc_val})
 
 
             time_end = time.time()
@@ -154,81 +186,93 @@ class CATALOG_projections_serengeti:
                     print("The acc don't increase")
 
             if epoch==(self.num_epochs-1) or counter >= self.patience:
-                projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,device=device)
-                projection_model.load_state_dict(torch.load(model_params_path))
-                projection_model = projection_model.to(device)
-                projection_model.eval()
+                if test:
+                    projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,
+                                                     device=device)
+                    projection_model.load_state_dict(torch.load(model_params_path))
+                    projection_model = projection_model.to(device)
+                    projection_model.eval()
 
-                running_loss_test = 0
-                running_corrects_test = 0.0
-                size_test = 0
-
-
-                # Variables to calculate confusion matrix
-                all_preds = []
-                all_labels = []
+                    running_loss_test = 0
+                    running_corrects_test = 0.0
+                    size_test = 0
 
 
-                with torch.no_grad():
-
-                    for batch_test in dataloader_test:
-                        image_features_test, description_embeddings_test, target_index_test = batch_test
-                        size_test += len(image_features_test)
-                        image_features_test = image_features_test.to(device)
-                        description_embeddings_test = description_embeddings_test.to(device)
+                    # Variables to calculate confusion matrix
+                    all_preds = []
+                    all_labels = []
 
 
-                        loss_test, acc_test,preds_test = projection_model(description_embeddings_test,
-                                                                     image_features_test, text_features,
-                                                                     self.weight_Clip, target_index_test, self.t)
+                    with torch.no_grad():
 
-                        all_preds.extend(preds_test.cpu().numpy())
-                        all_labels.extend(target_index_test.cpu().numpy())
-
-                        running_loss_test += loss_test.item()
-                        running_corrects_test += float(acc_test)
+                        for batch_test in dataloader_test:
+                            image_features_test, description_embeddings_test, target_index_test = batch_test
+                            size_test += len(description_embeddings_test)
+                            image_features_test = image_features_test.to(device)
+                            description_embeddings_test = description_embeddings_test.to(device)
 
 
-                epoch_loss_test = running_loss_test / len(dataloader_test)
-                epoch_acc_test = (running_corrects_test / size_test) * 100
+                            loss_test, acc_test,preds_test = projection_model(description_embeddings_test,
+                                                                         image_features_test, text_features,
+                                                                         self.weight_Clip, target_index_test, self.t)
 
-                print('Test loss: {:.4f},Test acc: {:.4f}'.format(epoch_loss_test, epoch_acc_test))
+                            all_preds.extend(preds_test.cpu().numpy())
+                            all_labels.extend(target_index_test.cpu().numpy())
 
-                # Calculate confusion matrix
-                conf_matrix = confusion_matrix(all_labels, all_preds)
-                df_conf_matrix = pd.DataFrame(conf_matrix)
-                df_conf_matrix.to_csv('conf_matrix_Projections_serengeti.csv', index=False)
+                            running_loss_test += loss_test.item()
+                            running_corrects_test += float(acc_test)
+
+
+                    epoch_loss_test = running_loss_test / len(dataloader_test)
+                    epoch_acc_test = (running_corrects_test / size_test) * 100
+
+                    if self.wnb:
+                        wandb.log({"loss_test": epoch_loss_test, "acc_test": epoch_acc_test})
+
+                    print('Test loss: {:.4f},Test acc: {:.4f}'.format(epoch_loss_test, epoch_acc_test))
+
+                    # Calculate confusion matrix
+                    conf_matrix = confusion_matrix(all_labels, all_preds)
+                    df_conf_matrix = pd.DataFrame(conf_matrix)
+                    df_conf_matrix.to_csv('conf_matrix_Base.csv', index=False)
 
             # Check early stopping condition
             if counter >= self.patience:
                 print(f'Validation acc has not improved for {self.patience} epochs. Stopping training.')
                 break
+        if test:
+            return epoch_loss_test, epoch_acc_test
+        elif test==0 and self.wnb==1:
+            return acc_best
+        else:
+            return None
     def prueba_model(self,model_params_path):# to calculate the acc in test for a saved model
         device = "cuda" if torch.cuda.is_available() else "cpu"
 
-        text_features = torch.load(self.path_text_feat)
+        text_features = torch.load(self.path_prompts_D)
         text_features = text_features.to(device)
 
+        dataset_D = torch.load(self.path_features_D)
+        dataloader_test = self.dataloader(dataset_D['test'], self.batch_size, self.dataset)
 
-        dataloader_test = self.dataloader(self.ruta_features_test, self.batch_size,self.dataset)
 
-
-        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,device=device)
+        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,
+                                         device=device)
         projection_model.load_state_dict(torch.load(model_params_path))
         projection_model = projection_model.to(device)
         projection_model.eval()
-
+        
         running_loss_test = 0
         running_corrects_test = 0.0
         size_test = 0
-
+        
         # Variables to calculate confusion matrix
         all_preds = []
         all_labels = []
         with torch.no_grad():
             for batch_test in dataloader_test:
                 image_features_test, description_embeddings_test, target_index_test = batch_test
-                size_test += len(image_features_test)
+                size_test += len(description_embeddings_test)
                 image_features_test = image_features_test.to(device)
                 description_embeddings_test = description_embeddings_test.to(device)
 
@@ -241,16 +285,18 @@ class CATALOG_projections_serengeti:
 
                 running_loss_test += loss_test.item()
                 running_corrects_test += float(acc_test)
-
+                
         epoch_loss_test = running_loss_test / len(dataloader_test)
         epoch_acc_test = (running_corrects_test / size_test) * 100
 
+        unique_preds = np.unique(all_preds)
+        print(unique_preds)
 
         print('Test loss: {:.4f}, Test acc: {:.4f}'.format(epoch_loss_test, epoch_acc_test))
 
         conf_matrix = confusion_matrix(all_labels, all_preds)
         df_conf_matrix = pd.DataFrame(conf_matrix)
-        df_conf_matrix.to_csv('conf_matrix_Projections_serengeti.csv')
+        df_conf_matrix.to_csv('conf_matrix_Base.csv')
 
         print("Confusion Matrix for Test:")
         print(conf_matrix)
@@ -266,7 +312,8 @@ class CATALOG_projections_serengeti:
 
         dataloader_test = self.dataloader(self.ruta_features_test, self.batch_size,self.dataset)
 
-        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,device=device)
+        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,
+                                         device=device)
         projection_model.load_state_dict(torch.load(model_params_path))
         projection_model = projection_model.to(device)
         projection_model.eval()
@@ -278,7 +325,7 @@ class CATALOG_projections_serengeti:
         with torch.no_grad():
             for batch_test in dataloader_test:
                 image_features_test, description_embeddings_test, target_index_test = batch_test
-                size_test += len(image_features_test)
+                size_test += len(description_embeddings_test)
                 image_features_test = image_features_test.to(device)
                 description_embeddings_test = description_embeddings_test.to(device)
 

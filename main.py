@@ -1,30 +1,20 @@
 import os.path
 
-import numpy as np
-
-from feature_extraction.Base.CATALOG_feature_extraction import extract_features
+from feature_extraction.CATALOG_feature_extraction import extract_features
 from random_search_hyperparameters import random_search,test_best_model,random_search2
 
 from models import CATALOG_Base as base
 from models import CATALOG_Base_fine_tuning as base_fine_tuning
-from models import CATALOG_Base_fine_tuning_last_layer as base_fine_tuning_layer
 from models import CATALOG_Base_long as base_long
-
-from models import CATALOG_Projections as projections
-from models import CATALOG_Projections_fine_tuning as projections_fine_tuning
-from models import CATALOG_Projections_fine_tuning_last_layer as projections_fine_tuning_layer
 
 
 import argparse
 from utils import BaselineDataset,dataloader_baseline,TuningDataset,dataloader_Tuning,build_optimizer
 from data.seeds import val_seeds, test_seeds
 
-
-from train.Base.Train_CATALOG_Projections_Serengeti import CATALOG_projections_serengeti
-from train.Base.Train_CATALOG_Projections_Terra import CATALOG_projections_terra
 from train.Base.Train_CATALOG_Base_out_domain import CATALOG_base
 
-from train.Fine_tuning.Train_CATALOG_Base_In_domain_Serengeti import CATALOG_base_In_domain_serengeti
+from train.Fine_tuning.Train_CATALOG_Base_In_domain import CATALOG_base_In_domain
 from train.Fine_tuning.Train_CATALOG_Base_In_domain_Terra import CATALOG_base_In_domain_terra
 
 
@@ -40,8 +30,8 @@ def mode_model(model,model_params_path,mode):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
-    parser.add_argument('--model_version', type=str, default="Base_long", help='Model version')
-    parser.add_argument('--dataset', type=str, default="terra", help='dataset')
+    parser.add_argument('--model_version', type=str, default="Base", help='Model version')
+    parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
     parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
     parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
@@ -59,8 +49,6 @@ if __name__ == "__main__":
     feature_extraction=args.feature_extraction
     LLM=args.LLM
     en_att=args.en_att
-    import torch
-    print(torch.cuda.is_available())
 
     if feature_extraction :
         if model_version!='Base_long':
@@ -126,11 +114,11 @@ if __name__ == "__main__":
                             features_D=[path_features_D,path_prompts_D]
 
 
-                            model = CATALOG_base_In_domain_serengeti( model=base_fine_tuning, Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
+                            model = CATALOG_base_In_domain( model=base_fine_tuning, Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
 
                             random_search([features_D], train_type, model_version,model, f'{train_type}_{dataset}',f'Hp_{model_version}_{train_type}_{dataset}_{LLM}',seeds)
                         else:
-                            model = CATALOG_base_In_domain_serengeti( model=base_fine_tuning, Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
+                            model = CATALOG_base_In_domain( model=base_fine_tuning, Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
                             model.set_parameters(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=4, dropout=0.4,hidden_dim=1743,lr=1e-3,t=0.1,momentum=0.8409
                                                                 , patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
 
@@ -192,12 +180,6 @@ if __name__ == "__main__":
                             random_search([features_D, features_S], train_type, model_version,model, f'{train_type}_{LLM}_ATT_{en_att}',f'Hp_{model_version}_{LLM}_ATT_{en_att}',seeds,en_att=en_att)
                         else:
                             config = {"weight_Clip": 0.494, "num_epochs": 107, "batch_size": 128, "num_layers": 1, "dropout": 0.42656, "hidden_dim": 913,"lr": 0.017475,"t": 0.0983,"momentum": 0.95166}
-                            #if LLM=='ChatGPT':
-                            #    config = {"weight_Clip": 0.494,"num_epochs": 107,"batch_size": 128,"num_layers": 1,"dropout": 0.42656, "hidden_dim": 913,
-                            #            "lr": 0.017475,"t": 0.0983,"momentum": 0.95166}
-                            #elif LLM=='ChatGPT_0.0':
-                            #    config = {"weight_Clip": 0.5428,"num_epochs": 107,"batch_size": 128,"num_layers": 1,"dropout": 0.42656, "hidden_dim": 913,
-                            #            "lr": 0.017475,"t": 0.0983,"momentum": 0.95166}
                             seeds = test_seeds
                             test_best_model([features_D, features_S],train_type, model_version,model, f'{train_type}_{LLM}',config, seeds)
 
