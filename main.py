@@ -41,7 +41,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
     parser.add_argument('--model_version', type=str, default="Base", help='Model version')
-    parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
+    parser.add_argument('--dataset', type=str, default="terra", help='dataset')
     parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
     parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
@@ -63,7 +63,10 @@ if __name__ == "__main__":
     print(torch.cuda.is_available())
 
     if feature_extraction :
-        extract_features(model_version=model_version,dataset=dataset,mode_clip='16',LLM=LLM,only_text=0,AB_omg=1)
+        if model_version!='Base_long':
+            extract_features(model_version=model_version,dataset=dataset,mode_clip='16',LLM=LLM,only_text=0,AB_omg=0)
+        else:
+            extract_features(model_version=model_version, dataset=dataset, mode_clip='longclip-B', LLM=LLM, only_text=0,AB_omg=0)
     else:
 
             if model_version=="Base":

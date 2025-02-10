@@ -2,6 +2,7 @@ import os
 import torch
 from transformers import BertModel, BertTokenizer
 import clip
+from feature_extraction.Base.long_Clip.model import longclip
 import json
 from PIL import Image
 import numpy as np
@@ -104,12 +105,17 @@ def extract_features(model_version,dataset,mode_clip,LLM='ChatGPT',only_text=0,A
     model_Bert = BertModel.from_pretrained('bert-base-uncased')
     model_Bert.to(device)
 
-    model_clip, preprocess_clip = clip.load(f'ViT-B/{mode_clip}', device)
+    if mode_clip=='longclip-B':
+        model_clip, preprocess_clip = longclip.load(f'feature_extraction/Base/long_Clip/checkpoints/{mode_clip}.pt', device=device)
+    else:
+        model_clip, preprocess_clip = clip.load(f'ViT-B/{mode_clip}', device)
     model_clip.to(device)
 
     root=f'data/{dataset}/img'
     carpetas=os.listdir(root)
 
+    if 'ChatGPT' in LLM:
+        LLM='ChatGPT'
     f = open(f'data/info_{dataset}_{LLM}.json')
     data = json.load(f)
     camera_trap_templates2 = data['llm_descriptions']
@@ -142,7 +148,7 @@ def extract_features(model_version,dataset,mode_clip,LLM='ChatGPT',only_text=0,A
                         else:
                             target_index = class_indices.index(category)
 
-                        if model_version == 'Base':
+                        if model_version == 'Base' or "Base_long":
                             images = preprocess_clip(Image.open(img_path).convert("RGB")).unsqueeze(0).to(device)
 
                             with torch.no_grad():
@@ -166,7 +172,7 @@ def extract_features(model_version,dataset,mode_clip,LLM='ChatGPT',only_text=0,A
                             output_bert = model_Bert(token_ids, attention_mask=attention_mask)
                             description_embeddings = output_bert.pooler_output
 
-                        if model_version == 'Base':
+                        if model_version == 'Base'or model_version=="Base_long":
                             data_dict[img_name] = {
                                 "image_features": image_features,
                                 "description_embeddings": description_embeddings,
@@ -193,6 +199,12 @@ def extract_features(model_version,dataset,mode_clip,LLM='ChatGPT',only_text=0,A
             torch.save(features_dataset, f'features/Features_{dataset}/standard_features/Features_{dataset}.pt')
             zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2,model_clip,device)
             torch.save(zeroshot_weights,f'features/Features_{dataset}/standard_features/Prompts_{dataset}_{LLM}.pt')
+
+        if model_version== 'Base_long':
+            torch.save(features_dataset, f'features/Features_{dataset}/long_standard_features/Features_{dataset}.pt')
+            zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2,model_clip,device)
+            torch.save(zeroshot_weights,f'features/Features_{dataset}/long_standard_features/Prompts_{dataset}_{LLM}.pt')
+
         elif model_version == 'Fine_tuning':
             torch.save(features_dataset, f'features/Features_{dataset}/finetuning_features/Features_{dataset}.pt')
             zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device)
@@ -208,6 +220,9 @@ def extract_features(model_version,dataset,mode_clip,LLM='ChatGPT',only_text=0,A
             else:
                 zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2,model_clip,device)
                 torch.save(zeroshot_weights,f'features/Features_{dataset}/standard_features/Prompts_{dataset}_{LLM}.pt')
+        elif model_version=="Base_long":
+            zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device)
+            torch.save(zeroshot_weights, f'features/Features_{dataset}/long_standard_features/Prompts_{dataset}_{LLM}.pt')
         elif model_version == 'Fine_tuning':
             zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device)
             torch.save(zeroshot_weights, f'features/Features_{dataset}/finetuning_features/Prompts_{dataset}_{LLM}.pt')
