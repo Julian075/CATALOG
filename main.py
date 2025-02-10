@@ -30,7 +30,7 @@ from train.Fine_tuning.Train_CATALOG_Base_In_domain_Terra import CATALOG_base_In
 
 def mode_model(model,model_params_path,mode):
     if mode == 'train':
-        model.train(1064200250)
+        model.train()
     elif mode == 'test':
         model.prueba_model(model_params_path=model_params_path)
 
@@ -42,12 +42,13 @@ if __name__ == "__main__":
 
     parser.add_argument('--model_version', type=str, default="Base", help='Model version')
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
-    parser.add_argument('--mode', type=str, default="test", help='define if you want train or test or feature_extraction')
+    parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
     parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
-    parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')
+    parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')#en_att
+    parser.add_argument('--en_att', type=int, default=0, help='Enable the Attention layer')
 
-    parser.add_argument('--LLM', type=str, default="ChatGPT", help='define LLM')
+    parser.add_argument('--LLM', type=str, default="ChatGPT_0.5", help='define LLM')
     args = parser.parse_args()
 
     model_version = args.model_version
@@ -57,11 +58,12 @@ if __name__ == "__main__":
     hyperparameterTuning_mode=args.hyperparameterTuning_mode
     feature_extraction=args.feature_extraction
     LLM=args.LLM
+    en_att=args.en_att
     import torch
     print(torch.cuda.is_available())
 
     if feature_extraction :
-        extract_features(model_version=model_version,dataset=dataset,mode_clip='16',LLM=LLM,only_text=1,AB_omg=1)
+        extract_features(model_version=model_version,dataset=dataset,mode_clip='16',LLM=LLM,only_text=0,AB_omg=1)
     else:
 
             if model_version=="Base":
@@ -131,7 +133,7 @@ if __name__ == "__main__":
                         model = CATALOG_base(model=base, Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
                         model.set_parameters(weight_Clip=0.494, num_epochs=107, batch_size=128,num_layers=1, dropout=0.42656, hidden_dim=913, lr=0.017475,
                                              t=0.0983,momentum=0.95166, patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S=path_features_S,
-                                             path_prompts_S=path_prompts_S, exp_name=f'{model_version}_{train_type}', wnb=0)
+                                             path_prompts_S=path_prompts_S, exp_name=f'{model_version}_{train_type}', en_att=en_att,wnb=0)
                         #0.494
                         model_params_path =f'models/CATALOG_Base.pth'
                         mode_model(model, model_params_path, mode)

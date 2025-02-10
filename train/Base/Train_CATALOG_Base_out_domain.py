@@ -43,7 +43,7 @@ class CATALOG_base:
         self.patience = None
         self.exp_name = None
 
-    def set_parameters(self, weight_Clip, num_epochs, batch_size, num_layers, dropout, hidden_dim, lr, t, momentum, patience,path_features_D,path_prompts_D,path_features_S,path_prompts_S,exp_name,wnb=0):
+    def set_parameters(self, weight_Clip, num_epochs, batch_size, num_layers, dropout, hidden_dim, lr, t, momentum, patience,path_features_D,path_prompts_D,path_features_S,path_prompts_S,exp_name,en_att=0,wnb=0):
 
         self.wnb=wnb
         #data_dict=torch.load(self.root_dir)
@@ -63,6 +63,7 @@ class CATALOG_base:
         self.momentum=momentum
         self.patience=patience
         self.exp_name=exp_name
+        self.en_att=en_att
 
     def set_seed(self,seed):
         torch.manual_seed(seed)
@@ -89,7 +90,7 @@ class CATALOG_base:
 
 
 
-        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout, device=device)
+        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout, en_att=self.en_att,device=device)
         projection_model = projection_model.to(device)
 
         # Get your DataLoader
@@ -105,7 +106,7 @@ class CATALOG_base:
             dataloader_trans_test = self.dataloader(dataset_S['trans_test'], self.batch_size,self.dataset)
 
         #Configurate optimazer for training
-        optimizer,scheduler = self.build_optimizer(projection_model,'sgd',self.lr,self.momentum,self.version)
+        optimizer,scheduler = self.build_optimizer(projection_model,'sgd',self.lr,self.momentum,self.version,self.en_att)
         acc_best = -float('inf') #Variable to check the best model
         counter = 0  #Variable to verify the number of epoch without an improvement in the val acc
         for epoch in range(self.num_epochs):
@@ -193,7 +194,7 @@ class CATALOG_base:
 
             if epoch==(self.num_epochs-1) or counter >= self.patience:
                 if test:
-                    projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,device=device)
+                    projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,en_att=self.en_att,device=device)
                     projection_model.load_state_dict(torch.load(model_params_path))
                     projection_model = projection_model.to(device)
                     projection_model.eval()
@@ -290,7 +291,6 @@ class CATALOG_base:
         dataset_S = torch.load(self.path_features_S)
         dataloader_cis_test = self.dataloader(dataset_S['cis_test'], self.batch_size, self.dataset)
         dataloader_trans_test = self.dataloader(dataset_S['trans_test'], self.batch_size, self.dataset)
-
 
         projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,device=device)
         projection_model.load_state_dict(torch.load(model_params_path))
