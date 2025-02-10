@@ -5,7 +5,7 @@ from feature_extraction.Monte_carlo_partition import monte_carlo_partition
 import numpy as np
 
 
-def wandb_train(model, model_version,train_type,path_features, name_exp, seeds, config=None):
+def wandb_train(model, model_version,train_type,path_features, name_exp, seeds,en_att=0, config=None):
     with wandb.init(config=config,name=name_exp):
         config = wandb.config
 
@@ -38,7 +38,7 @@ def wandb_train(model, model_version,train_type,path_features, name_exp, seeds, 
                                          num_layers=num_layers, dropout=dropout, hidden_dim=hidden_dim, lr=learning_rate,
                                          t=temperature,momentum=momentum, patience=5, path_features_D=features[0][0],
                                          path_prompts_D=features[0][1], path_features_S=features[1][0],
-                                         path_prompts_S=features[1][1], exp_name=f'{seed}_{model_version}_{train_type}', wnb=1)
+                                         path_prompts_S=features[1][1], exp_name=f'{seed}_{model_version}_{train_type}',en_att=en_att, wnb=1)
 
             if model_version == 'Fine_tuning':
                 if train_type == 'In_domain':
@@ -68,7 +68,7 @@ def wandb_train(model, model_version,train_type,path_features, name_exp, seeds, 
                 avg_acc_val,std_acc_val, weight_clip, num_epochs, batch_size,
                 num_layers, dropout, hidden_dim, learning_rate, temperature, momentum
             ])
-def random_search(path_features,train_type, model_version,model, name_exp, name_project, seeds):
+def random_search(path_features,train_type, model_version,model, name_exp, name_project, seeds,en_att=0):
 
         token ="282780c770de0083eddfa3c56402f555ee60e108"#os.getenv("WandB_TOKE")
         wandb.login(key=token)
@@ -91,7 +91,7 @@ def random_search(path_features,train_type, model_version,model, name_exp, name_
         sweep_id = wandb.sweep(sweep_config, project=name_project)
 
 
-        wandb.agent(sweep_id, function=lambda: wandb_train(model, model_version, train_type, path_features,name_exp, seeds), count=100)
+        wandb.agent(sweep_id, function=lambda: wandb_train(model, model_version, train_type, path_features,name_exp, seeds,en_att=en_att), count=100)
 
 
 def random_search2(path_features, train_type, model_version, model, name_exp, name_project, seeds):
