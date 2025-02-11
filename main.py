@@ -54,7 +54,7 @@ if __name__ == "__main__":
         if model_version!='Base_long':
             extract_features(model_version=model_version,dataset=dataset,type_clip='16',LLM=LLM,only_text=0)
         else:
-            extract_features(model_version=model_version, dataset=dataset, type_clip='longclip-B', LLM=LLM, only_text=1)
+            extract_features(model_version=model_version, dataset=dataset, type_clip='longclip-B', LLM=LLM, only_text=0)
     else:
 
             if model_version=="Base":
