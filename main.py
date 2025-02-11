@@ -30,12 +30,12 @@ def mode_model(model,model_params_path,mode):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
-    parser.add_argument('--model_version', type=str, default="Base", help='Model version')
+    parser.add_argument('--model_version', type=str, default="Base_long", help='Model version')
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
     parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
     parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
-    parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')#en_att
+    parser.add_argument('--feature_extraction', type=int, default=1, help='Type of training')#en_att
     parser.add_argument('--en_att', type=int, default=0, help='Enable the Attention layer')
 
     parser.add_argument('--LLM', type=str, default="ChatGPT_0.5", help='define LLM')
@@ -52,9 +52,9 @@ if __name__ == "__main__":
 
     if feature_extraction :
         if model_version!='Base_long':
-            extract_features(model_version=model_version,dataset=dataset,mode_clip='16',LLM=LLM,only_text=0,AB_omg=0)
+            extract_features(model_version=model_version,dataset=dataset,type_clip='16',LLM=LLM,only_text=0)
         else:
-            extract_features(model_version=model_version, dataset=dataset, mode_clip='longclip-B', LLM=LLM, only_text=0,AB_omg=0)
+            extract_features(model_version=model_version, dataset=dataset, type_clip='longclip-B', LLM=LLM, only_text=1)
     else:
 
             if model_version=="Base":
