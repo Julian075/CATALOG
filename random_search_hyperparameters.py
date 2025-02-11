@@ -94,7 +94,7 @@ def random_search(path_features,train_type, model_version,model, name_exp, name_
         wandb.agent(sweep_id, function=lambda: wandb_train(model, model_version, train_type, path_features,name_exp, seeds,en_att=en_att), count=100)
 
 
-def random_search2(path_features, train_type, model_version, model, name_exp, name_project, seeds):
+def random_search2(path_features, train_type, model_version, model, name_exp, name_project, seeds,en_att=0):
     token = "282780c770de0083eddfa3c56402f555ee60e108"  # os.getenv("WandB_TOKE")
     wandb.login(key=token)
     sweep_config = {
@@ -116,8 +116,7 @@ def random_search2(path_features, train_type, model_version, model, name_exp, na
     sweep_id = wandb.sweep(sweep_config, project=name_project)
 
     wandb.agent(sweep_id,
-                function=lambda: wandb_train(model, model_version, train_type, path_features, name_exp, seeds),
-                count=100)
+                function=lambda: wandb_train(model, model_version, train_type, path_features, name_exp, seeds,en_att=en_att), count=100)
 
 def test_best_model(path_features,train_type, model_version,model, name_exp,config, seeds):
     weight_clip = config['weight_Clip']
