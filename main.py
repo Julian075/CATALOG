@@ -34,7 +34,7 @@ if __name__ == "__main__":
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
     parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
     parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
-    parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
+    parser.add_argument('--hyperparameterTuning_mode', type=int, default=1, help='Type of training')
     parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')#en_att
     parser.add_argument('--en_att', type=int, default=0, help='Enable the Attention layer')
 
@@ -173,7 +173,7 @@ if __name__ == "__main__":
                         features_D=[path_features_D,path_prompts_D]
                         features_S = [path_features_S, path_prompts_S]
 
-                        model = CATALOG_base( model=base_long, Dataset=BaselineDataset,Dataloader=dataloader_baseline, version='base',build_optimizer=build_optimizer)
+                        model = CATALOG_base( model=base, Dataset=BaselineDataset,Dataloader=dataloader_baseline, version='base',build_optimizer=build_optimizer)
 
                         if hyperparameterTuning_mode == 1:
                             seeds = val_seeds
