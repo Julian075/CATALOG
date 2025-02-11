@@ -32,7 +32,7 @@ def wandb_train(model, model_version,train_type,path_features, name_exp, seeds,e
             elif train_type == 'In_domain':
                 features = [[monte_carlo_partition( path_features[0][0], seed), path_features[0][1]]]
 
-            if model_version == 'Base':
+            if model_version == 'Base' or model_version == 'Base_long':
                 if train_type == 'Out_domain':
                     model.set_parameters(weight_Clip=weight_clip, num_epochs=num_epochs, batch_size=batch_size,
                                          num_layers=num_layers, dropout=dropout, hidden_dim=hidden_dim, lr=learning_rate,
@@ -161,7 +161,7 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
         elif train_type == 'In_domain':
             features = [[path_features[0][0], path_features[0][1]]]
 
-        if model_version == 'Base' and train_type == 'Out_domain':
+        if (model_version == 'Base' or model_version == 'Base_long') and train_type == 'Out_domain':
             model.set_parameters(weight_Clip=weight_clip, num_epochs=num_epochs, batch_size=batch_size,
                                  num_layers=num_layers, dropout=dropout, hidden_dim=hidden_dim, lr=learning_rate,
                                  t=temperature, momentum=momentum, patience=5, path_features_D=features[0][0],
