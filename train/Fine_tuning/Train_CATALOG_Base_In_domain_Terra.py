@@ -307,13 +307,14 @@ class CATALOG_base_In_domain_terra:
             return None
     def prueba_model(self,model_params_path):# to calculate the acc in test for a saved model
 
+        dataset_D = torch.load(self.path_features_D)
         device = "cuda" if torch.cuda.is_available() else "cpu"
 
-        text_features = torch.load(self.path_text_feat)
-        text_features=text_features.to(device)
+        text_features = torch.load(self.path_prompts_D)
+        text_features = text_features.to(device)
 
-        dataloader_cis_test = self.dataloader(self.ruta_features_test1, self.batch_size,self.dataset)
-        dataloader_trans_test = self.dataloader(self.ruta_features_test2, self.batch_size, self.dataset)
+        dataloader_cis_test = self.dataloader(dataset_D['cis_test'], self.batch_size, self.dataset)
+        dataloader_trans_test = self.dataloader(dataset_D['trans_test'], self.batch_size, self.dataset)
 
 
         projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,device=device)
