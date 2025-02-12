@@ -4,6 +4,7 @@ from feature_extraction.CATALOG_feature_extraction import extract_features
 from random_search_hyperparameters import random_search,test_best_model,random_search2
 
 from models import CATALOG_Base as base
+from models import CATALOG_Base_long as base_long
 from models import CATALOG_Base_fine_tuning as base_fine_tuning
 from models import CLIP_Mlp as CLIP_MLP
 
@@ -31,11 +32,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
     parser.add_argument('--model_version', type=str, default="Base_long", help='Model version')
-    parser.add_argument('--dataset', type=str, default="terra", help='dataset')
-    parser.add_argument('--mode', type=str, default="test", help='define if you want train or test or feature_extraction')
+    parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
+    parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
     parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
-    parser.add_argument('--feature_extraction', type=int, default=1, help='Type of training')#en_att
+    parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')#en_att
     parser.add_argument('--en_att', type=int, default=0, help='Enable the Attention layer')
 
     parser.add_argument('--LLM', type=str, default="ChatGPT_0.5", help='define LLM')
@@ -61,9 +62,11 @@ if __name__ == "__main__":
 
             if model_version=="Base" or model_version=="Base_long":
                 if model_version == "Base":
+                    model_type=base
                     type_feat="standard_features"
                     model_params_path = 'models/CATALOG_BERT.pth'
                 else:
+                    model_type=base_long
                     type_feat = "long_features"
                     model_params_path = 'models/CATALOG_LongCLIP.pth'
 
@@ -81,7 +84,7 @@ if __name__ == "__main__":
                         features_D=[path_features_D,path_prompts_D]
                         features_S = [path_features_S, path_prompts_S]
 
-                        model = CATALOG_base( model=base, Dataset=BaselineDataset,Dataloader=dataloader_baseline, version='base',build_optimizer=build_optimizer)
+                        model = CATALOG_base( model=model_type, Dataset=BaselineDataset,Dataloader=dataloader_baseline, version='base',build_optimizer=build_optimizer)
 
                         if hyperparameterTuning_mode == 1:
                             seeds = val_seeds

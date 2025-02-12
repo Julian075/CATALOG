@@ -142,10 +142,10 @@ class LLaVA_CLIP(nn.Module):
         similarity_clip = similarity_clip / similarity_clip.norm(dim=-1, keepdim=True)
 
         logit_scale_LLaVA = self.logit_scale_LLaVA.exp()
-        similarity_bert = (description_features.half() @ txt_features) * logit_scale_LLaVA
-        similarity_bert = similarity_bert / similarity_bert.norm(dim=-1, keepdim=True)
+        similarity_VLM = (description_features.half() @ txt_features) * logit_scale_LLaVA
+        similarity_VLM = similarity_VLM / similarity_VLM.norm(dim=-1, keepdim=True)
 
-        similarity = (similarity_clip * weight_p + similarity_bert * (1 - weight_p))
+        similarity = (similarity_clip * weight_p + similarity_VLM * (1 - weight_p))
         out_logits = similarity / similarity.norm(dim=-1, keepdim=True)
 
 
@@ -173,10 +173,10 @@ class LLaVA_CLIP(nn.Module):
         similarity_clip = similarity_clip / similarity_clip.norm(dim=-1, keepdim=True)
 
         logit_scale_LLaVA = self.logit_scale_LLaVA.exp()
-        similarity_bert = (description_features.half() @ txt_features) * logit_scale_LLaVA
-        similarity_bert = similarity_bert / similarity_bert.norm(dim=-1, keepdim=True)
+        similarity_VLM = (description_features.half() @ txt_features) * logit_scale_LLaVA
+        similarity_VLM = similarity_VLM / similarity_VLM.norm(dim=-1, keepdim=True)
 
-        similarity = (similarity_clip * weight_p + similarity_bert * (1 - weight_p))
+        similarity = (similarity_clip * weight_p + similarity_VLM * (1 - weight_p))
         out_logits = similarity / similarity.norm(dim=-1, keepdim=True)
 
         max_values, max_indices = torch.max(out_logits, dim=1)
@@ -192,10 +192,10 @@ class LLaVA_CLIP(nn.Module):
         similarity_clip = similarity_clip / similarity_clip.norm(dim=-1, keepdim=True)
 
         logit_scale_LLaVA = self.logit_scale_LLaVA.exp()
-        similarity_bert = (description_features.half() @ txt_features) * logit_scale_LLaVA
-        similarity_bert = similarity_bert / similarity_bert.norm(dim=-1, keepdim=True)
+        similarity_VLM = (description_features.half() @ txt_features) * logit_scale_LLaVA
+        similarity_VLM = similarity_VLM / similarity_VLM.norm(dim=-1, keepdim=True)
 
-        similarity = (similarity_clip * weight_p + similarity_bert * (1 - weight_p))
+        similarity = (similarity_clip * weight_p + similarity_VLM * (1 - weight_p))
         out_logits = similarity / similarity.norm(dim=-1, keepdim=True)
 
         acc=self.accuracy_top_3(out_logits,target_ind)
