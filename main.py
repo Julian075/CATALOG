@@ -86,7 +86,7 @@ if __name__ == "__main__":
                             #    config = {"weight_Clip": 0.5428,"num_epochs": 107,"batch_size": 128,"num_layers": 1,"dropout": 0.42656, "hidden_dim": 913,
                             #            "lr": 0.017475,"t": 0.0983,"momentum": 0.95166}
                             seeds = test_seeds
-                            test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_ATT_{en_att}',config, seeds)
+                            test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_ATT_{en_att}',config, seeds,en_att=en_att)
 
                     else:
                         model = CATALOG_base(model=base, Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
@@ -180,7 +180,7 @@ if __name__ == "__main__":
                         else:
                             config = {"weight_Clip": 0.494, "num_epochs": 107, "batch_size": 128, "num_layers": 1, "dropout": 0.42656, "hidden_dim": 913,"lr": 0.017475,"t": 0.0983,"momentum": 0.95166}
                             seeds = test_seeds
-                            test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_ATT_{en_att}',config, seeds)
+                            test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_ATT_{en_att}',config, seeds,en_att=en_att)
 
                     else:
                         model = CATALOG_base(model=base, Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)

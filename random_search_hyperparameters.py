@@ -118,7 +118,7 @@ def random_search2(path_features, train_type, model_version, model, name_exp, na
     wandb.agent(sweep_id,
                 function=lambda: wandb_train(model, model_version, train_type, path_features, name_exp, seeds,en_att=en_att), count=100)
 
-def test_best_model(path_features,train_type, model_version,model, name_exp,config, seeds):
+def test_best_model(path_features,train_type, model_version,model, name_exp,config, seeds,en_att=0):
     weight_clip = config['weight_Clip']
     num_epochs = config['num_epochs']
     batch_size = config['batch_size']
@@ -165,7 +165,7 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
                                  num_layers=num_layers, dropout=dropout, hidden_dim=hidden_dim, lr=learning_rate,
                                  t=temperature, momentum=momentum, patience=5, path_features_D=features[0][0],
                                  path_prompts_D=features[0][1], path_features_S=features[1][0],
-                                 path_prompts_S=features[1][1], exp_name=f'{seed}_{model_version}_{name_exp}',
+                                 path_prompts_S=features[1][1], exp_name=f'{seed}_{model_version}_{name_exp}',en_att=en_att,
                                  wnb=0)
 
         elif model_version == 'Fine_tuning' and train_type == 'In_domain':
