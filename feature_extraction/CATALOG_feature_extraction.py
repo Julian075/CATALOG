@@ -214,8 +214,8 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0):
 
         elif model_version == 'Fine_tuning':
             torch.save(features_dataset, f'features/Features_{dataset}/finetuning_features/Features_{dataset}.pt')
-            zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device,type_clip,0.5)
-            torch.save(zeroshot_weights, f'features/Features_{dataset}/finetuning_features/Prompts_{dataset}_{LLM}_0.5.pt')
+            zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device,type_clip,0.5)
+            torch.save(zeroshot_weights, f'features/Features_{dataset}/finetuning_features/Prompts_{dataset}_{LLM}.pt')
     else:
 
         if model_version== 'Base':
@@ -225,8 +225,8 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0):
             zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device, type_clip,0.5)
             torch.save(zeroshot_weights, f'features/Features_{dataset}/long_standard_features/Prompts_{dataset}_{LLM}_0.5.pt')
         elif model_version == 'Fine_tuning':
-            zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device,type_clip,0.5)
-            torch.save(zeroshot_weights, f'features/Features_{dataset}/finetuning_features/Prompts_{dataset}_{LLM}_0.5.pt')
+            zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device,type_clip,0.5)
+            torch.save(zeroshot_weights, f'features/Features_{dataset}/finetuning_features/Prompts_{dataset}_{LLM}.pt')
 
 
 

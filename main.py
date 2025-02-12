@@ -29,10 +29,10 @@ def mode_model(model,model_params_path,mode):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
-    parser.add_argument('--model_version', type=str, default="Base_long", help='Model version')
+    parser.add_argument('--model_version', type=str, default="Fine_tuning", help='Model version')
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
-    parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
-    parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
+    parser.add_argument('--mode', type=str, default="test", help='define if you want train or test or feature_extraction')
+    parser.add_argument('--train_type', type=str, default="In_domain", help='Type of training')
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
     parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')#en_att
     parser.add_argument('--en_att', type=int, default=0, help='Enable the Attention layer')
@@ -56,16 +56,22 @@ if __name__ == "__main__":
             extract_features(model_version=model_version, dataset=dataset, type_clip='longclip-B', LLM=LLM, only_text=0)
     else:
 
-            if model_version=="Base":
-                path_features_D = f"features/Features_{dataset}/standard_features/Features_{dataset}.pt"
-                path_prompts_D = f"features/Features_{dataset}/standard_features/Prompts_{dataset}_{LLM}.pt"
-                #if not os.path.isfile(path_prompts_D):
-                #    path_prompts_D = f"features/Features_{dataset}/standard_features/Prompts_{dataset}.pt"
+            if model_version=="Base" or model_version=="Base_long":
+                if model_version == "Base":
+                    type_feat="standard_features"
+                    model_params_path = 'models/CATALOG_BERT.pth'
+                else:
+                    type_feat = "long_standard_features"
+                    model_params_path = 'models/CATALOG_LongCLIP.pth'
 
-                path_features_S = "features/Features_terra/standard_features/Features_terra.pt"
-                path_prompts_S = f"features/Features_terra/standard_features/Prompts_terra_{LLM}.pt"
-                #if not os.path.isfile(path_prompts_S):
-                #    path_prompts_S = f"features/Features_terra/standard_features/Prompts_terra.pt"
+                path_features_D = f"features/Features_{dataset}/{type_feat}/Features_{dataset}.pt"
+                path_prompts_D = f"features/Features_{dataset}/{type_feat}/Prompts_{dataset}_{LLM}.pt"
+
+
+                path_features_S = f"features/Features_terra/{type_feat}/Features_terra.pt"
+                path_prompts_S = f"features/Features_terra/{type_feat}/Prompts_terra_{LLM}.pt"
+
+
                 if train_type=="Out_domain":
                     if hyperparameterTuning_mode == 1 or hyperparameterTuning_mode == 2:
                         seeds=val_seeds
@@ -79,12 +85,6 @@ if __name__ == "__main__":
                             random_search2([features_D, features_S], train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_ATT_{en_att}',f'Hp_{model_version}_{LLM}_ATT_{en_att}',seeds,en_att=en_att)
                         else:
                             config = {"weight_Clip": 0.494, "num_epochs": 107, "batch_size": 128, "num_layers": 1, "dropout": 0.42656, "hidden_dim": 913,"lr": 0.017475,"t": 0.0983,"momentum": 0.95166}
-                            #if LLM=='ChatGPT':
-                            #    config = {"weight_Clip": 0.494,"num_epochs": 107,"batch_size": 128,"num_layers": 1,"dropout": 0.42656, "hidden_dim": 913,
-                            #            "lr": 0.017475,"t": 0.0983,"momentum": 0.95166}
-                            #elif LLM=='ChatGPT_0.0':
-                            #    config = {"weight_Clip": 0.5428,"num_epochs": 107,"batch_size": 128,"num_layers": 1,"dropout": 0.42656, "hidden_dim": 913,
-                            #            "lr": 0.017475,"t": 0.0983,"momentum": 0.95166}
                             seeds = test_seeds
                             test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_ATT_{en_att}',config, seeds,en_att=en_att)
 
@@ -93,8 +93,7 @@ if __name__ == "__main__":
                         model.set_parameters(weight_Clip=0.494, num_epochs=107, batch_size=128,num_layers=1, dropout=0.42656, hidden_dim=913, lr=0.017475,
                                              t=0.0983,momentum=0.95166, patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S=path_features_S,
                                              path_prompts_S=path_prompts_S, exp_name=f'{model_version}_{train_type}', en_att=en_att,wnb=0)
-                        #0.494
-                        model_params_path =f'models/CATALOG_Base.pth'
+
                         mode_model(model, model_params_path, mode)
 
 
@@ -148,48 +147,10 @@ if __name__ == "__main__":
                         else:
                             model = CATALOG_base_In_domain_terra( model=base_fine_tuning, Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
 
-                            model.set_parameters(weight_Clip=0.391885, num_epochs=185, batch_size=32, num_layers=7,
-                                                 dropout=0.391855, hidden_dim=1024, lr=0.00034235,
-                                                 t=0.157429, momentum=0.8851568, patience=5,
+                            model.set_parameters(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=1,
+                                                dropout=0.5,hidden_dim=1045,lr=1e-4,t=0.1,momentum=0.8409, patience=5,
                                                  path_features_D=path_features_D, path_prompts_D=path_prompts_D,
                                                  exp_name=f'{model_version}_{train_type}', wnb=0)
 
                             model_params_path = 'models/CATALOG_finetuning_Base_Terra.pth'
                             mode_model(model, model_params_path, mode)
-
-
-
-            elif model_version=="Base_long":
-                path_features_D = f"features/Features_{dataset}/long_standard_features/Features_{dataset}.pt"
-                path_prompts_D = f"features/Features_{dataset}/long_standard_features/Prompts_{dataset}_{LLM}.pt"
-
-                path_features_S = "features/Features_terra/long_standard_features/Features_terra.pt"
-                path_prompts_S = f"features/Features_terra/long_standard_features/Prompts_terra_{LLM}.pt"
-
-                if train_type=="Out_domain":
-                    if hyperparameterTuning_mode == 1 or hyperparameterTuning_mode == 2:
-                        seeds=val_seeds
-                        features_D=[path_features_D,path_prompts_D]
-                        features_S = [path_features_S, path_prompts_S]
-
-                        model = CATALOG_base( model=base, Dataset=BaselineDataset,Dataloader=dataloader_baseline, version='base',build_optimizer=build_optimizer)
-
-                        if hyperparameterTuning_mode == 1:
-                            seeds = val_seeds
-                            random_search2([features_D, features_S], train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_ATT_{en_att}',f'Hp_{model_version}_{LLM}_ATT_{en_att}',seeds,en_att=en_att)
-                        else:
-                            config = {"weight_Clip": 0.494, "num_epochs": 107, "batch_size": 128, "num_layers": 1, "dropout": 0.42656, "hidden_dim": 913,"lr": 0.017475,"t": 0.0983,"momentum": 0.95166}
-                            seeds = test_seeds
-                            test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_ATT_{en_att}',config, seeds,en_att=en_att)
-
-                    else:
-                        model = CATALOG_base(model=base, Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
-                        model.set_parameters(weight_Clip=0.494, num_epochs=107, batch_size=128,num_layers=1, dropout=0.42656, hidden_dim=913, lr=0.017475,
-                                             t=0.0983,momentum=0.95166, patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S=path_features_S,
-                                             path_prompts_S=path_prompts_S, exp_name=f'{model_version}_{train_type}', en_att=en_att,wnb=0)
-                        #0.494
-
-                        model_params_path = 'models/CATALOG_Base_long.pth'
-                        mode_model(model, model_params_path, mode)
-
-
