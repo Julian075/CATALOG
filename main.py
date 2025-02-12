@@ -88,11 +88,11 @@ if __name__ == "__main__":
 
                         if hyperparameterTuning_mode == 1:
                             seeds = val_seeds
-                            random_search2([features_D, features_S], train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_ATT_{en_att}',f'Hp_{model_version}_{LLM}_ATT_{en_att}',seeds,en_att=en_att)
+                            random_search2([features_D, features_S], train_type, model_version,model, f'{model_version}2_{train_type}_{LLM}_ATT_{en_att}',f'Hp_{model_version}2_{LLM}_ATT_{en_att}',seeds,en_att=en_att)
                         else:
                             config = {"weight_Clip": 0.494, "num_epochs": 107, "batch_size": 128, "num_layers": 1, "dropout": 0.42656, "hidden_dim": 913,"lr": 0.017475,"t": 0.0983,"momentum": 0.95166}
                             seeds = test_seeds
-                            test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_ATT_{en_att}',config, seeds,en_att=en_att)
+                            test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}2_{train_type}_{LLM}_ATT_{en_att}',config, seeds,en_att=en_att)
 
                     else:
                         model = CATALOG_base(model=base, Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
