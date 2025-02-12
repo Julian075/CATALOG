@@ -19,7 +19,7 @@ from train.Fine_tuning.Train_CATALOG_Base_In_domain_Terra import CATALOG_base_In
 
 def mode_model(model,model_params_path,mode):
     if mode == 'train':
-        model.train()
+        model.train(1064200250)
     elif mode == 'test':
         model.prueba_model(model_params_path=model_params_path)
 
