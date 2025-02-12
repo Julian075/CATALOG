@@ -148,7 +148,7 @@ if __name__ == "__main__":
                             model = CATALOG_base_In_domain_terra( model=base_fine_tuning, Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
 
                             model.set_parameters(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=1,
-                                                dropout=0.5,hidden_dim=1045,lr=1e-4,t=0.1,momentum=0.8409, patience=5,
+                                                dropout=0.5,hidden_dim=1863,lr=1e-4,t=0.1,momentum=0.8409, patience=5,
                                                  path_features_D=path_features_D, path_prompts_D=path_prompts_D,
                                                  exp_name=f'{model_version}_{train_type}', wnb=0)
 
