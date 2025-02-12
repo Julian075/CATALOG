@@ -5,7 +5,7 @@ import clip
 from feature_extraction.long_Clip.model import longclip
 import json
 from PIL import Image
-import numpy as np
+import open_clip
 
 
 camera_trap_templates1 = [
@@ -73,6 +73,8 @@ def zeroshot_classifier_2(classnames, templates1, templates2,model_clip,device,t
             texts = [template.format(classname) for template in templates1]
             if type_clip == 'longclip-B':
                 texts = longclip.tokenize(texts).to(device)
+            elif type_clip == "BioCLIP":
+                texts = biocllip_tokenizer(texts).to(device)
             else:
                 texts = clip.tokenize(texts).to(device)
             template_embeddings = model_clip.encode_text(texts)  # embed with text encoder
@@ -84,6 +86,8 @@ def zeroshot_classifier_2(classnames, templates1, templates2,model_clip,device,t
             texts2 = [template for template in templates2[classname]]  # format with class
             if type_clip == 'longclip-B':
                 texts2 = longclip.tokenize(texts2).to(device)
+            elif type_clip=="BioCLIP":
+                texts2 =biocllip_tokenizer(texts2).to(device)
             else:
                 texts2 = clip.tokenize(texts2).to(device)
 
@@ -114,6 +118,9 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0):
 
     if type_clip=='longclip-B':
         model_clip, preprocess_clip = longclip.load(f'feature_extraction/long_Clip/checkpoints/{type_clip}.pt', device=device)
+    elif type_clip=='BioCLIP':
+        model_clip, _, preprocess_clip = open_clip.create_model_and_transforms("hf-hub:imageomics/bioclip")
+        biocllip_tokenizer = open_clip.get_tokenizer("hf-hub:imageomics/bioclip")
     else:
         model_clip, preprocess_clip = clip.load(f'ViT-B/{type_clip}', device)
     model_clip.to(device)
@@ -122,8 +129,9 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0):
     carpetas=os.listdir(root)
 
     if 'ChatGPT' in LLM:
-        LLM='ChatGPT'
-    f = open(f'data/info_{dataset}_{LLM}.json')
+        f = open(f'data/info_{dataset}_ChatGPT.json')
+    else:
+        f = open(f'data/info_{dataset}_{LLM}.json')
     data = json.load(f)
     camera_trap_templates2 = data['llm_descriptions']
     f.close()
@@ -162,22 +170,26 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0):
                                 image_features = model_clip.encode_image(images)
                                 image_features /= image_features.norm(dim=-1, keepdim=True)
 
+                        if model_version != 'CLIP_MLP' and model_version != 'BioCLIP_MLP':
+                            f = open(json_path)
+                            data = json.load(f)
+                            description = data['description']
+                            f.close()
+                            if type_clip == 'longclip-B':
+                                tokens = longclip.tokenize(description).to(device)
+                                with torch.no_grad():
+                                    description_embeddings = model_clip.encode_text(tokens)
+                            else:
+                                tokens = tokenizer_Bert.tokenize(description)
+                                tokens = ['[CLS]'] + tokens + ['[SEP]']
+                                attention_mask = [1 if token != '[PAD]' else 0 for token in tokens]
+                                token_ids = tokenizer_Bert.convert_tokens_to_ids(tokens)
 
-                        # images = images.unsqueeze(0)[0]
-                        f = open(json_path)
-                        data = json.load(f)
-                        description = data['description']
-                        f.close()
-                        tokens = tokenizer_Bert.tokenize(description)
-                        tokens = ['[CLS]'] + tokens + ['[SEP]']
-                        attention_mask = [1 if token != '[PAD]' else 0 for token in tokens]
-                        token_ids = tokenizer_Bert.convert_tokens_to_ids(tokens)
-
-                        attention_mask = torch.tensor(attention_mask).unsqueeze(0).to(device)
-                        token_ids = torch.tensor(token_ids).unsqueeze(0).to(device)
-                        with torch.no_grad():
-                            output_bert = model_Bert(token_ids, attention_mask=attention_mask)
-                            description_embeddings = output_bert.pooler_output
+                                attention_mask = torch.tensor(attention_mask).unsqueeze(0).to(device)
+                                token_ids = torch.tensor(token_ids).unsqueeze(0).to(device)
+                                with torch.no_grad():
+                                    output_bert = model_Bert(token_ids, attention_mask=attention_mask)
+                                    description_embeddings = output_bert.pooler_output
 
                         if model_version == 'Base'or model_version=="Base_long":
                             data_dict[img_name] = {
@@ -191,9 +203,13 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0):
                                 "description_embeddings": description_embeddings,
                                 "target_index": target_index
                             }
+                        elif model_version == 'CLIP_MLP' or model_version == 'BioCLIP_MLP':
+                            data_dict[img_name] = {
+                                "image_features": img_path,
+                                "target_index": target_index
+                            }
                 # Save the dict in a .pt file
                 features_dataset[mode]=data_dict
-                #torch.save(data_dict,f'features/Features_{dataset}/standard_features/Features_CATALOG_{mode}_{mode_clip}.pt')
 
         if dataset=='serengeti':
             #This is a particular case of serengeti dataset
@@ -205,28 +221,35 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0):
         if model_version== 'Base':
             torch.save(features_dataset, f'features/Features_{dataset}/standard_features/Features_{dataset}.pt')
             zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2,model_clip,device,type_clip,0.5)
-            torch.save(zeroshot_weights,f'features/Features_{dataset}/standard_features/Prompts_{dataset}_{LLM}_0.5.pt')
+            torch.save(zeroshot_weights,f'features/Features_{dataset}/standard_features/Prompts_{dataset}_{LLM}.pt')
 
         if model_version== 'Base_long':
-            torch.save(features_dataset, f'features/Features_{dataset}/long_standard_features/Features_{dataset}.pt')
+            torch.save(features_dataset, f'features/Features_{dataset}/long_features/Features_{dataset}.pt')
             zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2,model_clip,device,type_clip,0.5)
-            torch.save(zeroshot_weights,f'features/Features_{dataset}/long_standard_features/Prompts_{dataset}_{LLM}_0.5.pt')
+            torch.save(zeroshot_weights,f'features/Features_{dataset}/long_features/Prompts_{dataset}_{LLM}.pt')
 
         elif model_version == 'Fine_tuning':
             torch.save(features_dataset, f'features/Features_{dataset}/finetuning_features/Features_{dataset}.pt')
-            zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device,type_clip,0.5)
+            zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device)
             torch.save(zeroshot_weights, f'features/Features_{dataset}/finetuning_features/Prompts_{dataset}_{LLM}.pt')
+        elif model_version == 'CLIP_MLP' or model_version == 'BioCLIP_MLP':
+            torch.save(features_dataset, f'features/Features_{dataset}/CLIP_MLP/Features_{type_clip}_{dataset}.pt')
+            zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device,type_clip,0.5)
+            torch.save(zeroshot_weights, f'features/Features_{dataset}/CLIP_MLP/Prompts_{type_clip}_{dataset}_{LLM}.pt')
     else:
 
         if model_version== 'Base':
             zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2,model_clip,device,type_clip,0.5)
-            torch.save(zeroshot_weights,f'features/Features_{dataset}/standard_features/Prompts_{dataset}_{LLM}_0.5.pt')
+            torch.save(zeroshot_weights,f'features/Features_{dataset}/standard_features/Prompts_{dataset}_{LLM}.pt')
         elif model_version=="Base_long":
             zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device, type_clip,0.5)
-            torch.save(zeroshot_weights, f'features/Features_{dataset}/long_standard_features/Prompts_{dataset}_{LLM}_0.5.pt')
+            torch.save(zeroshot_weights, f'features/Features_{dataset}/long_features/Prompts_{dataset}_{LLM}.pt')
         elif model_version == 'Fine_tuning':
-            zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device,type_clip,0.5)
+            zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device)
             torch.save(zeroshot_weights, f'features/Features_{dataset}/finetuning_features/Prompts_{dataset}_{LLM}.pt')
+        elif model_version == 'CLIP_MLP' or model_version == 'BioCLIP_MLP':
+            zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device,type_clip,0.5)
+            torch.save(zeroshot_weights, f'features/Features_{dataset}/CLIP_MLP/Prompts_{type_clip}_{dataset}_{LLM}.pt')
 
 
 

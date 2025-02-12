@@ -5,13 +5,14 @@ from random_search_hyperparameters import random_search,test_best_model,random_s
 
 from models import CATALOG_Base as base
 from models import CATALOG_Base_fine_tuning as base_fine_tuning
+from models import CLIP_Mlp as CLIP_MLP
 
 
 import argparse
 from utils import BaselineDataset,dataloader_baseline,TuningDataset,dataloader_Tuning,build_optimizer
 from data.seeds import val_seeds, test_seeds
 
-from train.Base.Train_CATALOG_Base_out_domain import CATALOG_base
+from train.Train_CATALOG_Base_out_domain import CATALOG_base
 
 from train.Fine_tuning.Train_CATALOG_Base_In_domain import CATALOG_base_In_domain
 from train.Fine_tuning.Train_CATALOG_Base_In_domain_Terra import CATALOG_base_In_domain_terra
@@ -29,12 +30,12 @@ def mode_model(model,model_params_path,mode):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
-    parser.add_argument('--model_version', type=str, default="Fine_tuning", help='Model version')
-    parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
+    parser.add_argument('--model_version', type=str, default="Base_long", help='Model version')
+    parser.add_argument('--dataset', type=str, default="terra", help='dataset')
     parser.add_argument('--mode', type=str, default="test", help='define if you want train or test or feature_extraction')
-    parser.add_argument('--train_type', type=str, default="In_domain", help='Type of training')
+    parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
-    parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')#en_att
+    parser.add_argument('--feature_extraction', type=int, default=1, help='Type of training')#en_att
     parser.add_argument('--en_att', type=int, default=0, help='Enable the Attention layer')
 
     parser.add_argument('--LLM', type=str, default="ChatGPT_0.5", help='define LLM')
@@ -50,10 +51,12 @@ if __name__ == "__main__":
     en_att=args.en_att
 
     if feature_extraction :
-        if model_version!='Base_long':
-            extract_features(model_version=model_version,dataset=dataset,type_clip='16',LLM=LLM,only_text=0)
-        else:
+        if model_version=='Base_long':
             extract_features(model_version=model_version, dataset=dataset, type_clip='longclip-B', LLM=LLM, only_text=0)
+        elif model_version == "BioCLIP_MLP":
+            extract_features(model_version=model_version, dataset=dataset, type_clip='BioCLIP', LLM=LLM, only_text=0)
+        else:
+            extract_features(model_version=model_version, dataset=dataset, type_clip='16', LLM=LLM, only_text=0)
     else:
 
             if model_version=="Base" or model_version=="Base_long":
@@ -61,7 +64,7 @@ if __name__ == "__main__":
                     type_feat="standard_features"
                     model_params_path = 'models/CATALOG_BERT.pth'
                 else:
-                    type_feat = "long_standard_features"
+                    type_feat = "long_features"
                     model_params_path = 'models/CATALOG_LongCLIP.pth'
 
                 path_features_D = f"features/Features_{dataset}/{type_feat}/Features_{dataset}.pt"
@@ -148,9 +151,19 @@ if __name__ == "__main__":
                             model = CATALOG_base_In_domain_terra( model=base_fine_tuning, Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
 
                             model.set_parameters(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=1,
-                                                dropout=0.5,hidden_dim=1863,lr=1e-4,t=0.1,momentum=0.8409, patience=5,
+                                                dropout=0.5,hidden_dim=1045,lr=1e-4,t=0.1,momentum=0.8409, patience=5,
                                                  path_features_D=path_features_D, path_prompts_D=path_prompts_D,
                                                  exp_name=f'{model_version}_{train_type}', wnb=0)
 
                             model_params_path = 'models/CATALOG_finetuning_Base_Terra.pth'
                             mode_model(model, model_params_path, mode)
+
+            elif model_version == "CLIP_MLP" or model_version == "BioCLIP_MLP":
+                path_features_D = f"features/Features_{dataset}/long_standard_features/Features_{dataset}.pt"
+                path_prompts_D = f"features/Features_{dataset}/long_standard_features/Prompts_{dataset}_{LLM}.pt"
+
+                if train_type == "In_domain":
+                   print('Loading..')
+                elif train_type == "Out_domain":
+                    path_features_S = f"features/Features_terra/long_standard_features/Features_terra.pt"
+                    path_prompts_S = f"features/Features_terra/long_standard_features/Prompts_terra_{LLM}.pt"
