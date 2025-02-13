@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 import torch.nn as nn
-from CATALOG_Base import MLP as MLP_projection
+from models.CATALOG_Base import MLP as MLP_projection
 
 
 class Adapter(nn.Module):
