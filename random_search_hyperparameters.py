@@ -150,6 +150,10 @@ def random_search_MLP(path_features, train_type, model_version, model, name_exp,
         }
     }
 
+    sweep_id = wandb.sweep(sweep_config, project=name_project)
+
+    wandb.agent(sweep_id,function=lambda: wandb_train(model, model_version, train_type, path_features, name_exp, seeds), count=100)
+
 def random_search_Adapter(path_features, train_type, model_version, model, name_exp, name_project, seeds, en_att=0):
     token = "282780c770de0083eddfa3c56402f555ee60e108"  # os.getenv("WandB_TOKE")
     wandb.login(key=token)
@@ -168,8 +172,7 @@ def random_search_Adapter(path_features, train_type, model_version, model, name_
 
     sweep_id = wandb.sweep(sweep_config, project=name_project)
 
-    wandb.agent(sweep_id,
-                function=lambda: wandb_train(model, model_version, train_type, path_features, name_exp, seeds,en_att=en_att), count=100)
+    wandb.agent(sweep_id,  function=lambda: wandb_train(model, model_version, train_type, path_features, name_exp, seeds), count=100)
 
 
 
