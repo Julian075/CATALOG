@@ -90,7 +90,7 @@ class CATALOG_base:
 
 
 
-        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout, en_att=self.en_att,device=device)
+        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout, en_att=self.en_att)
         projection_model = projection_model.to(device)
 
         # Get your DataLoader
