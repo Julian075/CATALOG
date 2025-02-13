@@ -206,7 +206,7 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0):
                             }
                         elif model_version == 'CLIP_MLP' or model_version == 'BioCLIP_MLP':
                             data_dict[img_name] = {
-                                "image_features": img_path,
+                                "image_features": image_features,
                                 "target_index": target_index
                             }
                 # Save the dict in a .pt file
