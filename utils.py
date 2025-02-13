@@ -77,12 +77,12 @@ def build_optimizer( projection_model, optimizer, learning_rate, momentum, versi
         params1 = {"params": projection_model.description_encoder.parameters(), "lr": learning_rate,
                     "momentum": momentum}
 
-    if not en_att:
-        params2 = {"params": projection_model.logit_scale_CLIP, "lr": learning_rate, "momentum": momentum}
-        params3 = {"params": projection_model.logit_scale_LLaVA, "lr": learning_rate, "momentum": momentum}
-    else:
-        params2 = {"params": projection_model.cross_attention.parameters(), "lr": learning_rate, "momentum": momentum}
-        params3 = {"params": projection_model.logit_scale_CLIP, "lr": learning_rate, "momentum": momentum}
+        if not en_att:
+            params2 = {"params": projection_model.logit_scale_CLIP, "lr": learning_rate, "momentum": momentum}
+            params3 = {"params": projection_model.logit_scale_LLaVA, "lr": learning_rate, "momentum": momentum}
+        else:
+            params2 = {"params": projection_model.cross_attention.parameters(), "lr": learning_rate, "momentum": momentum}
+            params3 = {"params": projection_model.logit_scale_CLIP, "lr": learning_rate, "momentum": momentum}
 
     scheduler = None  # Inicializa el scheduler como None
 
