@@ -67,6 +67,8 @@ def zeroshot_classifier(classnames, templates1, templates2,model_clip,device):
         zeroshot_weights = torch.stack(zeroshot_weights, dim=1).to(device)
     return zeroshot_weights
 def zeroshot_classifier_2(classnames, templates1, templates2,model_clip,device,type_clip,beta):
+    if type_clip=='BioCLIP':
+        biocllip_tokenizer = open_clip.get_tokenizer("hf-hub:imageomics/bioclip")
     with torch.no_grad():
         zeroshot_weights = []
         for classname in classnames:
@@ -120,7 +122,6 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0):
         model_clip, preprocess_clip = longclip.load(f'feature_extraction/long_Clip/checkpoints/{type_clip}.pt', device=device)
     elif type_clip=='BioCLIP':
         model_clip, _, preprocess_clip = open_clip.create_model_and_transforms("hf-hub:imageomics/bioclip")
-        biocllip_tokenizer = open_clip.get_tokenizer("hf-hub:imageomics/bioclip")
     else:
         model_clip, preprocess_clip = clip.load(f'ViT-B/{type_clip}', device)
     model_clip.to(device)
