@@ -292,7 +292,7 @@ class CATALOG_base:
         dataloader_cis_test = self.dataloader(dataset_S['cis_test'], self.batch_size, self.dataset)
         dataloader_trans_test = self.dataloader(dataset_S['trans_test'], self.batch_size, self.dataset)
 
-        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,device=device)
+        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout)
         projection_model.load_state_dict(torch.load(model_params_path))
         projection_model = projection_model.to(device)
         projection_model.eval()
@@ -381,7 +381,7 @@ class CATALOG_base:
         dataloader_trans_test = self.dataloader(dataset_S['trans_test'], self.batch_size, self.dataset)
 
 
-        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,device=device)
+        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout)
         projection_model.load_state_dict(torch.load(model_params_path))
         projection_model = projection_model.to(device)
         projection_model.eval()
