@@ -38,7 +38,7 @@ class CLIP_MLP_train:
         self.patience = None
         self.exp_name = None
 
-    def set_parameters(self, num_epochs, batch_size, num_layers, dropout, hidden_dim, lr, momentum, patience,path_features_D, path_prompts_D, path_features_S=None, path_prompts_S=None, exp_name="MLP",wnb=0):
+    def set_parameters(self, num_epochs, batch_size, num_layers, dropout, hidden_dim, lr,t, momentum, patience,path_features_D, path_prompts_D, path_features_S=None, path_prompts_S=None, exp_name="MLP",wnb=0):
         self.wnb = wnb
         self.path_features_D = path_features_D
         self.path_prompts_D = path_prompts_D
@@ -51,6 +51,7 @@ class CLIP_MLP_train:
         self.dropout = dropout
         self.hidden_dim = hidden_dim
         self.lr = lr
+        self.t = t
         self.momentum = momentum
         self.patience = patience
         self.exp_name = exp_name
@@ -64,7 +65,7 @@ class CLIP_MLP_train:
         torch.backends.cudnn.benchmark = False
         torch.backends.cudnn.deterministic = True
 
-    def train_out_domain(self, seed=42, test=1):
+    def train(self, seed=42, test=1):
         self.set_seed(seed)
         unique_id = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -74,7 +75,10 @@ class CLIP_MLP_train:
         text_features2 = torch.load(self.path_prompts_S)
         text_features2 = text_features2.to(device)
 
-        projection_model=self.md.CLIP_MLP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout)
+        if self.version=='CLIP_MLP':
+            projection_model=self.md.CLIP_MLP(input_dim=512,hidden_dim=self.hidden_dim,output_dim=512, num_layers=self.num_layers, dropout=self.dropout)
+        elif self.version=='CLIP_Adapter':
+            projection_model = self.md.CLIP_Adapter(feature_dim=512, hidden_dim=self.hidden_dim)
         projection_model = projection_model.to(device)
 
         # Get your DataLoader
@@ -90,8 +94,7 @@ class CLIP_MLP_train:
             dataloader_trans_test = self.dataloader(dataset_S['trans_test'], self.batch_size, self.dataset)
 
         # Configurate optimazer for training
-        optimizer, scheduler = self.build_optimizer(projection_model, 'sgd', self.lr, self.momentum, self.version,
-                                                    self.en_att)
+        optimizer, scheduler = self.build_optimizer(projection_model, 'sgd', self.lr, self.momentum, 'CLIP_MLP')
         acc_best = -float('inf')  # Variable to check the best model
         counter = 0  # Variable to verify the number of epoch without an improvement in the val acc
         for epoch in range(self.num_epochs):
@@ -103,13 +106,11 @@ class CLIP_MLP_train:
             running_corrects = 0.0
             size = 0
             for batch in dataloader:
-                image_features, description_embeddings, target_index = batch
+                image_features, target_index = batch
                 size += len(image_features)
                 image_features = image_features.to(device)
-                description_embeddings = description_embeddings.to(device)
 
-                loss, acc, _ = projection_model(description_embeddings, image_features, text_features, self.weight_Clip,
-                                                target_index, self.t)
+                loss, acc= projection_model( image_features, text_features, target_index, self.t)
 
                 loss.backward()
                 optimizer.step()
@@ -135,14 +136,11 @@ class CLIP_MLP_train:
 
             with torch.no_grad():
                 for batch_val in dataloader_val:
-                    image_features_val, description_embeddings_val, target_index_val = batch_val
+                    image_features_val, target_index_val = batch_val
                     size_val += len(image_features_val)
                     image_features_val = image_features_val.to(device)
-                    description_embeddings_val = description_embeddings_val.to(device)
 
-                    loss_val, acc_val, _ = projection_model(description_embeddings_val, image_features_val,
-                                                            text_features,
-                                                            self.weight_Clip, target_index_val, self.t)
+                    loss_val, acc_val= projection_model( image_features_val, text_features, target_index_val, self.t)
 
                     running_loss_val += loss_val.item()
                     running_corrects_val += float(acc_val)
@@ -178,8 +176,10 @@ class CLIP_MLP_train:
 
             if epoch == (self.num_epochs - 1) or counter >= self.patience:
                 if test:
-                    projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers,
-                                                          dropout=self.dropout, en_att=self.en_att, device=device)
+                    if self.version == 'CLIP_MLP':
+                        projection_model = self.md.CLIP_MLP(input_dim=512, hidden_dim=self.hidden_dim, output_dim=512,num_layers=self.num_layers, dropout=self.dropout)
+                    elif self.version == 'CLIP_Adapter':
+                        projection_model = self.md.CLIP_Adapter(feature_dim=512, hidden_dim=self.hidden_dim)
                     projection_model.load_state_dict(torch.load(model_params_path))
                     projection_model = projection_model.to(device)
                     projection_model.eval()
@@ -192,46 +192,26 @@ class CLIP_MLP_train:
                     running_corrects_trans_test = 0.0
                     size_trans_test = 0
 
-                    # Variables to calculate the confusion matrix
-                    all_preds_cis = []
-                    all_labels_cis = []
-                    all_preds_trans = []
-                    all_labels_trans = []
 
                     with torch.no_grad():
 
                         for batch_cis_test in dataloader_cis_test:
-                            image_features_cis_test, description_embeddings_cis_test, target_index_cis_test = batch_cis_test
+                            image_features_cis_test, target_index_cis_test = batch_cis_test
                             size_cis_test += len(image_features_cis_test)
                             image_features_cis_test = image_features_cis_test.to(device)
-                            description_embeddings_cis_test = description_embeddings_cis_test.to(device)
 
-                            loss_cis_test, acc_cis_test, preds_cis_test = projection_model(
-                                description_embeddings_cis_test,
-                                image_features_cis_test, text_features2,
-                                self.weight_Clip, target_index_cis_test, self.t)
+                            loss_cis_test, acc_cis_test = projection_model( image_features_cis_test, text_features2, target_index_cis_test, self.t)
 
-                            # Save predictions and targets
-                            all_preds_cis.extend(preds_cis_test.cpu().numpy())
-                            all_labels_cis.extend(target_index_cis_test.cpu().numpy())
 
                             running_loss_cis_test += loss_cis_test.item()
                             running_corrects_cis_test += float(acc_cis_test)
 
                         for batch_trans_test in dataloader_trans_test:
-                            image_features_trans_test, description_embeddings_trans_test, target_index_trans_test = batch_trans_test
+                            image_features_trans_test, target_index_trans_test = batch_trans_test
                             size_trans_test += len(image_features_trans_test)
                             image_features_trans_test = image_features_trans_test.to(device)
-                            description_embeddings_trans_test = description_embeddings_trans_test.to(device)
 
-                            loss_trans_test, acc_trans_test, preds_trans_test = projection_model(
-                                description_embeddings_trans_test,
-                                image_features_trans_test, text_features2,
-                                self.weight_Clip, target_index_trans_test, self.t)
-
-                            # Save predictions and targets
-                            all_preds_trans.extend(preds_trans_test.cpu().numpy())
-                            all_labels_trans.extend(target_index_trans_test.cpu().numpy())
+                            loss_trans_test, acc_trans_test, preds_trans_test = projection_model(image_features_trans_test, text_features2, target_index_trans_test, self.t)
 
                             running_loss_trans_test += loss_trans_test.item()
                             running_corrects_trans_test += float(acc_trans_test)
@@ -250,14 +230,6 @@ class CLIP_MLP_train:
                     print('Trans Test loss: {:.4f}, Trans Test acc: {:.4f}'.format(epoch_loss_trans_test,
                                                                                    epoch_acc_trans_test))
 
-                    # Calculate the confusion matrix
-                    conf_matrix_cis = confusion_matrix(all_labels_cis, all_preds_cis)
-                    df_conf_matrix_cis = pd.DataFrame(conf_matrix_cis)
-                    df_conf_matrix_cis.to_csv('conf_matrix_cis_Base.csv', index=False)
-                    conf_matrix_trans = confusion_matrix(all_labels_trans, all_preds_trans)
-                    df_conf_matrix_trans = pd.DataFrame(conf_matrix_trans)
-                    df_conf_matrix_trans.to_csv('conf_matrix_trans_Base.csv', index=False)
-
             # Check early stopping condition
             if counter >= self.patience:
                 print(f'Validation acc has not improved for {self.patience} epochs. Stopping training.')
@@ -268,92 +240,70 @@ class CLIP_MLP_train:
             return acc_best
         else:
             return None
+    def prueba_model_out(self,model_params_path):# to calculate the acc in test for a saved model
+
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+
+        text_features2 = torch.load(self.path_prompts_S)
+        text_features2 = text_features2.to(device)
+
+        dataset_S = torch.load(self.path_features_S)
+        dataloader_cis_test = self.dataloader(dataset_S['cis_test'], self.batch_size, self.dataset)
+        dataloader_trans_test = self.dataloader(dataset_S['trans_test'], self.batch_size, self.dataset)
+
+        if self.version == 'CLIP_MLP':
+            projection_model = self.md.CLIP_MLP(input_dim=512, hidden_dim=self.hidden_dim, output_dim=512,
+                                                num_layers=self.num_layers, dropout=self.dropout)
+        elif self.version == 'CLIP_Adapter':
+            projection_model = self.md.CLIP_Adapter(feature_dim=512, hidden_dim=self.hidden_dim)
+        projection_model.load_state_dict(torch.load(model_params_path))
+        projection_model = projection_model.to(device)
+        projection_model.eval()
+
+        running_loss_cis_test = 0
+        running_corrects_cis_test = 0.0
+        size_cis_test = 0
+
+        running_loss_trans_test = 0
+        running_corrects_trans_test = 0.0
+        size_trans_test = 0
+
+        with torch.no_grad():
+
+            for batch_cis_test in dataloader_cis_test:
+                image_features_cis_test, target_index_cis_test = batch_cis_test
+                size_cis_test += len(image_features_cis_test)
+                image_features_cis_test = image_features_cis_test.to(device)
+
+                loss_cis_test, acc_cis_test = projection_model(image_features_cis_test, text_features2,
+                                                               target_index_cis_test, self.t)
+
+                running_loss_cis_test += loss_cis_test.item()
+                running_corrects_cis_test += float(acc_cis_test)
+
+            for batch_trans_test in dataloader_trans_test:
+                image_features_trans_test, target_index_trans_test = batch_trans_test
+                size_trans_test += len(image_features_trans_test)
+                image_features_trans_test = image_features_trans_test.to(device)
+
+                loss_trans_test, acc_trans_test, preds_trans_test = projection_model(image_features_trans_test,
+                                                                                     text_features2,
+                                                                                     target_index_trans_test, self.t)
+
+                running_loss_trans_test += loss_trans_test.item()
+                running_corrects_trans_test += float(acc_trans_test)
+
+        epoch_loss_cis_test = running_loss_cis_test / len(dataloader_cis_test)
+        epoch_acc_cis_test = (running_corrects_cis_test / size_cis_test) * 100
+
+        epoch_loss_trans_test = running_loss_trans_test / len(dataloader_trans_test)
+        epoch_acc_trans_test = (running_corrects_trans_test / size_trans_test) * 100
+
+        print('Cis Test loss: {:.4f}, Cis Test acc: {:.4f}'.format(epoch_loss_cis_test, epoch_acc_cis_test))
+        print('Trans Test loss: {:.4f}, Trans Test acc: {:.4f}'.format(epoch_loss_trans_test,
+                                                                       epoch_acc_trans_test))
 
 
-
-
-
-class CustomDataset(Dataset):
-    def __init__(self,json_path):
-        self.root_dir = json_path
-        self.samples = self._load_samples()
-
-
-    def _load_samples(self):
-        samples=[]
-        data_dict=torch.load(self.root_dir)
-        for key in data_dict.keys():
-            samples.append([data_dict[key]['image_features'][0],data_dict[key]['target_index']])
-        return samples
-
-    def __len__(self):
-        return len(self.samples)
-
-    def __getitem__(self, idx):
-        image_features, target_index= self.samples[idx]
-        return image_features, target_index
-
-
-# Define your DataLoader
-def get_dataloader(root_dir, batch_size):
-    dataset = CustomDataset(root_dir)
-    return DataLoader(dataset, batch_size=batch_size, shuffle=True)
-
-
-if __name__ == "__main__":
-
-    # Crear un objeto ArgumentParser
-    parser = argparse.ArgumentParser(description='Descripción del programa')
-
-    # Agregar los argumentos
-    parser.add_argument('--ruta_features_train', type=str,
-                        default="D:/Udea/Maestria/Experimentos/scripts/Pruebas_Clip/Features_CLIP_16_MLP_train.pt",
-                        help='Training path')
-    parser.add_argument('--ruta_features_val1', type=str,
-                        default="D:/Udea/Maestria/Experimentos/scripts/Pruebas_Clip/Features_CLIP_16_MLP_cis_val.pt",
-                        help='Validation path 1')
-    parser.add_argument('--ruta_features_val2', type=str,
-                        default="D:/Udea/Maestria/Experimentos/scripts/Pruebas_Clip/Features_CLIP_16_MLP_trans_val.pt",
-                        help='Validation path 2')
-    parser.add_argument('--ruta_features_test1', type=str,
-                        default="D:/Udea/Maestria/Experimentos/scripts/Pruebas_Clip/Features_CLIP_16_MLP_cis_test.pt",
-                        help='Test path 1')
-    parser.add_argument('--ruta_features_test2', type=str,
-                        default="D:/Udea/Maestria/Experimentos/scripts/Pruebas_Clip/Features_CLIP_16_MLP_trans_test.pt",
-                        help='Test path 2')
-    # parser.add_argument('--num_epochs', type=int, default=30, help='Número de épocas')
-    # parser.add_argument('--batch_size', type=int, default=8, help='batch size')
-    parser.add_argument('--pretrained', type=int, default=0, help='pretrained ')
-    # parser.add_argument('--num_layers', type=int, default=1, help='num_layers ')
-    # parser.add_argument('--dropout', type=float, default=0.5, help='dropout ')
-    # parser.add_argument('--hidden_dim', type=int, default=512 * 4, help='hidden_dim ')
-    # parser.add_argument('--lr', type=float, default=0.01, help='learning rate ')
-    # parser.add_argument('--momentum', type=float, default=0.9, help='momentum ')
-    # parser.add_argument('--patience', type=int, default=10, help='patience ')
-
-    # Parsear los argumentos
-    args = parser.parse_args()
-
-    # Acceder a los valores de los argumentos
-    ruta_features_train = args.ruta_features_train
-    ruta_features_val1 = args.ruta_features_val1
-    ruta_features_val2 = args.ruta_features_val2
-    ruta_features_test1 = args.ruta_features_test1
-    ruta_features_test2 = args.ruta_features_test2
-    # num_epochs = args.num_epochs
-    # batch_size = args.batch_size
-    pretrained = args.pretrained
-    # num_layers = args.num_layers
-    # dropout = args.dropout
-    # hidden_dim = args.hidden_dim
-    # lr = args.lr
-    # momentum = args.momentum
-    # patience = args.patience
-
-    # ruta_img_train='D:/Udea/Maestria/Bases_de_datos/eccv_18_all_images_sm/Organizado/categorias/train'
-    # ruta_img_val = 'D:/Udea/Maestria/Bases_de_datos/eccv_18_all_images_sm/Organizado/categorias/cis_val'
-
-    wandb.login(key="282780c770de0083eddfa3c56402f555ee60e108")
 
     # Configurar las settings de W&B
     sweep_config = {
