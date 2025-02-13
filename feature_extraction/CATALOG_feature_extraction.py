@@ -177,7 +177,7 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0):
                             description = data['description']
                             f.close()
                             if type_clip == 'longclip-B':
-                                tokens = longclip.tokenize(description).to(device)
+                                tokens = longclip.tokenize(description,truncate=True).to(device)
                                 with torch.no_grad():
                                     description_embeddings = model_clip.encode_text(tokens)
                             else:

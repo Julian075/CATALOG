@@ -32,11 +32,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
     parser.add_argument('--model_version', type=str, default="Base_long", help='Model version')
-    parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
+    parser.add_argument('--dataset', type=str, default="terra", help='dataset')
+    parser.add_argument('--dataset2', type=str, default="terra", help='dataset')
     parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
     parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
-    parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')#en_att
+    parser.add_argument('--feature_extraction', type=int, default=1, help='Type of training')#en_att
     parser.add_argument('--en_att', type=int, default=0, help='Enable the Attention layer')
 
     parser.add_argument('--LLM', type=str, default="ChatGPT_0.5", help='define LLM')
@@ -45,6 +46,7 @@ if __name__ == "__main__":
     model_version = args.model_version
     train_type = args.train_type
     dataset=args.dataset
+    dataset2 = args.dataset2
     mode = args.mode
     hyperparameterTuning_mode=args.hyperparameterTuning_mode
     feature_extraction=args.feature_extraction
@@ -74,8 +76,8 @@ if __name__ == "__main__":
                 path_prompts_D = f"features/Features_{dataset}/{type_feat}/Prompts_{dataset}_{LLM}.pt"
 
 
-                path_features_S = f"features/Features_terra/{type_feat}/Features_terra.pt"
-                path_prompts_S = f"features/Features_terra/{type_feat}/Prompts_terra_{LLM}.pt"
+                path_features_S = f"features/Features_{dataset2}/{type_feat}/Features_{dataset2}.pt"
+                path_prompts_S = f"features/Features_{dataset2}/{type_feat}/Prompts_{dataset2}_{LLM}.pt"
 
 
                 if train_type=="Out_domain":
@@ -162,11 +164,52 @@ if __name__ == "__main__":
                             mode_model(model, model_params_path, mode)
 
             elif model_version == "CLIP_MLP" or model_version == "BioCLIP_MLP":
-                path_features_D = f"features/Features_{dataset}/long_standard_features/Features_{dataset}.pt"
-                path_prompts_D = f"features/Features_{dataset}/long_standard_features/Prompts_{dataset}_{LLM}.pt"
+                if model_version== "CLIP_MLP":
+                    path_features_D = f"features/Features_{dataset}/CLIP_MLP/Features_16_{dataset}.pt"
+                    path_prompts_D = f"features/Features_{dataset}/CLIP_MLP/Prompts_16_{dataset}_{LLM}.pt"
 
-                if train_type == "In_domain":
+                elif model_version== "BioCLIP_MLP":
+                    path_features_D = f"features/Features_{dataset}/CLIP_MLP/Features_BioCLIP_{dataset}.pt"
+                    path_prompts_D = f"features/Features_{dataset}/CLIP_MLP/Prompts_BioCLIP_{dataset}_{LLM}.pt"
+
+
+                if train_type=="Out_domain":
+                    model_params_path = 'models/CLIP_MLP_Out_Domain.pth'
+                    if model_version == "CLIP_MLP":
+                        path_features_S = f"features/Features_{dataset2}/CLIP_MLP/Features_16_{dataset2}.pt"
+                        path_prompts_S = f"features/Features_{dataset2}/CLIP_MLP/Prompts_16_{dataset2}_{LLM}.pt"
+
+                    elif model_version == "BioCLIP_MLP":
+                        path_features_S = f"features/Features_{dataset2}/CLIP_MLP/Features_BioCLIP_{dataset2}.pt"
+                        path_prompts_S = f"features/Features_{dataset2}/CLIP_MLP/Prompts_BioCLIP_{dataset2}_{LLM}.pt"
+
+                    if hyperparameterTuning_mode == 1 or hyperparameterTuning_mode == 2:
+                        seeds=val_seeds
+                        features_D=[path_features_D,path_prompts_D]
+                        features_S = [path_features_S, path_prompts_S]
+
+                        model = CATALOG_base( model=CLIP_MLP, Dataset=BaselineDataset,Dataloader=dataloader_baseline, version='CLIP_MLP',build_optimizer=build_optimizer)
+
+                        if hyperparameterTuning_mode == 1:
+                            seeds = val_seeds
+                            random_search2([features_D, features_S], train_type, model_version,model, f'{model_version}2_{train_type}_{LLM}_ATT_{en_att}',f'Hp_{model_version}2_{LLM}_ATT_{en_att}',seeds,en_att=en_att)
+                        else:
+                            config = {"num_epochs": 107, "batch_size": 128, "num_layers": 1, "dropout": 0.42656, "hidden_dim": 913,"lr": 0.017475,"momentum": 0.95166}
+                            seeds = test_seeds
+                            test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}2_{train_type}_{LLM}_ATT_{en_att}',config, seeds,en_att=en_att)
+
+                    else:
+                        model = CATALOG_base(model=CLIP_MLP, Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
+                        model.set_parameters(weight_Clip=0.494, num_epochs=107, batch_size=128,num_layers=1, dropout=0.42656, hidden_dim=913, lr=0.017475,
+                                             t=0.0983,momentum=0.95166, patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S=path_features_S,
+                                             path_prompts_S=path_prompts_S, exp_name=f'{model_version}_{train_type}', en_att=en_att,wnb=0)
+
+                        mode_model(model, model_params_path, mode)
+
+                elif train_type == "In_domain":
                    print('Loading..')
-                elif train_type == "Out_domain":
-                    path_features_S = f"features/Features_terra/long_standard_features/Features_terra.pt"
-                    path_prompts_S = f"features/Features_terra/long_standard_features/Prompts_terra_{LLM}.pt"
+
+
+
+
+

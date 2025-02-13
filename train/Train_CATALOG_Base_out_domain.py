@@ -25,7 +25,6 @@ class CATALOG_base:
 
         # default
         self.wnb = 0
-        # data_dict=torch.load(self.root_dir)
         self.path_features_D = None
         self.path_prompts_D =  None
         self.path_features_S = None
@@ -64,6 +63,7 @@ class CATALOG_base:
         self.patience=patience
         self.exp_name=exp_name
         self.en_att=en_att
+
 
     def set_seed(self,seed):
         torch.manual_seed(seed)

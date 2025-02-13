@@ -32,9 +32,9 @@ class MLP(nn.Module):
         return x
 
 class CLIP_MLP(nn.Module):
-    def __init__(self, hidden_dim, num_layers, dropout, pretrained, pretrained_path="") -> None:
+    def __init__(self, hidden_dim, num_layers, dropout) -> None:
         super().__init__()
-        self.projection_model = MLP(input_size=16, hidden_size=hidden_dim, output_size=16, num_layers=num_layers, dropout_prob=dropout)
+        self.projection_model = MLP(input_size=512, hidden_size=hidden_dim, output_size=512, num_layers=num_layers, dropout_prob=dropout)
 
         self.criterion = nn.CrossEntropyLoss(reduction="mean")
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
