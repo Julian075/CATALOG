@@ -75,7 +75,7 @@ class MLP(nn.Module):
 
 
 class LLaVA_CLIP(nn.Module):
-    def __init__(self, hidden_dim, num_layers, dropout, device="") -> None:
+    def __init__(self, hidden_dim, num_layers, dropout, en_att=0) -> None:
         super().__init__()
         self.description_encoder = MLP(input_dim=512, hidden_dim=hidden_dim, output_dim=512, num_layers=num_layers,
                                        dropout=dropout, return_embeds=True)
@@ -83,6 +83,11 @@ class LLaVA_CLIP(nn.Module):
         # temperature
         self.logit_scale_CLIP = nn.Parameter(torch.ones([]) * np.log(1 / 0.07))
         self.logit_scale_LLaVA = nn.Parameter(torch.ones([]) * np.log(1 / 0.07))
+
+        # ablation alignment
+        self.en_att = en_att
+        if self.en_att:
+            self.cross_attention = nn.MultiheadAttention(512, 1, batch_first=True).to(torch.float16)
 
     # LLaVA-CLIP Loss
     def LLaVA_CLIP_loss(self, logits: torch.Tensor,label,t) :
@@ -136,16 +141,24 @@ class LLaVA_CLIP(nn.Module):
 
         description_features = self.description_encoder(embeddings)
         description_features = description_features / description_features.norm(dim=-1, keepdim=True)
+        
+        if not self.en_att:
+            logit_scale_CLIP = self.logit_scale_CLIP.exp()
+            similarity_clip = (img_features @ txt_features) * logit_scale_CLIP
+            similarity_clip = similarity_clip / similarity_clip.norm(dim=-1, keepdim=True)
 
-        logit_scale_CLIP = self.logit_scale_CLIP.exp()
-        similarity_clip = (img_features @ txt_features) * logit_scale_CLIP
-        similarity_clip = similarity_clip / similarity_clip.norm(dim=-1, keepdim=True)
+            logit_scale_LLaVA = self.logit_scale_LLaVA.exp()
+            similarity_VLM = (description_features.half() @ txt_features) * logit_scale_LLaVA
+            similarity_VLM = similarity_VLM / similarity_VLM.norm(dim=-1, keepdim=True)
+            similarity = (similarity_clip * weight_p + similarity_VLM * (1 - weight_p))
+        else:
+            logit_scale_CLIP = self.logit_scale_CLIP.exp()
+            #description_features=description_features.unsqueeze(1)
+            #img_features=img_features.unsqueeze(1)
+            alignment_feats,_ = self.cross_attention(description_features.half() ,img_features,img_features)
+            similarity = (alignment_feats @ txt_features) * logit_scale_CLIP
 
-        logit_scale_LLaVA = self.logit_scale_LLaVA.exp()
-        similarity_VLM = (description_features.half() @ txt_features) * logit_scale_LLaVA
-        similarity_VLM = similarity_VLM / similarity_VLM.norm(dim=-1, keepdim=True)
 
-        similarity = (similarity_clip * weight_p + similarity_VLM * (1 - weight_p))
         out_logits = similarity / similarity.norm(dim=-1, keepdim=True)
 
 

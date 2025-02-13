@@ -73,7 +73,7 @@ class MLP(nn.Module):
 
 
 class LLaVA_CLIP(nn.Module):
-    def __init__(self, hidden_dim, num_layers, dropout,en_att=0, device="") -> None:
+    def __init__(self, hidden_dim, num_layers, dropout,en_att=0) -> None:
         super().__init__()
         self.description_encoder = MLP(input_dim=768, hidden_dim=hidden_dim, output_dim=512, num_layers=num_layers,
                                        dropout=dropout, return_embeds=True)
