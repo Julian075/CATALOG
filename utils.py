@@ -73,8 +73,9 @@ def dataloader_Tuning(root_dir, batch_size,TuningDataset):
 
 
 def build_optimizer( projection_model, optimizer, learning_rate, momentum, version,en_att=0):
-    params1 = {"params": projection_model.description_encoder.parameters(), "lr": learning_rate,
-               "momentum": momentum}
+    if version!='CLIP_MLP':
+        params1 = {"params": projection_model.description_encoder.parameters(), "lr": learning_rate,
+                    "momentum": momentum}
 
     if not en_att:
         params2 = {"params": projection_model.logit_scale_CLIP, "lr": learning_rate, "momentum": momentum}
@@ -104,7 +105,7 @@ def build_optimizer( projection_model, optimizer, learning_rate, momentum, versi
             eta_min = learning_rate
             scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=T_max, eta_min=eta_min)
 
-        elif version == 'CLIP_MLP':
+        else:
             params_MLP = {"params": projection_model.parameters(), "lr": learning_rate, "momentum": momentum}
             optimizer = optim.SGD([params_MLP], lr=learning_rate, momentum=momentum)
 
