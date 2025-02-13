@@ -194,7 +194,7 @@ class CATALOG_base:
 
             if epoch==(self.num_epochs-1) or counter >= self.patience:
                 if test:
-                    projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,en_att=self.en_att,device=device)
+                    projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,en_att=self.en_att)
                     projection_model.load_state_dict(torch.load(model_params_path))
                     projection_model = projection_model.to(device)
                     projection_model.eval()

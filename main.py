@@ -31,7 +31,7 @@ def mode_model(model,model_params_path,mode):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
-    parser.add_argument('--model_version', type=str, default="Base_long", help='Model version')
+    parser.add_argument('--model_version', type=str, default="Base", help='Model version')
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
     parser.add_argument('--dataset2', type=str, default="terra", help='dataset')
     parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
@@ -67,10 +67,11 @@ if __name__ == "__main__":
                     model_type=base
                     type_feat="standard_features"
                     model_params_path = 'models/CATALOG_BERT.pth'
+                    #model_params_path = 'models/CATALOG_LongCLIP_BERT.pth'
                 else:
                     model_type=base_long
                     type_feat = "long_features"
-                    model_params_path = 'models/CATALOG_LongCLIP.pth'
+                    model_params_path = 'models/CATALOG_LongCLIP_BERT.pth'
 
                 path_features_D = f"features/Features_{dataset}/{type_feat}/Features_{dataset}.pt"
                 path_prompts_D = f"features/Features_{dataset}/{type_feat}/Prompts_{dataset}_{LLM}.pt"
