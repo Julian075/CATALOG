@@ -103,7 +103,7 @@ def random_search2(path_features, train_type, model_version, model, name_exp, na
         'parameters': {
             'batch_size': {'distribution': 'categorical', 'values': [2 ** i for i in range(2, 9)]},
             'dropout': {'distribution': 'uniform', 'min': 0.1, 'max': 0.5},
-            'hidden_dim': {'distribution': 'uniform', 'min': 512, 'max': 1400},
+            'hidden_dim': {'distribution': 'uniform', 'min': 32, 'max': 1400},
             'lr': {'distribution': 'uniform', 'min': 1e-3, 'max': 0.1},
             'momentum': {'distribution': 'uniform', 'min': 0.8, 'max': 0.99},
             'num_epochs': {'distribution': 'int_uniform', 'min': 1, 'max': 200},
