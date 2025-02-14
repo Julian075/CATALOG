@@ -7,8 +7,7 @@ class QuickGELU(nn.Module):
         return x * torch.sigmoid(1.702 * x)
 
 class MLP(nn.Module):
-    def __init__(self, input_dim, hidden_dim, output_dim, num_layers,
-                 dropout, return_embeds=False):
+    def __init__(self, input_dim, hidden_dim, output_dim, num_layers,dropout, return_embeds=False):
         super(MLP, self).__init__()
         self.linears = nn.ModuleList()
         self.linears2 = nn.ModuleList()

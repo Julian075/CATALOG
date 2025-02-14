@@ -88,7 +88,7 @@ class CLIP_MLP_train:
             dataset_D = torch.load(self.path_features_D)
         dataset_S = torch.load(self.path_features_S)
         dataloader = self.dataloader(dataset_D['train'], self.batch_size, self.dataset)
-        dataloader_val = self.dataloader(dataset_D['cis_val'], self.batch_size, self.dataset)
+        dataloader_val = self.dataloader(dataset_D['val'], self.batch_size, self.dataset)
         if test:
             dataloader_cis_test = self.dataloader(dataset_S['cis_test'], self.batch_size, self.dataset)
             dataloader_trans_test = self.dataloader(dataset_S['trans_test'], self.batch_size, self.dataset)

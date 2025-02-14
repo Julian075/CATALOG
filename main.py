@@ -32,8 +32,8 @@ def mode_model(model,model_params_path,mode):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
-    parser.add_argument('--model_version', type=str, default="Base_long", help='Model version')
-    parser.add_argument('--dataset', type=str, default="terra", help='dataset')
+    parser.add_argument('--model_version', type=str, default="Base", help='Model version')
+    parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
     parser.add_argument('--dataset2', type=str, default="terra", help='dataset')
     parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
     parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
@@ -194,7 +194,7 @@ if __name__ == "__main__":
 
                         if hyperparameterTuning_mode == 1:
                             seeds = val_seeds
-                            if model_version == 'CLIP_Apater':
+                            if model_version == 'CLIP_Adapter':
                                 random_search_Adapter([features_D, features_S], train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',f'Hp_{model_version}_{LLM}',seeds)
                             elif model_version == 'CLIP_MLP':
                                 random_search_MLP([features_D, features_S], train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',f'Hp_{model_version}_{LLM}',seeds)
@@ -206,7 +206,7 @@ if __name__ == "__main__":
                             test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',config, seeds)
 
                     else:
-                        model = CLIP_MLP_train(model=CLIP_MLP, Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
+                        model = CLIP_MLP_train(model=CLIP_MLP, Dataset=BaselineDataset,Dataloader=dataloader_baseline,version=model_version,build_optimizer=build_optimizer)
                         model.set_parameters(num_epochs=107, batch_size=128,num_layers=1, dropout=0.42656, hidden_dim=913, lr=0.017475,
                                              t=0.0983,momentum=0.95166, patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S=path_features_S,
                                              path_prompts_S=path_prompts_S, exp_name=f'{model_version}_{train_type}',wnb=0)
