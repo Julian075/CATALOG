@@ -7,6 +7,7 @@ from models import CATALOG_Base as base
 from models import CATALOG_Base_long as base_long
 from models import CATALOG_Base_fine_tuning as base_fine_tuning
 from models import CLIP_Mlp as CLIP_MLP
+from models import BioCLIP_Mlp as BioCLIP_MLP
 
 
 import argparse
@@ -165,12 +166,15 @@ if __name__ == "__main__":
                             model_params_path = 'models/CATALOG_finetuning_Base_Terra.pth'
                             mode_model(model, model_params_path, mode)
 
+
             elif model_version == "CLIP_MLP" or  model_version == "CLIP_Adapter"  or model_version == "BioCLIP_MLP" or model_version=="BioCLIP_Adapter":
                 if model_version== "CLIP_MLP" or  model_version == "CLIP_Adapter":
+                    model_type = CLIP_MLP
                     path_features_D = f"features/Features_{dataset}/CLIP_MLP/Features_16_{dataset}.pt"
                     path_prompts_D = f"features/Features_{dataset}/CLIP_MLP/Prompts_16_{dataset}_{LLM}.pt"
 
                 elif model_version== "BioCLIP_MLP" or  model_version == "BioCLIP_Adapter":
+                    model_type = BioCLIP_MLP
                     path_features_D = f"features/Features_{dataset}/CLIP_MLP/Features_BioCLIP_{dataset}.pt"
                     path_prompts_D = f"features/Features_{dataset}/CLIP_MLP/Prompts_BioCLIP_{dataset}_{LLM}.pt"
 
@@ -190,7 +194,7 @@ if __name__ == "__main__":
                         features_D=[path_features_D,path_prompts_D]
                         features_S = [path_features_S, path_prompts_S]
 
-                        model = CLIP_MLP_train( model=CLIP_MLP, Dataset=BaselineDataset,Dataloader=dataloader_baseline, version=model_version,build_optimizer=build_optimizer)
+                        model = CLIP_MLP_train( model=model_type, Dataset=BaselineDataset,Dataloader=dataloader_baseline, version=model_version,build_optimizer=build_optimizer)
 
                         if hyperparameterTuning_mode == 1:
                             seeds = val_seeds
@@ -210,7 +214,7 @@ if __name__ == "__main__":
                             test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',config, seeds)
 
                     else:
-                        model = CLIP_MLP_train(model=CLIP_MLP, Dataset=BaselineDataset,Dataloader=dataloader_baseline,version=model_version,build_optimizer=build_optimizer)
+                        model = CLIP_MLP_train(model=model_type, Dataset=BaselineDataset,Dataloader=dataloader_baseline,version=model_version,build_optimizer=build_optimizer)
                         model.set_parameters(num_epochs=107, batch_size=128,num_layers=1, dropout=0.42656, hidden_dim=913, lr=0.017475,
                                              t=0.0983,momentum=0.95166, patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S=path_features_S,
                                              path_prompts_S=path_prompts_S, exp_name=f'{model_version}_{train_type}',wnb=0)
