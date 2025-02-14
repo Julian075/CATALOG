@@ -32,7 +32,7 @@ def mode_model(model,model_params_path,mode):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
-    parser.add_argument('--model_version', type=str, default="Base", help='Model version')
+    parser.add_argument('--model_version', type=str, default="CLIP_MLP", help='Model version')
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
     parser.add_argument('--dataset2', type=str, default="terra", help='dataset')
     parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
@@ -165,12 +165,12 @@ if __name__ == "__main__":
                             model_params_path = 'models/CATALOG_finetuning_Base_Terra.pth'
                             mode_model(model, model_params_path, mode)
 
-            elif model_version == "CLIP_MLP" or  model_version == "CLIP_Adapter"  or model_version == "BioCLIP_MLP":
+            elif model_version == "CLIP_MLP" or  model_version == "CLIP_Adapter"  or model_version == "BioCLIP_MLP" or model_version=="BioCLIP_Adapter":
                 if model_version== "CLIP_MLP" or  model_version == "CLIP_Adapter":
                     path_features_D = f"features/Features_{dataset}/CLIP_MLP/Features_16_{dataset}.pt"
                     path_prompts_D = f"features/Features_{dataset}/CLIP_MLP/Prompts_16_{dataset}_{LLM}.pt"
 
-                elif model_version== "BioCLIP_MLP":
+                elif model_version== "BioCLIP_MLP" or  model_version == "BioCLIP_Adapter":
                     path_features_D = f"features/Features_{dataset}/CLIP_MLP/Features_BioCLIP_{dataset}.pt"
                     path_prompts_D = f"features/Features_{dataset}/CLIP_MLP/Prompts_BioCLIP_{dataset}_{LLM}.pt"
 
@@ -181,7 +181,7 @@ if __name__ == "__main__":
                         path_features_S = f"features/Features_{dataset2}/CLIP_MLP/Features_16_{dataset2}.pt"
                         path_prompts_S = f"features/Features_{dataset2}/CLIP_MLP/Prompts_16_{dataset2}_{LLM}.pt"
 
-                    elif model_version == "BioCLIP_MLP":
+                    elif model_version == "BioCLIP_MLP" or  model_version == "BioCLIP_Adapter":
                         path_features_S = f"features/Features_{dataset2}/CLIP_MLP/Features_BioCLIP_{dataset2}.pt"
                         path_prompts_S = f"features/Features_{dataset2}/CLIP_MLP/Prompts_BioCLIP_{dataset2}_{LLM}.pt"
 
@@ -194,13 +194,17 @@ if __name__ == "__main__":
 
                         if hyperparameterTuning_mode == 1:
                             seeds = val_seeds
-                            if model_version == 'CLIP_Adapter':
+                            if model_version== "BioCLIP_Adapter" or model_version == 'CLIP_Adapter':
                                 random_search_Adapter([features_D, features_S], train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',f'Hp_{model_version}_{LLM}',seeds)
-                            elif model_version == 'CLIP_MLP':
+                            elif model_version== "BioCLIP_MLP" or model_version == 'CLIP_MLP':
                                 random_search_MLP([features_D, features_S], train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',f'Hp_{model_version}_{LLM}',seeds)
                         else:
-                            config = {"weight_Clip": 0.494, "num_epochs": 107, "batch_size": 128, "num_layers": 1, "dropout": 0.42656, "hidden_dim": 913,"lr": 0.017475,"t": 0.0983,"momentum": 0.95166}
-
+                            if model_version== 'CLIP_MLP' or model_version=='BioCLIP_MLP':
+                                config = {"weight_Clip": 0, "num_epochs": 107, "batch_size": 128, "num_layers": 1,"dropout": 0.42656, "hidden_dim": 913, "lr": 0.017475, "t": 0.0983,
+                                          "momentum": 0.95166}
+                            elif model_version== 'CLIP_Adapter'  or model_version=='BioCLIP_Adapter':
+                                config = {"weight_Clip": 0, "num_epochs": 107, "batch_size": 128, "num_layers": 0,"dropout": 0.42656, "hidden_dim": 256, "lr": 0.017475, "t": 0.0983,
+                                          "momentum": 0.95166}
 
                             seeds = test_seeds
                             test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',config, seeds)

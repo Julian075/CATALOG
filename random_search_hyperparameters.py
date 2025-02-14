@@ -236,14 +236,14 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
                                  t=temperature, momentum=momentum, patience=5, path_features_D=features[0][0],
                                  path_prompts_D=features[0][1], exp_name=f'{seed}_{model_version}_{name_exp}',
                                  wnb=0)
-        elif model_version =='CLIP_MLP' :#and  model_version !='Linear_probe'
+        elif model_version =='CLIP_MLP' or model_version== "BioCLIP_MLP":#and  model_version !='Linear_probe'
             if train_type == 'Out_domain':
                 model.set_parameters(num_epochs=num_epochs, batch_size=batch_size,num_layers=num_layers, dropout=dropout,
                                      hidden_dim=hidden_dim, lr=learning_rate,t=temperature, momentum=momentum, patience=5, path_features_D=features[0][0],
                                      path_prompts_D=features[0][1],path_features_S=features[1][0],
                                      path_prompts_S=features[1][1], exp_name=f'{seed}_{model_version}_{name_exp}',
                                      wnb=0)
-        elif model_version =='CLIP_Adapter' :#and  model_version !='Linear_probe'
+        elif model_version =='CLIP_Adapter' or model_version== "BioCLIP_Adapter" :#and  model_version !='Linear_probe'
             if train_type == 'Out_domain':
                 model.set_parameters(num_epochs=num_epochs, batch_size=batch_size,num_layers="", dropout="",hidden_dim=hidden_dim, lr=learning_rate,t=temperature, momentum=momentum, patience=5, path_features_D=features[0][0],
                                      path_prompts_D=features[0][1],path_features_S=features[1][0],path_prompts_S=features[1][1], exp_name=f'{seed}_{model_version}_{name_exp}',
