@@ -63,7 +63,7 @@ class CLIP_MLP_train:
         torch.backends.cudnn.benchmark = False
         torch.backends.cudnn.deterministic = True
 
-    def train(self, seed=42, test=1):
+    def train(self, seed=1064200250, test=1):
         self.set_seed(seed)
         unique_id = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         device = "cuda" if torch.cuda.is_available() else "cpu"
