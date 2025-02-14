@@ -76,9 +76,9 @@ class CLIP_MLP_train:
         text_features2 = torch.load(self.path_prompts_S)
         text_features2 = text_features2.to(device)
 
-        if self.version=='CLIP_MLP':
+        if self.version=='CLIP_MLP' or self.version=='BioCLIP_MLP':
             projection_model=self.md.CLIP_MLP(input_dim=512,hidden_dim=self.hidden_dim,output_dim=512, num_layers=self.num_layers, dropout=self.dropout)
-        elif self.version=='CLIP_Adapter':
+        elif self.version=='CLIP_Adapter' or self.version=='BioCLIP_Adapter':
             projection_model = self.md.CLIP_Adapter(feature_dim=512, hidden_dim=self.hidden_dim)
         projection_model = projection_model.to(device)
 
