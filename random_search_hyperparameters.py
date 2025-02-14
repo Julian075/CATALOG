@@ -9,11 +9,9 @@ def wandb_train(model, model_version,train_type,path_features, name_exp, seeds,e
     with wandb.init(config=config,name=name_exp):
         config = wandb.config
 
-        if model_version != 'CLIP_MLP' and model_version != 'CLIP_Adapter' and model_version != 'Linear_probe':
-            weight_clip = config.weight_Clip
-        if model_version != 'CLIP_Adapter':
-            dropout = config.dropout
-            num_layers = config.num_layers
+        weight_clip = config.weight_Clip
+        dropout = config.dropout
+        num_layers = config.num_layers
 
 
         num_epochs = config.num_epochs
@@ -56,12 +54,12 @@ def wandb_train(model, model_version,train_type,path_features, name_exp, seeds,e
                     model.set_parameters(num_epochs=num_epochs, batch_size=batch_size, num_layers=num_layers,dropout=dropout,
                                          hidden_dim=hidden_dim, lr=learning_rate, t=temperature, momentum=momentum,
                                          patience=5, path_features_D=features[0][0],path_prompts_D=features[0][1], path_features_S=features[1][0],
-                                         path_prompts_S=features[1][1], exp_name=f'{seed}_{model_version}_{name_exp}',wnb=0)
+                                         path_prompts_S=features[1][1], exp_name=f'{seed}_{model_version}_{name_exp}',wnb=1)
             elif model_version == 'CLIP_Adapter':  # and  model_version !='Linear_probe'
                 if train_type == 'Out_domain':
                     model.set_parameters(num_epochs=num_epochs, batch_size=batch_size,num_layers="", dropout="",hidden_dim=hidden_dim, lr=learning_rate, t=temperature,
                                          momentum=momentum, patience=5, path_features_D=features[0][0],path_prompts_D=features[0][1], path_features_S=features[1][0],
-                                         path_prompts_S=features[1][1], exp_name=f'{seed}_{model_version}_{name_exp}', wnb=0)
+                                         path_prompts_S=features[1][1], exp_name=f'{seed}_{model_version}_{name_exp}', wnb=1)
 
             best_acc_val=model.train(seed=seed, test=0)
             results_val_seeds.append(best_acc_val)
@@ -119,7 +117,7 @@ def random_search2(path_features, train_type, model_version, model, name_exp, na
         'parameters': {
             'batch_size': {'distribution': 'categorical', 'values': [2 ** i for i in range(2, 9)]},
             'dropout': {'distribution': 'uniform', 'min': 0.1, 'max': 0.5},
-            'hidden_dim': {'distribution': 'uniform', 'min': 32, 'max': 1400},
+            'hidden_dim': {'distribution': 'int_uniform', 'min': 32, 'max': 1400},
             'lr': {'distribution': 'uniform', 'min': 1e-3, 'max': 0.1},
             'momentum': {'distribution': 'uniform', 'min': 0.8, 'max': 0.99},
             'num_epochs': {'distribution': 'int_uniform', 'min': 1, 'max': 200},
@@ -143,13 +141,13 @@ def random_search_MLP(path_features, train_type, model_version, model, name_exp,
         'parameters': {
             'batch_size': {'distribution': 'categorical', 'values': [2 ** i for i in range(2, 9)]},
             'dropout': {'distribution': 'uniform', 'min': 0.1, 'max': 0.5},
-            'hidden_dim': {'distribution': 'uniform', 'min': 32, 'max': 1400},
+            'hidden_dim': {'distribution': 'int_uniform', 'min': 32, 'max': 1400},
             'lr': {'distribution': 'uniform', 'min': 1e-3, 'max': 0.1},
             'momentum': {'distribution': 'uniform', 'min': 0.8, 'max': 0.99},
             'num_epochs': {'distribution': 'int_uniform', 'min': 1, 'max': 200},
             'num_layers': {'distribution': 'int_uniform','min': 1,'max': 7 },
             't': {'distribution': 'log_uniform_values', 'min': 0.01, 'max': 1},
-            'weight_Clip': {'value': ''}
+            'weight_Clip': {'value': 0}
         }
     }
 
@@ -165,14 +163,14 @@ def random_search_Adapter(path_features, train_type, model_version, model, name_
         'name': name_exp,
         'parameters': {
             'batch_size': {'distribution': 'categorical', 'values': [2 ** i for i in range(2, 9)]},
-            'hidden_dim': {'distribution': 'uniform', 'min': 32, 'max': 512},
+            'hidden_dim': {'distribution': 'int_uniform', 'min': 32, 'max': 512},
             'lr': {'distribution': 'uniform', 'min': 1e-3, 'max': 0.1},
             'momentum': {'distribution': 'uniform', 'min': 0.8, 'max': 0.99},
             'num_epochs': {'distribution': 'int_uniform', 'min': 1, 'max': 200},
             't': {'distribution': 'log_uniform_values', 'min': 0.01, 'max': 1},
-            'weight_Clip': {'value': ''},
-            'dropout': {'value': ''},
-            'num_layers': {'value': ''}
+            'weight_Clip': {'value': 0},
+            'dropout': {'value': 0},
+            'num_layers': {'value': 0}
         }
     }
 

@@ -34,6 +34,7 @@ class CLIP_MLP_train:
         self.dropout =     None
         self.hidden_dim =  None
         self.lr = None
+        self.t = None
         self.momentum = None
         self.patience = None
         self.exp_name = None
