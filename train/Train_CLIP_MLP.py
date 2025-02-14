@@ -211,7 +211,7 @@ class CLIP_MLP_train:
                             size_trans_test += len(image_features_trans_test)
                             image_features_trans_test = image_features_trans_test.to(device)
 
-                            loss_trans_test, acc_trans_test, preds_trans_test = projection_model(image_features_trans_test, text_features2, target_index_trans_test, self.t)
+                            loss_trans_test, acc_trans_test = projection_model(image_features_trans_test, text_features2, target_index_trans_test, self.t)
 
                             running_loss_trans_test += loss_trans_test.item()
                             running_corrects_trans_test += float(acc_trans_test)
@@ -286,7 +286,7 @@ class CLIP_MLP_train:
                 size_trans_test += len(image_features_trans_test)
                 image_features_trans_test = image_features_trans_test.to(device)
 
-                loss_trans_test, acc_trans_test, preds_trans_test = projection_model(image_features_trans_test,
+                loss_trans_test, acc_trans_test = projection_model(image_features_trans_test,
                                                                                      text_features2,
                                                                                      target_index_trans_test, self.t)
 
