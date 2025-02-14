@@ -249,12 +249,11 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
                                      wnb=0)
         elif model_version =='CLIP_Adapter' :#and  model_version !='Linear_probe'
             if train_type == 'Out_domain':
-                model.set_parameters(num_epochs=num_epochs, batch_size=batch_size,hidden_dim=hidden_dim, lr=learning_rate,t=temperature, momentum=momentum, patience=5, path_features_D=features[0][0],
+                model.set_parameters(num_epochs=num_epochs, batch_size=batch_size,num_layers="", dropout="",hidden_dim=hidden_dim, lr=learning_rate,t=temperature, momentum=momentum, patience=5, path_features_D=features[0][0],
                                      path_prompts_D=features[0][1],path_features_S=features[1][0],path_prompts_S=features[1][1], exp_name=f'{seed}_{model_version}_{name_exp}',
                                      wnb=0)
 
-        epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test = model.train(seed=seed,
-                                                                                                           test=1)
+        epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test = model.train(seed=seed,test=1)
         results_cis_test_seeds.append(epoch_acc_cis_test)
         results_trans_test_seeds.append(epoch_acc_trans_test)
 

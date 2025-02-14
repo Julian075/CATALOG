@@ -32,13 +32,13 @@ def mode_model(model,model_params_path,mode):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
-    parser.add_argument('--model_version', type=str, default="CLIP_MLP", help='Model version')
+    parser.add_argument('--model_version', type=str, default="Base_long", help='Model version')
     parser.add_argument('--dataset', type=str, default="terra", help='dataset')
     parser.add_argument('--dataset2', type=str, default="terra", help='dataset')
     parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
     parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
-    parser.add_argument('--hyperparameterTuning_mode', type=int, default=2, help='Type of training')
-    parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')#en_att
+    parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
+    parser.add_argument('--feature_extraction', type=int, default=1, help='Type of training')#en_att
     parser.add_argument('--en_att', type=int, default=0, help='Enable the Attention layer')
 
     parser.add_argument('--LLM', type=str, default="ChatGPT_0.5", help='define LLM')
