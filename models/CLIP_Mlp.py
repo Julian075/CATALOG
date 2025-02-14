@@ -99,6 +99,8 @@ class CLIP_Adapter(nn.Module):
         # Learnable residual blending factors
         self.alpha = nn.Parameter(torch.tensor(alpha))  # α trainable
 
+        self.logit_scale_CLIP = nn.Parameter(torch.ones([]) * np.log(1 / 0.07))
+
     def contrastive_loss(self, logits: torch.Tensor,label,t) :
         loss_i=0
         for b in range(len(logits)):

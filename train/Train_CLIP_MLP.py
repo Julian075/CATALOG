@@ -240,7 +240,7 @@ class CLIP_MLP_train:
             return acc_best
         else:
             return None
-    def prueba_model_out(self,model_params_path):# to calculate the acc in test for a saved model
+    def prueba_model(self,model_params_path):# to calculate the acc in test for a saved model
 
         device = "cuda" if torch.cuda.is_available() else "cpu"
 
