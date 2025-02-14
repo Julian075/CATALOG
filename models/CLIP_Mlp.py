@@ -7,9 +7,9 @@ from models.CATALOG_Base_long import MLP as MLP_projection
 class Adapter(nn.Module):
     def __init__(self, input_dim, hidden_dim):
         super(Adapter, self).__init__()
-        self.down_proj = nn.Linear(input_dim, hidden_dim)  # Bottleneck layer
+        self.down_proj = nn.Linear(input_dim, hidden_dim).half()  # Bottleneck layer
         self.activation = nn.ReLU()
-        self.up_proj = nn.Linear(hidden_dim, input_dim)
+        self.up_proj = nn.Linear(hidden_dim, input_dim).half()
 
     def forward(self, x):
         residual = x  # Store the original input for the skip connection
