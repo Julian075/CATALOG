@@ -118,7 +118,7 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0):
     model_Bert = BertModel.from_pretrained('bert-base-uncased')
     model_Bert.to(device)
 
-    if type_clip=='longclip-B':
+    if type_clip == 'longclip-B':
         model_clip, preprocess_clip = longclip.load(f'feature_extraction/long_Clip/checkpoints/{type_clip}.pt', device=device)
     elif type_clip=='BioCLIP':
         model_clip, _, preprocess_clip = open_clip.create_model_and_transforms("hf-hub:imageomics/bioclip")
@@ -171,7 +171,7 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0):
                                 image_features = model_clip.encode_image(images)
                                 image_features /= image_features.norm(dim=-1, keepdim=True)
 
-                        if model_version != 'CLIP_MLP' and model_version != 'BioCLIP_MLP':
+                        if not  ('MLP'in model_version) and not  ('Adapter'in model_version):
                             f = open(json_path)
                             data = json.load(f)
                             description = data['description']
@@ -204,7 +204,7 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0):
                                 "description_embeddings": description_embeddings,
                                 "target_index": target_index
                             }
-                        elif model_version == 'CLIP_MLP' or model_version == 'BioCLIP_MLP':
+                        elif 'MLP' in model_version or 'Adapter' in model_version:
                             data_dict[img_name] = {
                                 "image_features": image_features,
                                 "target_index": target_index
@@ -233,7 +233,7 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0):
             torch.save(features_dataset, f'features/Features_{dataset}/finetuning_features/Features_{dataset}.pt')
             zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device)
             torch.save(zeroshot_weights, f'features/Features_{dataset}/finetuning_features/Prompts_{dataset}_{LLM}.pt')
-        elif model_version == 'CLIP_MLP' or model_version == 'BioCLIP_MLP':
+        elif 'MLP' in model_version or 'Adapter' in model_version:
             torch.save(features_dataset, f'features/Features_{dataset}/CLIP_MLP/Features_{type_clip}_{dataset}.pt')
             zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device,type_clip,0.5)
             torch.save(zeroshot_weights, f'features/Features_{dataset}/CLIP_MLP/Prompts_{type_clip}_{dataset}_{LLM}.pt')
@@ -248,7 +248,7 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0):
         elif model_version == 'Fine_tuning':
             zeroshot_weights = zeroshot_classifier(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device)
             torch.save(zeroshot_weights, f'features/Features_{dataset}/finetuning_features/Prompts_{dataset}_{LLM}.pt')
-        elif model_version == 'CLIP_MLP' or model_version == 'BioCLIP_MLP':
+        elif 'MLP' in model_version or 'Adapter' in model_version:
             zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device,type_clip,0.5)
             torch.save(zeroshot_weights, f'features/Features_{dataset}/CLIP_MLP/Prompts_{type_clip}_{dataset}_{LLM}.pt')
 

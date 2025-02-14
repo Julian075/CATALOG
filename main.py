@@ -30,6 +30,45 @@ def mode_model(model,model_params_path,mode):
     elif mode == 'test_top3':
         model.prueba_model_top_3(model_params_path=model_params_path)
 
+model_type = {
+            "Base": base,
+            "Base_long": base_long,
+            "Fine_tuning": base_fine_tuning,
+            "CLIP_MLP": CLIP_MLP,
+            "BioCLIP_MLP": BioCLIP_MLP,
+            "CLIP_Adapter": CLIP_MLP,
+            "BioCLIP_Adapter": BioCLIP_MLP,
+        }
+type_feat = {
+            "Base": 'standard_features',
+            "Base_long": 'long_features',
+            "Fine_tuning": 'finetuning_features',
+            "CLIP_MLP": 'CLIP_MLP',
+            "BioCLIP_MLP": 'BioCLIP_MLP',
+            "CLIP_Adapter": 'CLIP_MLP',
+            "BioCLIP_Adapter": 'BioCLIP_MLP',
+            }
+ext_name_feats = {
+            "Base": '',
+            "Base_long": '',
+            "Fine_tuning": '',
+            "CLIP_MLP": '_16',
+            "BioCLIP_MLP": '_BioCLIP',
+            "CLIP_Adapter": '_16',
+            "BioCLIP_Adapter": '_BioCLIP',
+            }
+model_params_path = {
+            "Base": 'models/CATALOG_BERT.pth',#CATALOG_LongCLIP_BERT
+            "Base_long": 'models/CATALOG_LongCLIP.pth',
+            "Fine_tuning": 'models/CATALOG_finetuning_Base_Serengeti.pth',
+            "CLIP_MLP": 'models/CLIP_MLP.pth',
+            "BioCLIP_MLP": 'models/BioCLIP_MLP.pth',
+            "CLIP_Adapter": 'models/CLIP_Adapter.pth',
+            "BioCLIP_Adapter": 'models/BioCLIP_Adapter.pth',
+        }
+
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
@@ -58,38 +97,29 @@ if __name__ == "__main__":
     if feature_extraction :
         if model_version=='Base_long':
             extract_features(model_version=model_version, dataset=dataset, type_clip='longclip-B', LLM=LLM, only_text=0)
-        elif model_version == "BioCLIP_MLP":
+        elif  "BioCLIP" in model_version :
             extract_features(model_version=model_version, dataset=dataset, type_clip='BioCLIP', LLM=LLM, only_text=0)
-        else:
+        elif not('Long' in model_version):
             extract_features(model_version=model_version, dataset=dataset, type_clip='16', LLM=LLM, only_text=0)
+        else:
+            extract_features(model_version=model_version, dataset=dataset, type_clip='longclip-B', LLM=LLM, only_text=0)
     else:
+            path_features_D = f"features/Features_{dataset}/{type_feat[model_version]}/Features{ext_name_feats[model_version]}_{dataset}.pt"
+            path_prompts_D = f"features/Features_{dataset}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset}_{LLM}.pt"
+            if train_type == "Out_domain":
+                path_features_S = f"features/Features_{dataset2}/{type_feat[model_version]}/Features{ext_name_feats[model_version]}_{dataset2}.pt"
+                path_prompts_S = f"features/Features_{dataset2}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset2}_{LLM}.pt"
+
+            model_params_path=model_params_path[model_version]
 
             if model_version=="Base" or model_version=="Base_long":
-                if model_version == "Base":
-                    model_type=base
-                    type_feat="standard_features"
-                    model_params_path = 'models/CATALOG_BERT.pth'
-                    #model_params_path = 'models/CATALOG_LongCLIP_BERT.pth'
-                else:
-                    model_type=base_long
-                    type_feat = "long_features"
-                    model_params_path = 'models/CATALOG_LongCLIP_BERT.pth'
-
-                path_features_D = f"features/Features_{dataset}/{type_feat}/Features_{dataset}.pt"
-                path_prompts_D = f"features/Features_{dataset}/{type_feat}/Prompts_{dataset}_{LLM}.pt"
-
-
-                path_features_S = f"features/Features_{dataset2}/{type_feat}/Features_{dataset2}.pt"
-                path_prompts_S = f"features/Features_{dataset2}/{type_feat}/Prompts_{dataset2}_{LLM}.pt"
-
-
                 if train_type=="Out_domain":
                     if hyperparameterTuning_mode == 1 or hyperparameterTuning_mode == 2:
                         seeds=val_seeds
                         features_D=[path_features_D,path_prompts_D]
                         features_S = [path_features_S, path_prompts_S]
 
-                        model = CATALOG_base( model=model_type, Dataset=BaselineDataset,Dataloader=dataloader_baseline, version='base',build_optimizer=build_optimizer)
+                        model = CATALOG_base( model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline, version='base',build_optimizer=build_optimizer)
 
                         if hyperparameterTuning_mode == 1:
                             seeds = val_seeds
@@ -100,7 +130,7 @@ if __name__ == "__main__":
                             test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}2_{train_type}_{LLM}_ATT_{en_att}',config, seeds,en_att=en_att)
 
                     else:
-                        model = CATALOG_base(model=model_type, Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
+                        model = CATALOG_base(model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
                         model.set_parameters(weight_Clip=0.494, num_epochs=107, batch_size=128,num_layers=1, dropout=0.42656, hidden_dim=913, lr=0.017475,
                                              t=0.0983,momentum=0.95166, patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S=path_features_S,
                                              path_prompts_S=path_prompts_S, exp_name=f'{model_version}_{train_type}', en_att=en_att,wnb=0)
@@ -110,53 +140,15 @@ if __name__ == "__main__":
 
             elif model_version == "Fine_tuning":
 
-                path_features_D = f"features/Features_{dataset}/finetuning_features/Features_{dataset}.pt"
-                path_prompts_D = f"features/Features_{dataset}/finetuning_features/Prompts_{dataset}_{LLM}.pt"
-                if not os.path.isfile(path_prompts_D):
-                    path_prompts_D = f"features/Features_{dataset}/finetuning_features/Prompts_{dataset}.pt"
-
                 if train_type=="In_domain":
                     if dataset=="serengeti":
-
-                        if hyperparameterTuning_mode == 1:
-                            seeds=val_seeds
-                            features_D=[path_features_D,path_prompts_D]
-
-
-                            model = CATALOG_base_In_domain( model=base_fine_tuning, Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
-
-                            random_search([features_D], train_type, model_version,model, f'{train_type}_{dataset}',f'Hp_{model_version}_{train_type}_{dataset}_{LLM}',seeds)
-                        else:
-                            model = CATALOG_base_In_domain( model=base_fine_tuning, Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
+                            model = CATALOG_base_In_domain( model=model_type[model_version], Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
                             model.set_parameters(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=4, dropout=0.4,hidden_dim=1743,lr=1e-3,t=0.1,momentum=0.8409
                                                                 , patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
-
-
-                            model_params_path = 'models/CATALOG_finetuning_Base_Serengeti.pth'
                             mode_model(model, model_params_path, mode)
 
                     elif dataset=="terra":
-
-                        if hyperparameterTuning_mode == 1 or hyperparameterTuning_mode == 2:
-                            seeds = val_seeds
-                            features_D = [path_features_D, path_prompts_D]
-
-                            model = CATALOG_base_In_domain_terra( model=base_fine_tuning, Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
-
-
-                            if hyperparameterTuning_mode == 1:
-                                seeds = val_seeds
-                                random_search([features_D], train_type, model_version, model,f'{train_type}_{dataset}', f'Hp_{model_version}_{train_type}_{dataset}_{LLM}', seeds)
-                            else:
-                                config = {"weight_Clip": 0.391885, "num_epochs": 185, "batch_size": 32, "num_layers": 7,
-                                          "dropout": 0.391855, "hidden_dim": 1024,
-                                          "lr": 0.00034235, "t": 0.157429, "momentum": 0.8851568}
-                                seeds = test_seeds
-                                test_best_model([features_D], train_type, model_version, model,
-                                                f'{train_type}_{dataset}_{LLM}', config, seeds)
-
-                        else:
-                            model = CATALOG_base_In_domain_terra( model=base_fine_tuning, Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
+                            model = CATALOG_base_In_domain_terra( model=model_type[model_version], Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
 
                             model.set_parameters(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=1,
                                                 dropout=0.5,hidden_dim=1045,lr=1e-4,t=0.1,momentum=0.8409, patience=5,
@@ -166,55 +158,29 @@ if __name__ == "__main__":
                             model_params_path = 'models/CATALOG_finetuning_Base_Terra.pth'
                             mode_model(model, model_params_path, mode)
 
-
-            elif model_version == "CLIP_MLP" or  model_version == "CLIP_Adapter"  or model_version == "BioCLIP_MLP" or model_version=="BioCLIP_Adapter":
-                if model_version== "CLIP_MLP" or  model_version == "CLIP_Adapter":
-                    model_type = CLIP_MLP
-                    path_features_D = f"features/Features_{dataset}/CLIP_MLP/Features_16_{dataset}.pt"
-                    path_prompts_D = f"features/Features_{dataset}/CLIP_MLP/Prompts_16_{dataset}_{LLM}.pt"
-
-                elif model_version== "BioCLIP_MLP" or  model_version == "BioCLIP_Adapter":
-                    model_type = BioCLIP_MLP
-                    path_features_D = f"features/Features_{dataset}/CLIP_MLP/Features_BioCLIP_{dataset}.pt"
-                    path_prompts_D = f"features/Features_{dataset}/CLIP_MLP/Prompts_BioCLIP_{dataset}_{LLM}.pt"
-
+            elif "MLP" in model_version :
 
                 if train_type=="Out_domain":
-                    model_params_path = 'models/CLIP_MLP_Out_Domain.pth'
-                    if model_version == "CLIP_MLP" or  model_version == "CLIP_Adapter":
-                        path_features_S = f"features/Features_{dataset2}/CLIP_MLP/Features_16_{dataset2}.pt"
-                        path_prompts_S = f"features/Features_{dataset2}/CLIP_MLP/Prompts_16_{dataset2}_{LLM}.pt"
-
-                    elif model_version == "BioCLIP_MLP" or  model_version == "BioCLIP_Adapter":
-                        path_features_S = f"features/Features_{dataset2}/CLIP_MLP/Features_BioCLIP_{dataset2}.pt"
-                        path_prompts_S = f"features/Features_{dataset2}/CLIP_MLP/Prompts_BioCLIP_{dataset2}_{LLM}.pt"
 
                     if hyperparameterTuning_mode == 1 or hyperparameterTuning_mode == 2:
                         seeds=val_seeds
                         features_D=[path_features_D,path_prompts_D]
                         features_S = [path_features_S, path_prompts_S]
 
-                        model = CLIP_MLP_train( model=model_type, Dataset=BaselineDataset,Dataloader=dataloader_baseline, version=model_version,build_optimizer=build_optimizer)
+                        model = CLIP_MLP_train( model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline, version=model_version,build_optimizer=build_optimizer)
 
                         if hyperparameterTuning_mode == 1:
                             seeds = val_seeds
-                            if model_version== "BioCLIP_Adapter" or model_version == 'CLIP_Adapter':
-                                random_search_Adapter([features_D, features_S], train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',f'Hp_{model_version}_{LLM}',seeds)
-                            elif model_version== "BioCLIP_MLP" or model_version == 'CLIP_MLP':
-                                random_search_MLP([features_D, features_S], train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',f'Hp_{model_version}_{LLM}',seeds)
+                            random_search_MLP([features_D, features_S], train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',f'Hp_{model_version}_{LLM}',seeds)
                         else:
-                            if model_version== 'CLIP_MLP' or model_version=='BioCLIP_MLP':
-                                config = {"weight_Clip": 0, "num_epochs": 107, "batch_size": 128, "num_layers": 1,"dropout": 0.42656, "hidden_dim": 913, "lr": 0.017475, "t": 0.0983,
-                                          "momentum": 0.95166}
-                            elif model_version== 'CLIP_Adapter'  or model_version=='BioCLIP_Adapter':
-                                config = {"weight_Clip": 0, "num_epochs": 107, "batch_size": 128, "num_layers": 0,"dropout": 0.42656, "hidden_dim": 256, "lr": 0.017475, "t": 0.0983,
+                            config = {"weight_Clip": 0, "num_epochs": 107, "batch_size": 128, "num_layers": 1,"dropout": 0.42656, "hidden_dim": 913, "lr": 0.017475, "t": 0.0983,
                                           "momentum": 0.95166}
 
                             seeds = test_seeds
                             test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',config, seeds)
 
                     else:
-                        model = CLIP_MLP_train(model=model_type, Dataset=BaselineDataset,Dataloader=dataloader_baseline,version=model_version,build_optimizer=build_optimizer)
+                        model = CLIP_MLP_train(model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline,version=model_version,build_optimizer=build_optimizer)
                         model.set_parameters(num_epochs=107, batch_size=128,num_layers=1, dropout=0.42656, hidden_dim=913, lr=0.017475,
                                              t=0.0983,momentum=0.95166, patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S=path_features_S,
                                              path_prompts_S=path_prompts_S, exp_name=f'{model_version}_{train_type}',wnb=0)
@@ -223,6 +189,37 @@ if __name__ == "__main__":
 
                 elif train_type == "In_domain":
                    print('Loading..')
+            elif "Adapter" in model_version:
+
+                if train_type=="Out_domain":
+
+                    if hyperparameterTuning_mode == 1 or hyperparameterTuning_mode == 2:
+                        seeds=val_seeds
+                        features_D=[path_features_D,path_prompts_D]
+                        features_S = [path_features_S, path_prompts_S]
+
+                        model = CLIP_MLP_train( model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline, version=model_version,build_optimizer=build_optimizer)
+
+                        if hyperparameterTuning_mode == 1:
+                            seeds = val_seeds
+                            random_search_Adapter([features_D, features_S], train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',f'Hp_{model_version}_{LLM}',seeds)
+                        else:
+                            config = {"weight_Clip": 0, "num_epochs": 107, "batch_size": 128, "num_layers": 0,"dropout": 0.42656, "hidden_dim": 256, "lr": 0.017475, "t": 0.0983,
+                                          "momentum": 0.95166}
+                            seeds = test_seeds
+                            test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',config, seeds)
+
+                    else:
+                        model = CLIP_MLP_train(model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline,version=model_version,build_optimizer=build_optimizer)
+                        model.set_parameters(num_epochs=107, batch_size=128,num_layers=1, dropout=0.42656, hidden_dim=913, lr=0.017475,
+                                             t=0.0983,momentum=0.95166, patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S=path_features_S,
+                                             path_prompts_S=path_prompts_S, exp_name=f'{model_version}_{train_type}',wnb=0)
+
+                        mode_model(model, model_params_path, mode)
+
+                elif train_type == "In_domain":
+                   print('Loading..')
+
 
 
 
