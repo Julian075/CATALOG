@@ -199,8 +199,8 @@ if __name__ == "__main__":
                             elif model_version == 'CLIP_MLP':
                                 random_search_MLP([features_D, features_S], train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',f'Hp_{model_version}_{LLM}',seeds)
                         else:
-                            config = {"weight_Clip": 0.494, "num_epochs": 107, "batch_size": 128, "num_layers": 1,"dropout": 0.42656, "hidden_dim": 913, "lr": 0.017475, "t": 0.0983,
-                                      "momentum": 0.95166}
+                            config = {"weight_Clip": 0.494, "num_epochs": 107, "batch_size": 128, "num_layers": 1, "dropout": 0.42656, "hidden_dim": 913,"lr": 0.017475,"t": 0.0983,"momentum": 0.95166}
+
 
                             seeds = test_seeds
                             test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',config, seeds)
