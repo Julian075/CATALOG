@@ -188,7 +188,7 @@ if __name__ == "__main__":
                     random_search([features_D, features_S], train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',f'Hp_{model_version}_{LLM}',seeds)
                 else:
                     seeds = test_seeds
-                    test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',config, seeds)
+                    test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',config[model_version], seeds)
 
             else:
                 model = CLIP_MLP_train(model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline,version=model_version,build_optimizer=build_optimizer)
