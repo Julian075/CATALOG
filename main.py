@@ -114,7 +114,7 @@ if __name__ == "__main__":
     en_att=args.en_att
 
     if feature_extraction :
-        #feature_extraction_(model_version,dataset,LLM)
+        feature_extraction_(model_version,dataset,LLM)
         
         if train_type=='Out_domain':
             feature_extraction_(model_version,dataset2,LLM)

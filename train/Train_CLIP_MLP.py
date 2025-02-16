@@ -73,9 +73,9 @@ class CLIP_MLP_train:
         text_features2 = torch.load(self.path_prompts_S)
         text_features2 = text_features2.to(device)
 
-        if self.version=='CLIP_MLP' or self.version=='BioCLIP_MLP':
+        if 'MLP' in self.version:
             projection_model=self.md.CLIP_MLP(input_dim=512,hidden_dim=self.hidden_dim,output_dim=512, num_layers=self.num_layers, dropout=self.dropout)
-        elif self.version=='CLIP_Adapter' or self.version=='BioCLIP_Adapter':
+        elif 'Adapter' in self.version:
             projection_model = self.md.CLIP_Adapter(feature_dim=512, hidden_dim=self.hidden_dim)
         projection_model = projection_model.to(device)
 
@@ -174,9 +174,9 @@ class CLIP_MLP_train:
 
             if epoch == (self.num_epochs - 1) or counter >= self.patience:
                 if test:
-                    if self.version == 'CLIP_MLP':
+                    if 'MLP' in  self.version :
                         projection_model = self.md.CLIP_MLP(input_dim=512, hidden_dim=self.hidden_dim, output_dim=512,num_layers=self.num_layers, dropout=self.dropout)
-                    elif self.version == 'CLIP_Adapter':
+                    elif 'Adapter' in self.version :
                         projection_model = self.md.CLIP_Adapter(feature_dim=512, hidden_dim=self.hidden_dim)
                     projection_model.load_state_dict(torch.load(model_params_path))
                     projection_model = projection_model.to(device)
@@ -249,10 +249,10 @@ class CLIP_MLP_train:
         dataloader_cis_test = self.dataloader(dataset_S['cis_test'], self.batch_size, self.dataset)
         dataloader_trans_test = self.dataloader(dataset_S['trans_test'], self.batch_size, self.dataset)
 
-        if self.version == 'CLIP_MLP':
+        if 'MLP' in self.version :
             projection_model = self.md.CLIP_MLP(input_dim=512, hidden_dim=self.hidden_dim, output_dim=512,
                                                 num_layers=self.num_layers, dropout=self.dropout)
-        elif self.version == 'CLIP_Adapter':
+        elif 'Adapter' in  self.version :
             projection_model = self.md.CLIP_Adapter(feature_dim=512, hidden_dim=self.hidden_dim)
         projection_model.load_state_dict(torch.load(model_params_path))
         projection_model = projection_model.to(device)
