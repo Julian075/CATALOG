@@ -3,6 +3,7 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 from PIL import Image
 import torch.optim as optim
+from feature_extraction.CATALOG_feature_extraction import extract_features
 
 #Datasets and Dataloaders
 class BaselineDataset(Dataset):
@@ -110,4 +111,14 @@ def build_optimizer( projection_model, optimizer, learning_rate, momentum, versi
             optimizer = optim.SGD([params_MLP], lr=learning_rate, momentum=momentum)
 
     return optimizer,scheduler
+
+def feature_extraction(model_version,dataset,LLM):
+    if model_version=='Base_long':
+        extract_features(model_version=model_version, dataset=dataset, type_clip='longclip-B', LLM=LLM, only_text=0)
+    elif  "BioCLIP" in model_version :
+        extract_features(model_version=model_version, dataset=dataset, type_clip='BioCLIP', LLM=LLM, only_text=0)
+    elif not('Long' in model_version):
+        extract_features(model_version=model_version, dataset=dataset, type_clip='16', LLM=LLM, only_text=0)
+    else:
+        extract_features(model_version=model_version, dataset=dataset, type_clip='longclip-B', LLM=LLM, only_text=0)
 

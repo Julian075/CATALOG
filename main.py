@@ -1,6 +1,6 @@
 import os.path
 
-from feature_extraction.CATALOG_feature_extraction import extract_features
+
 from random_search_hyperparameters import random_search,test_best_model,random_search2
 
 from models import CATALOG_Base as base
@@ -11,7 +11,7 @@ from models import BioCLIP_Mlp as BioCLIP_MLP
 
 
 import argparse
-from utils import BaselineDataset,dataloader_baseline,TuningDataset,dataloader_Tuning,build_optimizer
+from utils import BaselineDataset,dataloader_baseline,TuningDataset,dataloader_Tuning,build_optimizer,feature_extraction
 from data.seeds import val_seeds, test_seeds
 
 from train.Train_CATALOG_Base_out_domain import CATALOG_base
@@ -35,7 +35,9 @@ model_type = {
             "Base_long": base_long,
             "Fine_tuning": base_fine_tuning,
             "CLIP_MLP": CLIP_MLP,
+            "Long_CLIP_MLP": CLIP_MLP,
             "BioCLIP_MLP": BioCLIP_MLP,
+            "Long_CLIP_Adapter": CLIP_MLP,
             "CLIP_Adapter": CLIP_MLP,
             "BioCLIP_Adapter": BioCLIP_MLP,
         }
@@ -112,14 +114,10 @@ if __name__ == "__main__":
     en_att=args.en_att
 
     if feature_extraction :
-        if model_version=='Base_long':
-            extract_features(model_version=model_version, dataset=dataset, type_clip='longclip-B', LLM=LLM, only_text=0)
-        elif  "BioCLIP" in model_version :
-            extract_features(model_version=model_version, dataset=dataset, type_clip='BioCLIP', LLM=LLM, only_text=0)
-        elif not('Long' in model_version):
-            extract_features(model_version=model_version, dataset=dataset, type_clip='16', LLM=LLM, only_text=0)
-        else:
-            extract_features(model_version=model_version, dataset=dataset, type_clip='longclip-B', LLM=LLM, only_text=0)
+        #feature_extraction(model_version,dataset,LLM)
+        
+        if train_type=='Out_domain':
+            feature_extraction(model_version,dataset2,LLM)
 
     path_features_D = f"features/Features_{dataset}/{type_feat[model_version]}/Features{ext_name_feats[model_version]}_{dataset}.pt"
     path_prompts_D = f"features/Features_{dataset}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset}_{LLM}.pt"
