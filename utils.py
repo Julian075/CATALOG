@@ -112,7 +112,7 @@ def build_optimizer( projection_model, optimizer, learning_rate, momentum, versi
 
     return optimizer,scheduler
 
-def feature_extraction(model_version,dataset,LLM):
+def feature_extraction_(model_version,dataset,LLM):
     if model_version=='Base_long':
         extract_features(model_version=model_version, dataset=dataset, type_clip='longclip-B', LLM=LLM, only_text=0)
     elif  "BioCLIP" in model_version :

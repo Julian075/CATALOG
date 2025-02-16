@@ -11,7 +11,7 @@ from models import BioCLIP_Mlp as BioCLIP_MLP
 
 
 import argparse
-from utils import BaselineDataset,dataloader_baseline,TuningDataset,dataloader_Tuning,build_optimizer,feature_extraction
+from utils import BaselineDataset,dataloader_baseline,TuningDataset,dataloader_Tuning,build_optimizer,feature_extraction_
 from data.seeds import val_seeds, test_seeds
 
 from train.Train_CATALOG_Base_out_domain import CATALOG_base
@@ -114,10 +114,10 @@ if __name__ == "__main__":
     en_att=args.en_att
 
     if feature_extraction :
-        #feature_extraction(model_version,dataset,LLM)
+        #feature_extraction_(model_version,dataset,LLM)
         
         if train_type=='Out_domain':
-            feature_extraction(model_version,dataset2,LLM)
+            feature_extraction_(model_version,dataset2,LLM)
 
     path_features_D = f"features/Features_{dataset}/{type_feat[model_version]}/Features{ext_name_feats[model_version]}_{dataset}.pt"
     path_prompts_D = f"features/Features_{dataset}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset}_{LLM}.pt"
