@@ -68,7 +68,7 @@ class CATALOG_base_In_domain_terra:
         torch.backends.cudnn.deterministic = True
 
 
-    def train(self,seed=42,test=1):
+    def train(self,seed=1064200250,test=1):
         self.set_seed(seed)
         unique_id = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -77,10 +77,7 @@ class CATALOG_base_In_domain_terra:
         text_features = text_features.to(device)
 
 
-        try:
-            projection_model = self.md.LLaVA_CLIP_long(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,device=device)
-        except:
-            projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout, device=device)
+        projection_model = self.md.LLaVA_CLIP_long(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,device=device)
         projection_model = projection_model.to(device)
 
         # Get your DataLoader
