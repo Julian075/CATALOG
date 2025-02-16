@@ -168,7 +168,7 @@ if __name__ == "__main__":
                     model.train_ID_terra()
 
 
-    elif model_version == "Fine_tuning":
+    elif 'Fine_tuning' in model_version:
 
         if train_type=="In_domain":
             if dataset=="serengeti":
@@ -180,10 +180,8 @@ if __name__ == "__main__":
             elif dataset=="terra":
                     model = CATALOG_base_In_domain_terra( model=model_type[model_version], Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
 
-                    model.set_parameters(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=1,
-                                        dropout=0.5,hidden_dim=1045,lr=1e-4,t=0.1,momentum=0.8409, patience=5,
-                                         path_features_D=path_features_D, path_prompts_D=path_prompts_D,
-                                         exp_name=f'{model_version}_{train_type}', wnb=0)
+                    model.set_parameters(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=1,dropout=0.5,hidden_dim=1045,lr=1e-4,t=0.1,momentum=0.8409, patience=5,
+                                         path_features_D=path_features_D, path_prompts_D=path_prompts_D,exp_name=f'{model_version}_{train_type}', wnb=0)
 
                     model_params_path = 'models/CATALOG_finetuning_Base_Terra.pth'
                     mode_model(model, model_params_path, mode)
