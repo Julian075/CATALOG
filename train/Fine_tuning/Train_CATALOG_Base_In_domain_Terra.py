@@ -77,8 +77,10 @@ class CATALOG_base_In_domain_terra:
         text_features = text_features.to(device)
 
 
-
-        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,device=device)
+        try:
+            projection_model = self.md.LLaVA_CLIP_long(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,device=device)
+        except:
+            projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout, device=device)
         projection_model = projection_model.to(device)
 
         # Get your DataLoader

@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch
 import numpy as np
 import clip
+from models.CATALOG_Base_long import MLP as MLP_long
 
 class QuickGELU(nn.Module):
     def forward(self, x: torch.Tensor):
@@ -217,6 +218,158 @@ class LLaVA_CLIP(nn.Module):
 
         logit_scale_LLaVA = self.logit_scale_LLaVA.exp()
         similarity_bert = (description_features.half() @ txt_features) * logit_scale_LLaVA
+        similarity_bert = similarity_bert / similarity_bert.norm(dim=-1, keepdim=True)
+
+        similarity = (similarity_clip * weight_p + similarity_bert * (1 - weight_p))
+        out_logits = similarity / similarity.norm(dim=-1, keepdim=True)
+
+        acc=self.accuracy_top_3(out_logits,target_ind)
+
+        return acc
+
+class LLaVA_CLIP_long(nn.Module):
+    def __init__(self, hidden_dim, num_layers, dropout, device) -> None:
+        super().__init__()
+        self.description_encoder = MLP_long(input_dim=512, hidden_dim=hidden_dim, output_dim=512, num_layers=num_layers,
+                                       dropout=dropout, return_embeds=True)
+
+        self.model_clip,self.preprocess_clip= clip.load(f'ViT-B/16', device)
+        self.model_clip.visual.requires_grad_(True)
+        self.model_clip.to(device)
+
+        for param in self.model_clip.parameters():
+            param.requires_grad = False
+
+        for param in self.model_clip.visual.parameters():
+            param.requires_grad = True
+
+        # Run CLIP in eval mode since our batch size is much smaller than during CLIP training
+        for m in self.model_clip.modules():
+            if isinstance(m, nn.BatchNorm2d):
+                m.eval()
+
+
+        self.device=device
+        # temperature
+        self.logit_scale_CLIP = nn.Parameter(torch.ones([]) * np.log(1 / 0.07))
+        self.logit_scale_LLaVA = nn.Parameter(torch.ones([]) * np.log(1 / 0.07))
+
+
+    # LLaVA-CLIP Loss
+    def LLaVA_CLIP_loss(self, logits: torch.Tensor,label,t) :
+        loss_i=0
+        for b in range(len(logits)):
+            num = torch.exp(logits[b][label[b]]/t)
+            dem = torch.sum(torch.exp(logits[b]/t))
+            loss_i+=torch.log(num/dem)
+        loss=-loss_i/len(logits)
+        return loss
+
+    def LLaVA_CLIP_loss2(self, logits: torch.Tensor, labels,t):
+        temperature=t
+        inputs_expected_class = {}
+        for index in range(len(labels)):
+            clas = labels[index]
+            if not (clas in inputs_expected_class.keys()):
+                inputs_expected_class[clas] = [index]
+            else:
+                inputs_expected_class[clas].append(index)
+
+
+        loss = 0.00
+        for category in inputs_expected_class.keys():
+            aux_loss = 0.00
+            for inputs_index in inputs_expected_class[category]:
+                num = torch.exp((logits[inputs_index][labels[inputs_index]])/temperature)
+                dem = torch.sum(torch.exp(logits[inputs_index]/temperature))
+                aux_loss += torch.log(num / dem)
+            loss += -aux_loss / len(inputs_expected_class[category])
+
+        return loss
+
+        # LLaVA-CLIP  Accuracy
+
+    def LLaVA_CLIP_acc(self, img_feat,description_feat,text_feat,weight_p,target_ind):
+        sim_clip= img_feat @ text_feat
+        sim_clip = sim_clip / sim_clip.norm(dim=-1, keepdim=True)
+
+        sim_bert = description_feat @ text_feat
+        sim_bert = sim_bert / sim_bert.norm(dim=-1, keepdim=True)
+
+        sim_total=sim_clip*weight_p+sim_bert*(1-weight_p)
+        sim_total= sim_total / sim_total.norm(dim=-1, keepdim=True)
+
+        predicted_index = torch.argmax(sim_total, dim=1)
+        acc = torch.sum(predicted_index.cpu() == target_ind)
+        return acc
+
+    def forward(self, embeddings, img, zeroshot_weights, weight_p,target_ind,temp):
+
+        # Train last Layer CLIP
+        img_features = self.model_clip.encode_image(img)
+        img_features = img_features / img_features.norm(dim=-1, keepdim=True)
+
+        description_features = self.description_encoder(embeddings)
+        description_features = description_features / description_features.norm(dim=-1, keepdim=True)
+
+
+
+        logit_scale_CLIP = self.logit_scale_CLIP.exp()
+        similarity_clip = (img_features @ zeroshot_weights) * logit_scale_CLIP
+        similarity_clip = similarity_clip / similarity_clip.norm(dim=-1, keepdim=True)
+
+        logit_scale_LLaVA = self.logit_scale_LLaVA.exp()
+        similarity_bert = (description_features @ zeroshot_weights) * logit_scale_LLaVA
+        similarity_bert = similarity_bert / similarity_bert.norm(dim=-1, keepdim=True)
+
+        similarity = (similarity_clip * weight_p + similarity_bert * (1 - weight_p))
+        out_logits = similarity / similarity.norm(dim=-1, keepdim=True)
+
+
+
+        loss = self.LLaVA_CLIP_loss(out_logits,target_ind,temp)
+        #loss = self.LLaVA_CLIP_loss2(out_logits, target_ind,temp)
+        acc = self.LLaVA_CLIP_acc(img_features,description_features,zeroshot_weights,weight_p,target_ind)
+        return loss, acc,torch.argmax(out_logits, dim=1)
+
+    def accuracy_top_3(self,output, target):
+        topk = 3  # Queremos el top 3
+        pred = output.topk(topk, 1, True, True)[1].t()
+        pred=pred.cpu()
+        correct = pred.eq(target.view(1, -1).expand_as(pred))
+        correct_k = float(correct[:topk].reshape(-1).float().sum(0, keepdim=True).cpu().numpy())
+        return correct_k
+
+    def predict(self, embeddings, img_features, txt_features, weight_p,target_ind,temp):
+
+        description_features = self.description_encoder(embeddings)
+        description_features = description_features / description_features.norm(dim=-1, keepdim=True)
+
+        logit_scale_CLIP = self.logit_scale_CLIP.exp()
+        similarity_clip = (img_features @ txt_features) * logit_scale_CLIP
+        similarity_clip = similarity_clip / similarity_clip.norm(dim=-1, keepdim=True)
+
+        logit_scale_LLaVA = self.logit_scale_LLaVA.exp()
+        similarity_bert = (description_features @ txt_features) * logit_scale_LLaVA
+        similarity_bert = similarity_bert / similarity_bert.norm(dim=-1, keepdim=True)
+
+        similarity = (similarity_clip * weight_p + similarity_bert * (1 - weight_p))
+        out_logits = similarity / similarity.norm(dim=-1, keepdim=True)
+
+        max_values, max_indices = torch.max(out_logits, dim=1)
+        return max_values, max_indices
+
+    def predict_top_3(self, embeddings, img_features, txt_features, weight_p,target_ind,temp):
+
+        description_features = self.description_encoder(embeddings)
+        description_features = description_features / description_features.norm(dim=-1, keepdim=True)
+
+        logit_scale_CLIP = self.logit_scale_CLIP.exp()
+        similarity_clip = (img_features @ txt_features) * logit_scale_CLIP
+        similarity_clip = similarity_clip / similarity_clip.norm(dim=-1, keepdim=True)
+
+        logit_scale_LLaVA = self.logit_scale_LLaVA.exp()
+        similarity_bert = (description_features @ txt_features) * logit_scale_LLaVA
         similarity_bert = similarity_bert / similarity_bert.norm(dim=-1, keepdim=True)
 
         similarity = (similarity_clip * weight_p + similarity_bert * (1 - weight_p))
