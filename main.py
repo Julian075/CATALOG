@@ -47,10 +47,10 @@ type_feat = {
             "Fine_tuning": 'finetuning_features',
             "CLIP_MLP": 'CLIP_MLP',
             "Long_CLIP_MLP": 'CLIP_MLP',
-            "BioCLIP_MLP": 'BioCLIP_MLP',
+            "BioCLIP_MLP": 'CLIP_MLP',
             "CLIP_Adapter": 'CLIP_MLP',
             "Long_CLIP_Adapter": 'CLIP_MLP',
-            "BioCLIP_Adapter": 'BioCLIP_MLP',
+            "BioCLIP_Adapter": 'CLIP_MLP',
             }
 ext_name_feats = {
             "Base": '',
