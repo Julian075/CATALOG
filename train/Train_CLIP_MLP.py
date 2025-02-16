@@ -363,7 +363,7 @@ class CLIP_MLP_train:
                         for batch_test in dataloader_test:
                             image_features_test, target_index_test = batch_test
                             size_test += len(image_features_test)
-                            image_features_cis_test = image_features_cis_test.to(device)
+                            image_features_test = image_features_test.to(device)
 
                             loss_test, acc_test = projection_model( image_features_test, text_features, target_index_test, self.t)
 
