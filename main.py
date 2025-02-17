@@ -70,7 +70,7 @@ model_params_path = {
             "Base": 'models/CATALOG_BERT.pth',#CATALOG_LongCLIP_BERT
             "Base_long": 'models/CATALOG_LongCLIP.pth',
             "Fine_tuning": 'models/CATALOG_finetuning_Base_Serengeti.pth',
-            "Fine_tuning_Long": 'models/CATALOG_finetuning_Base_long_Serengeti.pth',
+            "Fine_tuning_Long": '/home/ids/jpabon/projects/CATALOG/Best/exp_Fine_tuning_Long_In_domain_serengeti/training_2025-02-16_21-01-11/best_model_params_4_1743.pth',#'models/CATALOG_finetuning_Base_long_Serengeti.pth',
             "CLIP_MLP": 'models/CLIP_MLP.pth',
             "Long_CLIP_MLP": 'models/Long_CLIP_MLP.pth',
             "BioCLIP_MLP": 'models/BioCLIP_MLP.pth',
