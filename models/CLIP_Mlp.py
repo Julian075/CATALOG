@@ -1,22 +1,10 @@
 import numpy as np
 import torch
 import torch.nn as nn
-from models.CATALOG_Base_long import MLP as MLP_projection
+from models.CATALOG_Base_long import MLP as MLP_projection,Adapter
 
 
-class Adapter(nn.Module):
-    def __init__(self, input_dim, hidden_dim):
-        super(Adapter, self).__init__()
-        self.down_proj = nn.Linear(input_dim, hidden_dim).half()  # Bottleneck layer
-        self.activation = nn.ReLU()
-        self.up_proj = nn.Linear(hidden_dim, input_dim).half()
 
-    def forward(self, x):
-        residual = x  # Store the original input for the skip connection
-        x = self.down_proj(x)  # First projection
-        x = self.activation(x)
-        x = self.up_proj(x)  # Second projection
-        return x + residual  # Add the original input
 
 class MLP(nn.Module):
     def __init__(self, input_size, hidden_size, output_size,num_layers,dropout_prob):
