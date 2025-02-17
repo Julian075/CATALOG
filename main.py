@@ -144,10 +144,10 @@ if __name__ == "__main__":
 
                 if hyperparameterTuning_mode == 1:
                     seeds = val_seeds
-                    random_search2([features_D, features_S], train_type, model_version,model, f'{model_version}_Adapter_{train_type}_{LLM}_ATT_{en_att}',f'Hp_{model_version}_Adapter_{LLM}_ATT_{en_att}',seeds,en_att=en_att)
+                    random_search2([features_D, features_S], train_type, model_version,model, f'{model_version}_R_Adapter_{train_type}_{LLM}_ATT_{en_att}',f'Hp_{model_version}_R_Adapter_{LLM}_ATT_{en_att}',seeds,en_att=en_att)
                 else:
                     seeds = test_seeds
-                    test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_Adapter_{train_type}_{LLM}_ATT_{en_att}',config[model_version], seeds,en_att=en_att)
+                    test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_R_Adapter_{train_type}_{LLM}_ATT_{en_att}',config[model_version], seeds,en_att=en_att)
 
             else:
                 model = CATALOG_base(model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
