@@ -96,14 +96,14 @@ config = {
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
-    parser.add_argument('--model_version', type=str, default="Base_long", help='Model version')
+    parser.add_argument('--model_version', type=str, default="Base", help='Model version')
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
     parser.add_argument('--dataset2', type=str, default="terra", help='dataset')
     parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
     parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
     parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')#en_att
-    parser.add_argument('--en_att', type=int, default=0, help='Enable the Attention layer')
+    parser.add_argument('--en_att', type=int, default=1, help='Enable the Attention layer')
 
     parser.add_argument('--LLM', type=str, default="ChatGPT_0.5", help='define LLM')
     args = parser.parse_args()
@@ -182,7 +182,7 @@ if __name__ == "__main__":
 
                     #model.set_parameters(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=1,dropout=0.5,hidden_dim=1045,lr=1e-4,t=0.1,momentum=0.8409, patience=5,
                                          #path_features_D=path_features_D, path_prompts_D=path_prompts_D,exp_name=f'{model_version}_{train_type}', wnb=0)
-                    model.set_parameters(weight_Clip=config[model_version]['weight_Clip'], num_epochs=config[model_version]['num_epochs'], batch_size=config[model_version]['batch_size'],num_layers=config[model_version]['num_layers'], dropout=config[model_version]['dropout'], hidden_dim=config[model_version]['hidden_dim'], lr= config[model_version]['lr'],
+                    model.set_parameters(weight_Clip=config[model_version]['weight_Clip'], num_epochs=config[model_version]['num_epochs'], batch_size=config[model_version]['batch_size'],num_layers=4, dropout=config[model_version]['dropout'], hidden_dim=config[model_version]['hidden_dim'], lr= config[model_version]['lr'],
                                      t=config[model_version]['t'],momentum=config[model_version]['momentum'], patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
 
                     model_params_path = 'models/CATALOG_finetuning_Base_Terra.pth'

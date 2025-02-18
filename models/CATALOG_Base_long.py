@@ -91,8 +91,8 @@ class MLP(nn.Module):
 class LLaVA_CLIP(nn.Module):
     def __init__(self, hidden_dim, num_layers, dropout, en_att=0) -> None:
         super().__init__()
-        self.description_encoder =Adapter(input_dim=512,hidden_dim=256)#hidden_dim)# MLP(input_dim=512, hidden_dim=hidden_dim, output_dim=512, num_layers=num_layers,
-                                       #dropout=dropout, return_embeds=True)
+        self.description_encoder =MLP(input_dim=512, hidden_dim=hidden_dim, output_dim=512, num_layers=num_layers,
+                                       dropout=dropout, return_embeds=True)
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         # temperature
         self.logit_scale_CLIP = nn.Parameter(torch.ones([]) * np.log(1 / 0.07))
@@ -169,7 +169,8 @@ class LLaVA_CLIP(nn.Module):
             logit_scale_CLIP = self.logit_scale_CLIP.exp()
             #description_features=description_features.unsqueeze(1)
             #img_features=img_features.unsqueeze(1)
-            alignment_feats,_ = self.cross_attention(description_features.half() ,img_features,img_features)
+            alignment_feats,weights_att = self.cross_attention(description_features.half().unsqueeze(1) ,img_features.unsqueeze(1),img_features.unsqueeze(1))
+            alignment_feats = alignment_feats.view(alignment_feats.shape[0], alignment_feats.shape[2])
             similarity = (alignment_feats @ txt_features) * logit_scale_CLIP
 
 

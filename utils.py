@@ -91,13 +91,6 @@ def build_optimizer( projection_model, optimizer, learning_rate, momentum, versi
     if optimizer == "sgd":
         if version == 'base':
             optimizer = optim.SGD([params1, params2, params3], lr=learning_rate, momentum=momentum)
-        elif version == 'projection':
-            params4 = {"params": projection_model.proyection_Img_CLIP.parameters(), "lr": learning_rate,
-                       "momentum": momentum}
-            params5 = {"params": projection_model.proyection_txt_CLIP.parameters(), "lr": learning_rate,
-                       "momentum": momentum}
-            optimizer = optim.SGD([params1, params2, params3, params4, params5], lr=learning_rate,
-                                  momentum=momentum)
         elif version == 'fine_tuning':
             params6 = {"params": projection_model.model_clip.visual.parameters(), "lr": learning_rate,
                        "momentum": momentum}

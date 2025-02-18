@@ -152,7 +152,8 @@ class LLaVA_CLIP(nn.Module):
             logit_scale_CLIP = self.logit_scale_CLIP.exp()
             #description_features=description_features.unsqueeze(1)
             #img_features=img_features.unsqueeze(1)
-            alignment_feats,_ = self.cross_attention(description_features.half() ,img_features,img_features)
+            alignment_feats,_ = self.cross_attention(description_features.half().unsqueeze(1) ,img_features.unsqueeze(1),img_features.unsqueeze(1))
+            alignment_feats = alignment_feats.view(alignment_feats.shape[0], alignment_feats.shape[2])
             similarity = (alignment_feats @ txt_features) * logit_scale_CLIP
 
         out_logits = similarity / similarity.norm(dim=-1, keepdim=True)
