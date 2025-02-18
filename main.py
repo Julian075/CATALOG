@@ -182,7 +182,7 @@ if __name__ == "__main__":
 
                     #model.set_parameters(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=1,dropout=0.5,hidden_dim=1045,lr=1e-4,t=0.1,momentum=0.8409, patience=5,
                                          #path_features_D=path_features_D, path_prompts_D=path_prompts_D,exp_name=f'{model_version}_{train_type}', wnb=0)
-                    model.set_parameters(weight_Clip=config[model_version]['weight_Clip'], num_epochs=config[model_version]['num_epochs'], batch_size=config[model_version]['batch_size'],num_layers=4, dropout=config[model_version]['dropout'], hidden_dim=config[model_version]['hidden_dim'], lr= config[model_version]['lr'],
+                    model.set_parameters(weight_Clip=config[model_version]['weight_Clip'], num_epochs=config[model_version]['num_epochs'], batch_size=config[model_version]['batch_size'],num_layers=1, dropout=config[model_version]['dropout'], hidden_dim=1045, lr= config[model_version]['lr'],
                                      t=config[model_version]['t'],momentum=config[model_version]['momentum'], patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
 
                     model_params_path = 'models/CATALOG_finetuning_Base_Terra.pth'
