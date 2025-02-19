@@ -10,13 +10,13 @@ def combination(n_combination):
     np.random.seed(23)
     for _ in range(n_combination):
         parameters.append({
-            'batch_size': np.random.choice(np.array([128, 256]), size=1)[0],
-            'hidden_dim': np.random.choice(np.arange(253, 973, 60)),
-            'lr': np.round(np.random.choice(np.arange(0.01, 0.1, 0.01)), decimals=2),
-            'momentum': np.round(np.random.choice(np.arange(0.8, 1, 0.02)), decimals=2),
-            'num_epochs': np.random.randint(25, 101, size=1)[0],
-            't': np.random.choice(np.array([0.1, 0.01, 0.001]), size=1)[0],
-            'weight_Clip': np.random.choice(np.array([0.4, 0.5, 0.6]), size=1)[0]
+            'batch_size': int(np.random.choice(np.array([128, 256]), size=1)[0]),
+            'hidden_dim': int(np.random.choice(np.arange(253, 973, 60))),
+            'lr': float(np.round(np.random.choice(np.arange(0.01, 0.1, 0.01)), decimals=2)),
+            'momentum': float(np.round(np.random.choice(np.arange(0.8, 1, 0.02)), decimals=2)),
+            'num_epochs': int(np.random.randint(25, 101, size=1)[0]),
+            't': float(np.random.choice(np.array([0.1, 0.01, 0.001]), size=1)[0]),
+            'weight_Clip': float(np.random.choice(np.array([0.4, 0.5, 0.6]), size=1)[0])
         }
         )
     return parameters
