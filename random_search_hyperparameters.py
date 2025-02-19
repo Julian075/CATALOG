@@ -162,14 +162,8 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
         with open(results_temporal, mode='a', newline='') as file:
             writer = csv.writer(file)
             if not results_exist_temp or os.stat(results_temporal).st_size == 0:
-                writer.writerow([
-                    "seed", "acc_cis_test", "acc_trans_test", "weight_clip", "num_epochs", "batch_size",
-                    "num_layers", "dropout", "hidden_dim", "learning_rate", "temperature", "momentum"
-                ])
-            writer.writerow([
-                seed, epoch_acc_cis_test, epoch_acc_trans_test, weight_clip,
-                num_epochs, batch_size, num_layers, dropout, hidden_dim, learning_rate, temperature, momentum
-            ])
+                writer.writerow(["seed", "acc_cis_test", "acc_trans_test" ])
+            writer.writerow([seed, epoch_acc_cis_test, epoch_acc_trans_test])
 
     avg_acc_cis_test = np.mean(results_cis_test_seeds) if results_cis_test_seeds else 0
     std_acc_cis_test = np.std(results_cis_test_seeds) if results_cis_test_seeds else 0
