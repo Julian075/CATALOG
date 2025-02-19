@@ -139,7 +139,7 @@ if __name__ == "__main__":
 
                 if hyperparameterTuning_mode == 1:
                     seeds = val_seeds
-                    random_search_hyperparameters([features_D, features_S], train_type, model_version, model, f'{model_version}_{train_type}_{LLM}', seeds, n_combination=30, sup_loss=sup_loss)
+                    random_search_hyperparameters([features_D, features_S], train_type, model_version, model, f'{model_version}_{train_type}_{LLM}_2', seeds, n_combination=30, sup_loss=sup_loss)
                 else:
                     seeds = test_seeds
                     test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',config[model_version], seeds,sup_loss=sup_loss)
