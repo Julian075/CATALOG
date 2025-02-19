@@ -149,6 +149,7 @@ class LLaVA_CLIP(nn.Module):
     def forward(self, embeddings, img_features, txt_features, weight_p,target_ind,temp,sup_loss=0):
 
         description_features = self.description_encoder(embeddings)
+        description_features = description_features / description_features.norm(dim=-1, keepdim=True)
 
         logit_scale_CLIP = self.logit_scale_CLIP.exp()
         similarity_clip = (img_features @ txt_features) * logit_scale_CLIP
