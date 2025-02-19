@@ -197,6 +197,11 @@ class CATALOG_base_In_domain_terra:
                 if self.wnb == 0:
                     print('Val Trans loss: {:.4f},Val acc: {:.4f}'.format(epoch_loss_trans_val, epoch_acc_trans_val))
                 print(f"Time for epoch [{total_time}]")
+                
+                if epoch_acc_cis_val <1 or np.isnan(epoch_acc_cis_val):
+                    print(f'💀 This model is officially trash. Accuracy: {epoch_acc_cis_val}. Let’s not waste more compute. Training stopped.')
+                    break
+                
                 if epoch_acc_cis_val > acc_best:
                     print('Save model')
                     acc_best = epoch_acc_cis_val

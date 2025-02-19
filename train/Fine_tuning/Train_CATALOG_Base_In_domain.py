@@ -170,6 +170,9 @@ class CATALOG_base_In_domain:
                 print('Train loss: {:.4f}, acc: {:.4f}'.format(epoch_loss, epoch_acc))
                 print('Val loss: {:.4f},Val acc: {:.4f}'.format(epoch_loss_val, epoch_acc_val))
                 print(f"Time for epoch [{total_time}]")
+                if epoch_acc_val <1 or np.isnan(epoch_acc_val):
+                    print(f'💀 This model is officially trash. Accuracy: {epoch_acc_val}. Let’s not waste more compute. Training stopped.')
+                    break
                 if epoch_acc_val > acc_best:
                     print('Save model')
                     acc_best = epoch_acc_val

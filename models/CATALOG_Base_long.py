@@ -91,8 +91,7 @@ class MLP(nn.Module):
 class LLaVA_CLIP(nn.Module):
     def __init__(self, hidden_dim, num_layers, dropout) -> None:
         super().__init__()
-        self.description_encoder =Adapter(input_dim=512,hidden_dim=hidden_dim)#MLP(input_dim=512, hidden_dim=hidden_dim, output_dim=512, num_layers=num_layers,
-                                      # dropout=dropout, return_embeds=True)
+        self.description_encoder =Adapter(input_dim=512,hidden_dim=hidden_dim)
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         # temperature
         self.logit_scale_CLIP = nn.Parameter(torch.ones([]) * np.log(1 / 0.07))

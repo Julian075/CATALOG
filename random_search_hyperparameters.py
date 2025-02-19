@@ -59,6 +59,8 @@ def random_search_hyperparameters(path_features, train_type, model_version, mode
 
             if model_version == 'Fine_tuning':
                 if train_type == 'In_domain':
+                    lr=1e-3
+                    t=0.1
                     model.set_parameters(weight_Clip=weight_Clip, num_epochs=num_epochs, batch_size=batch_size,
                                          num_layers="", dropout="", hidden_dim=hidden_dim, lr=lr,
                                          t=t, momentum=momentum, patience=5, path_features_D=features[0][0],
