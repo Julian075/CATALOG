@@ -107,13 +107,17 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
     if results_exist_temp:
         with open(results_temporal, mode='r') as file:
             reader = csv.reader(file)
-            next(reader, None)  # Skip header
+            next(reader, None)
             for row in reader:
                 try:
-                    seed = int(row[0])  # Intenta convertirlo a entero
+                    seed = int(row[0])
                     existing_seeds.add(seed)
                 except ValueError:
-                    pass  # Ignora si no es un número
+                    pass
+    else:
+        with open(results_temporal, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(["seed", "acc_cis_test", "acc_trans_test"])
 
     for seed in seeds:
         if seed in existing_seeds:
@@ -161,8 +165,6 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
         # Append new results to CSV
         with open(results_temporal, mode='a', newline='') as file:
             writer = csv.writer(file)
-            if not results_exist_temp or os.stat(results_temporal).st_size == 0:
-                writer.writerow(["seed", "acc_cis_test", "acc_trans_test" ])
             writer.writerow([seed, epoch_acc_cis_test, epoch_acc_trans_test])
 
     avg_acc_cis_test = np.mean(results_cis_test_seeds) if results_cis_test_seeds else 0
@@ -176,10 +178,7 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
     with open(results_file, mode='a', newline='') as file:
 
         writer = csv.writer(file)
-
-        # Write header only if the file is empty or newly created
-
-        if not results_exist or os.stat(results_file).st_size == 0:
+        if not results_exist:
             writer.writerow([
 
                 "Experiment", "avg_acc_cis_val", "std_acc_cis_val", "avg_acc_trans_val", "std_acc_trans_val" ,"weight_clip", "num_epochs", "batch_size",
