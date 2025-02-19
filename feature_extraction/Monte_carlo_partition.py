@@ -11,7 +11,7 @@ def monte_carlo_partition(path_features,seed):
     if len(features)==3:
         features_dev= {**features['train'], **features['val']}
     else:
-        features_dev = {**features['train'], **features['trans_val']}
+        features_dev = {**features['train'], **features['cis_val']}
 
     monte_carlo_partitions={}
     keys = list(features_dev.keys())

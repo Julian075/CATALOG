@@ -1,7 +1,7 @@
 import os.path
 
 
-from random_search_hyperparameters import random_search,test_best_model,random_search2
+from random_search_hyperparameters import test_best_model,random_search_hyperparameters
 
 from models import CATALOG_Base as base
 from models import CATALOG_Base_long as base_long
@@ -79,16 +79,16 @@ model_params_path = {
             "BioCLIP_Adapter": 'models/BioCLIP_Adapter.pth',
         }
 config = {
-            "Base": {"weight_Clip": 0.494, "num_epochs": 107, "batch_size": 128, "num_layers": 1, "dropout": 0.42656, "hidden_dim": 913,"lr": 0.017475,"t": 0.0983,"momentum": 0.95166},
-            "Base_long": {"weight_Clip": 0.494, "num_epochs": 107, "batch_size": 128, "num_layers": 1, "dropout": 0.42656, "hidden_dim": 913,"lr": 0.017475,"t": 0.0983,"momentum": 0.95166},
-            "Fine_tuning": {"weight_Clip": 0.6, "num_epochs": 1000, "batch_size": 100, "num_layers": 4, "dropout": 0.4, "hidden_dim": 1743,"lr": 1e-3,"t": 0.1,"momentum": 0.8409},
-            "Fine_tuning_Long": {"weight_Clip": 0.6, "num_epochs": 1000, "batch_size": 100, "num_layers": 4, "dropout": 0.4, "hidden_dim": 1743,"lr": 1e-3,"t": 0.1,"momentum": 0.8409},
-            "CLIP_MLP":{"weight_Clip": 0, "num_epochs": 107, "batch_size": 128, "num_layers": 1, "dropout": 0.42656, "hidden_dim": 913, "lr": 0.017475, "t": 0.0983,"momentum": 0.95166},
-            "Long_CLIP_MLP":{"weight_Clip": 0, "num_epochs": 107, "batch_size": 128, "num_layers": 1, "dropout": 0.42656, "hidden_dim": 913, "lr": 0.017475, "t": 0.0983,"momentum": 0.95166},
-            "BioCLIP_MLP":{"weight_Clip": 0, "num_epochs": 107, "batch_size": 128, "num_layers": 1, "dropout": 0.42656, "hidden_dim": 913, "lr": 0.017475, "t": 0.0983, "momentum": 0.95166},
-            "CLIP_Adapter":{"weight_Clip": 0, "num_epochs": 107, "batch_size": 128, "num_layers": 0, "dropout": 0, "hidden_dim": 256, "lr": 0.017475, "t": 0.0983, "momentum": 0.95166},
-            "Long_CLIP_Adapter":{"weight_Clip": 0, "num_epochs": 107, "batch_size": 128, "num_layers": 0, "dropout": 0, "hidden_dim": 913, "lr": 0.017475, "t": 0.0983,"momentum": 0.95166},
-            "BioCLIP_Adapter":{"weight_Clip": 0, "num_epochs": 107, "batch_size": 128, "num_layers": 0, "dropout": 0, "hidden_dim": 256, "lr": 0.017475, "t": 0.0983,"momentum": 0.95166},
+            "Base": {"weight_Clip": 0.494, "num_epochs": 107, "batch_size": 128, "num_layers": "", "dropout": "", "hidden_dim": 913,"lr": 0.017475,"t": 0.0983,"momentum": 0.95166},
+            "Base_long": {"weight_Clip": 0.494, "num_epochs": 107, "batch_size": 128, "num_layers": "", "dropout":"", "hidden_dim": 913,"lr": 0.017475,"t": 0.0983,"momentum": 0.95166},
+            "Fine_tuning": {"weight_Clip": 0.6, "num_epochs": 1000, "batch_size": 100, "num_layers": "", "dropout": "", "hidden_dim": 913,"lr": 1e-3,"t": 0.1,"momentum": 0.8409},
+            "Fine_tuning_Long": {"weight_Clip": 0.6, "num_epochs": 1000, "batch_size": 100, "num_layers": "", "dropout": "", "hidden_dim": 913,"lr": 1e-3,"t": 0.1,"momentum": 0.8409},
+            "CLIP_MLP":{"weight_Clip": "", "num_epochs": 107, "batch_size": 128, "num_layers": 1, "dropout": 0.42656, "hidden_dim": 913, "lr": 0.017475, "t": 0.0983,"momentum": 0.95166},
+            "Long_CLIP_MLP":{"weight_Clip": "", "num_epochs": 107, "batch_size": 128, "num_layers": 1, "dropout": 0.42656, "hidden_dim": 913, "lr": 0.017475, "t": 0.0983,"momentum": 0.95166},
+            "BioCLIP_MLP":{"weight_Clip": "", "num_epochs": 107, "batch_size": 128, "num_layers": 1, "dropout": 0.42656, "hidden_dim": 913, "lr": 0.017475, "t": 0.0983, "momentum": 0.95166},
+            "CLIP_Adapter":{"weight_Clip": "", "num_epochs": 107, "batch_size": 128, "num_layers": "", "dropout": "", "hidden_dim": 256, "lr": 0.017475, "t": 0.0983, "momentum": 0.95166},
+            "Long_CLIP_Adapter":{"weight_Clip": "", "num_epochs": 107, "batch_size": 128, "num_layers": "", "dropout": "", "hidden_dim": 913, "lr": 0.017475, "t": 0.0983,"momentum": 0.95166},
+            "BioCLIP_Adapter":{"weight_Clip": "", "num_epochs": 107, "batch_size": 128, "num_layers": "", "dropout": "", "hidden_dim": 256, "lr": 0.017475, "t": 0.0983,"momentum": 0.95166},
         }
 
 
@@ -96,12 +96,12 @@ config = {
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
-    parser.add_argument('--model_version', type=str, default="Base", help='Model version')
+    parser.add_argument('--model_version', type=str, default="Base_long", help='Model version')
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
     parser.add_argument('--dataset2', type=str, default="terra", help='dataset')
     parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
     parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
-    parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
+    parser.add_argument('--hyperparameterTuning_mode', type=int, default=1, help='Type of training')
     parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')#en_att
     parser.add_argument('--en_att', type=int, default=1, help='Enable the Attention layer')
 
@@ -144,10 +144,10 @@ if __name__ == "__main__":
 
                 if hyperparameterTuning_mode == 1:
                     seeds = val_seeds
-                    random_search2([features_D, features_S], train_type, model_version,model, f'{model_version}_R_Adapter_{train_type}_{LLM}_ATT_{en_att}',f'Hp_{model_version}_R_Adapter_{LLM}_ATT_{en_att}',seeds,en_att=en_att)
+                    random_search_hyperparameters([features_D, features_S], train_type, model_version, model, f'{model_version}_{train_type}_{LLM}', seeds, n_combination=30, en_att=0)
                 else:
                     seeds = test_seeds
-                    test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_R_Adapter_{train_type}_{LLM}_ATT_{en_att}',config[model_version], seeds,en_att=en_att)
+                    test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',config[model_version], seeds,en_att=en_att)
 
             else:
                 model = CATALOG_base(model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
@@ -182,7 +182,7 @@ if __name__ == "__main__":
 
                     #model.set_parameters(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=1,dropout=0.5,hidden_dim=1045,lr=1e-4,t=0.1,momentum=0.8409, patience=5,
                                          #path_features_D=path_features_D, path_prompts_D=path_prompts_D,exp_name=f'{model_version}_{train_type}', wnb=0)
-                    model.set_parameters(weight_Clip=config[model_version]['weight_Clip'], num_epochs=config[model_version]['num_epochs'], batch_size=config[model_version]['batch_size'],num_layers=1, dropout=config[model_version]['dropout'], hidden_dim=1045, lr= config[model_version]['lr'],
+                    model.set_parameters(weight_Clip=config[model_version]['weight_Clip'], num_epochs=config[model_version]['num_epochs'], batch_size=config[model_version]['batch_size'],num_layers=config[model_version]['num_layers'], dropout=config[model_version]['dropout'], hidden_dim=config[model_version]['hidden_dim'], lr= config[model_version]['lr'],
                                      t=config[model_version]['t'],momentum=config[model_version]['momentum'], patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
 
                     model_params_path = 'models/CATALOG_finetuning_Base_Terra.pth'
@@ -190,22 +190,6 @@ if __name__ == "__main__":
 
     elif "MLP" in model_version  or "Adapter" in model_version:
         if train_type=="Out_domain":
-
-            if hyperparameterTuning_mode == 1 or hyperparameterTuning_mode == 2:
-                seeds=val_seeds
-                features_D=[path_features_D,path_prompts_D]
-                features_S = [path_features_S, path_prompts_S]
-
-                model = CLIP_MLP_train( model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline, version=model_version,build_optimizer=build_optimizer)
-
-                if hyperparameterTuning_mode == 1:
-                    seeds = val_seeds
-                    random_search([features_D, features_S], train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',f'Hp_{model_version}_{LLM}',seeds)
-                else:
-                    seeds = test_seeds
-                    test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',config[model_version], seeds)
-
-            else:
                 model = CLIP_MLP_train(model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline,version=model_version,build_optimizer=build_optimizer)
                 model.set_parameters(num_epochs=config[model_version]['num_epochs'], batch_size=config[model_version]['batch_size'],num_layers=config[model_version]['num_layers'], dropout=config[model_version]['dropout'], hidden_dim=config[model_version]['hidden_dim'], lr= config[model_version]['lr'],
                                      t=config[model_version]['t'],momentum=config[model_version]['momentum'],patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S=path_features_S,

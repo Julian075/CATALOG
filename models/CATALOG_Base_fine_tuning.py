@@ -3,7 +3,9 @@ import torch.nn as nn
 import torch
 import numpy as np
 import clip
-from models.CATALOG_Base_long import MLP as MLP_long,Adapter
+from models.CATALOG_Base_long import MLP as MLP_long
+from models.BioCLIP_Mlp import Adapter
+from models.CATALOG_Base_long import Adapter as Adapter_long
 
 class QuickGELU(nn.Module):
     def forward(self, x: torch.Tensor):
@@ -78,8 +80,8 @@ class MLP(nn.Module):
 class LLaVA_CLIP(nn.Module):
     def __init__(self, hidden_dim, num_layers, dropout, device) -> None:
         super().__init__()
-        self.description_encoder = MLP(input_dim=768, hidden_dim=hidden_dim, output_dim=512, num_layers=num_layers,
-                                       dropout=dropout, return_embeds=True)
+        self.description_encoder =Adapter(input_dim=768,hidden_dim=hidden_dim) #MLP(input_dim=768, hidden_dim=hidden_dim, output_dim=512, num_layers=num_layers,
+                                      # dropout=dropout, return_embeds=True)
 
         self.model_clip,self.preprocess_clip= clip.load(f'ViT-B/16', device)
         self.model_clip.visual.requires_grad_(True)
@@ -230,7 +232,7 @@ class LLaVA_CLIP(nn.Module):
 class LLaVA_CLIP_long(nn.Module):
     def __init__(self, hidden_dim, num_layers, dropout, device) -> None:
         super().__init__()
-        self.description_encoder = Adapter(input_dim=512,hidden_dim=256)#MLP_long(input_dim=512, hidden_dim=hidden_dim, output_dim=512, num_layers=num_layers,
+        self.description_encoder = Adapter(input_dim=512,hidden_dim=hidden_dim)#MLP_long(input_dim=512, hidden_dim=hidden_dim, output_dim=512, num_layers=num_layers,
                                     #   dropout=dropout, return_embeds=True)
 
         self.model_clip,self.preprocess_clip= clip.load(f'ViT-B/16', device)

@@ -2,6 +2,21 @@ import torch.nn as nn
 import torch
 import numpy as np
 
+
+
+class Adapter(nn.Module):
+    def __init__(self, input_dim, hidden_dim):
+        super(Adapter, self).__init__()
+        self.down_proj = nn.Linear(input_dim, hidden_dim) # Bottleneck layer
+        self.activation = nn.ReLU()
+        self.up_proj = nn.Linear(hidden_dim, input_dim)
+
+    def forward(self, x):
+        residual = x  # Store the original input for the skip connection
+        x = self.down_proj(x)  # First projection
+        x = self.activation(x)
+        x = self.up_proj(x)  # Second projection
+        return x + residual  # Add the original input
 class QuickGELU(nn.Module):
     def forward(self, x: torch.Tensor):
         return x * torch.sigmoid(1.702 * x)
@@ -74,8 +89,8 @@ class MLP(nn.Module):
 class LLaVA_CLIP(nn.Module):
     def __init__(self, hidden_dim, num_layers, dropout,en_att=0) -> None:
         super().__init__()
-        self.description_encoder = MLP(input_dim=768, hidden_dim=hidden_dim, output_dim=512, num_layers=num_layers,
-                                       dropout=dropout, return_embeds=True)
+        self.description_encoder =Adapter(input_dim=768,hidden_dim=hidden_dim) #MLP(input_dim=768, hidden_dim=hidden_dim, output_dim=512, num_layers=num_layers,
+                                      # dropout=dropout, return_embeds=True)
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         # temperature
         self.logit_scale_CLIP = nn.Parameter(torch.ones([]) * np.log(1 / 0.07))
