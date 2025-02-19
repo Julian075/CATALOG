@@ -172,6 +172,8 @@ class CATALOG_base_In_domain:
                 print(f"Time for epoch [{total_time}]")
                 if epoch_acc_val <1 or np.isnan(epoch_acc_val):
                     print(f'💀 This model is officially trash. Accuracy: {epoch_acc_val}. Let’s not waste more compute. Training stopped.')
+                    if epoch==0:
+                        test=0
                     break
                 if epoch_acc_val > acc_best:
                     print('Save model')
