@@ -98,7 +98,7 @@ if __name__ == "__main__":
     parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
     parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')
-    parser.add_argument('--sup_loss', type=int, default=1, help='Enable the Attention layer')
+    parser.add_argument('--sup_loss', type=int, default=0, help='Enable the Attention layer')
 
     parser.add_argument('--LLM', type=str, default="ChatGPT_0.5", help='define LLM')
     args = parser.parse_args()
@@ -139,7 +139,7 @@ if __name__ == "__main__":
 
                 if hyperparameterTuning_mode == 1:
                     seeds = val_seeds
-                    random_search_hyperparameters([features_D, features_S], train_type, model_version, model, f'{model_version}_{train_type}_{LLM}_sup_loss_1', seeds, n_combination=30, sup_loss=sup_loss)
+                    random_search_hyperparameters([features_D, features_S], train_type, model_version, model, f'{model_version}_{train_type}_{LLM}', seeds, n_combination=30, sup_loss=sup_loss)
                 else:
                     seeds = test_seeds
                     test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}',config[model_version], seeds,sup_loss=sup_loss)
