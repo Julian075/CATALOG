@@ -42,7 +42,7 @@ class CATALOG_base:
         self.patience = None
         self.exp_name = None
 
-    def set_parameters(self, weight_Clip, num_epochs, batch_size, num_layers, dropout, hidden_dim, lr, t, momentum, patience,path_features_D,path_prompts_D,path_features_S,path_prompts_S,exp_name,en_att=0,wnb=0):
+    def set_parameters(self, weight_Clip, num_epochs, batch_size, num_layers, dropout, hidden_dim, lr, t, momentum, patience,path_features_D,path_prompts_D,path_features_S,path_prompts_S,exp_name,sup_loss=0,wnb=0):
 
         self.wnb=wnb
         #data_dict=torch.load(self.root_dir)
@@ -62,7 +62,7 @@ class CATALOG_base:
         self.momentum=momentum
         self.patience=patience
         self.exp_name=exp_name
-        self.en_att=en_att
+        self.sup_loss=sup_loss
 
 
     def set_seed(self,seed):
@@ -90,7 +90,7 @@ class CATALOG_base:
 
 
 
-        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout, en_att=self.en_att)
+        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout)
         projection_model = projection_model.to(device)
 
         # Get your DataLoader
@@ -106,7 +106,7 @@ class CATALOG_base:
             dataloader_trans_test = self.dataloader(dataset_S['trans_test'], self.batch_size,self.dataset)
 
         #Configurate optimazer for training
-        optimizer,scheduler = self.build_optimizer(projection_model,'sgd',self.lr,self.momentum,self.version,self.en_att)
+        optimizer,scheduler = self.build_optimizer(projection_model,'sgd',self.lr,self.momentum,self.version)
         acc_best = -float('inf') #Variable to check the best model
         counter = 0  #Variable to verify the number of epoch without an improvement in the val acc
         for epoch in range(self.num_epochs):
@@ -123,7 +123,7 @@ class CATALOG_base:
                 image_features=image_features.to(device)
                 description_embeddings = description_embeddings.to(device)
 
-                loss, acc,_ = projection_model(description_embeddings, image_features, text_features, self.weight_Clip,target_index,self.t)
+                loss, acc,_ = projection_model(description_embeddings, image_features, text_features, self.weight_Clip,target_index,self.t,self.sup_loss)
 
                 loss.backward()
                 optimizer.step()
@@ -156,8 +156,7 @@ class CATALOG_base:
 
 
 
-                    loss_val, acc_val,_ = projection_model(description_embeddings_val, image_features_val, text_features,
-                                                 self.weight_Clip,target_index_val,self.t)
+                    loss_val, acc_val,_ = projection_model(description_embeddings_val, image_features_val, text_features,self.weight_Clip,target_index_val,self.t,self.sup_loss)
 
                     running_loss_val += loss_val.item()
                     running_corrects_val += float(acc_val)
@@ -194,7 +193,7 @@ class CATALOG_base:
 
             if epoch==(self.num_epochs-1) or counter >= self.patience:
                 if test:
-                    projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,en_att=self.en_att)
+                    projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout)
                     projection_model.load_state_dict(torch.load(model_params_path))
                     projection_model = projection_model.to(device)
                     projection_model.eval()
@@ -222,9 +221,8 @@ class CATALOG_base:
                             image_features_cis_test = image_features_cis_test.to(device)
                             description_embeddings_cis_test = description_embeddings_cis_test.to(device)
 
-                            loss_cis_test, acc_cis_test,preds_cis_test = projection_model(description_embeddings_cis_test,
-                                                                         image_features_cis_test, text_features2,
-                                                                         self.weight_Clip, target_index_cis_test, self.t)
+                            loss_cis_test, acc_cis_test,preds_cis_test = projection_model(description_embeddings_cis_test, image_features_cis_test, text_features2,
+                                                                         self.weight_Clip, target_index_cis_test, self.t,self.sup_loss)
 
                             # Save predictions and targets
                             all_preds_cis.extend(preds_cis_test.cpu().numpy())
@@ -239,9 +237,8 @@ class CATALOG_base:
                             image_features_trans_test = image_features_trans_test.to(device)
                             description_embeddings_trans_test = description_embeddings_trans_test.to(device)
 
-                            loss_trans_test, acc_trans_test,preds_trans_test = projection_model(description_embeddings_trans_test,
-                                                                             image_features_trans_test, text_features2,
-                                                                             self.weight_Clip, target_index_trans_test, self.t)
+                            loss_trans_test, acc_trans_test,preds_trans_test = projection_model(description_embeddings_trans_test,image_features_trans_test, text_features2,
+                                                                                                self.weight_Clip, target_index_trans_test, self.t,self.sup_loss)
 
                             # Save predictions and targets
                             all_preds_trans.extend(preds_trans_test.cpu().numpy())
@@ -290,8 +287,7 @@ class CATALOG_base:
         text_features = torch.load(self.path_prompts_D)
         text_features = text_features.to(device)
 
-        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers,
-                                              dropout=self.dropout, en_att=self.en_att)
+        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout)
         projection_model = projection_model.to(device)
 
         # Get your DataLoader
@@ -305,8 +301,7 @@ class CATALOG_base:
             dataloader_test = self.dataloader(dataset_D['test'], self.batch_size, self.dataset)
 
         # Configurate optimazer for training
-        optimizer, scheduler = self.build_optimizer(projection_model, 'sgd', self.lr, self.momentum, self.version,
-                                                    self.en_att)
+        optimizer, scheduler = self.build_optimizer(projection_model, 'sgd', self.lr, self.momentum, self.version)
         acc_best = -float('inf')  # Variable to check the best model
         counter = 0  # Variable to verify the number of epoch without an improvement in the val acc
         for epoch in range(self.num_epochs):
@@ -324,7 +319,7 @@ class CATALOG_base:
                 description_embeddings = description_embeddings.to(device)
 
                 loss, acc, _ = projection_model(description_embeddings, image_features, text_features, self.weight_Clip,
-                                                target_index, self.t)
+                                                target_index, self.t,self.sup_loss)
 
                 loss.backward()
                 optimizer.step()
@@ -356,8 +351,7 @@ class CATALOG_base:
                     description_embeddings_val = description_embeddings_val.to(device)
 
                     loss_val, acc_val, _ = projection_model(description_embeddings_val, image_features_val,
-                                                            text_features,
-                                                            self.weight_Clip, target_index_val, self.t)
+                                                            text_features, self.weight_Clip, target_index_val, self.t,self.sup_loss)
 
                     running_loss_val += loss_val.item()
                     running_corrects_val += float(acc_val)
@@ -393,8 +387,7 @@ class CATALOG_base:
 
             if epoch == (self.num_epochs - 1) or counter >= self.patience:
                 if test:
-                    projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers,
-                                                          dropout=self.dropout, en_att=self.en_att)
+                    projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers,dropout=self.dropout)
                     projection_model.load_state_dict(torch.load(model_params_path))
                     projection_model = projection_model.to(device)
                     projection_model.eval()
@@ -418,7 +411,7 @@ class CATALOG_base:
 
                             loss_test, acc_test, preds_test = projection_model(
                                 description_embeddings_test,image_features_test, text_features,
-                                self.weight_Clip, target_index_test, self.t)
+                                self.weight_Clip, target_index_test, self.t,self.sup_loss)
 
                             # Save predictions and targets
                             all_preds.extend(preds_test.cpu().numpy())
@@ -433,7 +426,7 @@ class CATALOG_base:
                     if self.wnb:
                         wandb.log({"loss_test": epoch_loss_test, "acc_test": epoch_acc_test})
 
-                    print('Cis Test loss: {:.4f}, Cis Test acc: {:.4f}'.format(epoch_loss_test, epoch_acc_test))
+                    print(' Test loss: {:.4f},Test acc: {:.4f}'.format(epoch_loss_test, epoch_acc_test))
 
                     # Calculate the confusion matrix
                     conf_matrix_cis = confusion_matrix(all_labels, all_preds)
@@ -459,8 +452,7 @@ class CATALOG_base:
         text_features = torch.load(self.path_prompts_D)
         text_features = text_features.to(device)
 
-        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers,
-                                              dropout=self.dropout, en_att=self.en_att)
+        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout)
         projection_model = projection_model.to(device)
 
         # Get your DataLoader
@@ -475,8 +467,7 @@ class CATALOG_base:
             dataloader_trans_test = self.dataloader(dataset_D['trans_test'], self.batch_size, self.dataset)
 
         # Configurate optimazer for training
-        optimizer, scheduler = self.build_optimizer(projection_model, 'sgd', self.lr, self.momentum, self.version,
-                                                    self.en_att)
+        optimizer, scheduler = self.build_optimizer(projection_model, 'sgd', self.lr, self.momentum, self.version)
         acc_best = -float('inf')  # Variable to check the best model
         counter = 0  # Variable to verify the number of epoch without an improvement in the val acc
         for epoch in range(self.num_epochs):
@@ -494,7 +485,7 @@ class CATALOG_base:
                 description_embeddings = description_embeddings.to(device)
 
                 loss, acc, _ = projection_model(description_embeddings, image_features, text_features, self.weight_Clip,
-                                                target_index, self.t)
+                                                target_index, self.t,self.sup_loss)
 
                 loss.backward()
                 optimizer.step()
@@ -527,7 +518,7 @@ class CATALOG_base:
 
                     loss_val, acc_val, _ = projection_model(description_embeddings_val, image_features_val,
                                                             text_features,
-                                                            self.weight_Clip, target_index_val, self.t)
+                                                            self.weight_Clip, target_index_val, self.t,self.sup_loss)
 
                     running_loss_val += loss_val.item()
                     running_corrects_val += float(acc_val)
@@ -563,8 +554,7 @@ class CATALOG_base:
 
             if epoch == (self.num_epochs - 1) or counter >= self.patience:
                 if test:
-                    projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers,
-                                                          dropout=self.dropout, en_att=self.en_att)
+                    projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout)
                     projection_model.load_state_dict(torch.load(model_params_path))
                     projection_model = projection_model.to(device)
                     projection_model.eval()
@@ -594,7 +584,7 @@ class CATALOG_base:
                             loss_cis_test, acc_cis_test, preds_cis_test = projection_model(
                                 description_embeddings_cis_test,
                                 image_features_cis_test, text_features,
-                                self.weight_Clip, target_index_cis_test, self.t)
+                                self.weight_Clip, target_index_cis_test, self.t,self.sup_loss)
 
                             # Save predictions and targets
                             all_preds_cis.extend(preds_cis_test.cpu().numpy())
@@ -612,7 +602,7 @@ class CATALOG_base:
                             loss_trans_test, acc_trans_test, preds_trans_test = projection_model(
                                 description_embeddings_trans_test,
                                 image_features_trans_test, text_features,
-                                self.weight_Clip, target_index_trans_test, self.t)
+                                self.weight_Clip, target_index_trans_test, self.t,self.sup_loss)
 
                             # Save predictions and targets
                             all_preds_trans.extend(preds_trans_test.cpu().numpy())
@@ -693,7 +683,7 @@ class CATALOG_base:
 
                 loss_cis_test, acc_cis_test,preds_cis_test  = projection_model(description_embeddings_cis_test,
                                                                image_features_cis_test, text_features2,
-                                                               self.weight_Clip, target_index_cis_test, self.t)
+                                                               self.weight_Clip, target_index_cis_test, self.t,self.sup_loss)
 
                 all_preds_cis.extend(preds_cis_test.cpu().numpy())
                 all_labels_cis.extend(target_index_cis_test.cpu().numpy())
@@ -708,7 +698,7 @@ class CATALOG_base:
 
                 loss_trans_test, acc_trans_test,preds_trans_test  = projection_model(description_embeddings_trans_test,
                                                                    image_features_trans_test, text_features2,
-                                                                   self.weight_Clip, target_index_trans_test, self.t)
+                                                                   self.weight_Clip, target_index_trans_test, self.t,self.sup_loss)
 
                 all_preds_trans.extend(preds_trans_test.cpu().numpy())
                 all_labels_trans.extend(target_index_trans_test.cpu().numpy())
@@ -740,65 +730,3 @@ class CATALOG_base:
         print(conf_matrix_trans)
         print("\nClassification Report for Trans Test:")
         print(classification_report(all_labels_trans, all_preds_trans))
-
-
-    def prueba_model_top_3(self,model_params_path):# to calculate the acc in test for a saved model
-
-        device = "cuda" if torch.cuda.is_available() else "cpu"
-
-        text_features2 = torch.load(self.path_prompts_S)
-        text_features2 = text_features2.to(device)
-
-        dataset_S = torch.load(self.path_features_S)
-        dataloader_cis_test = self.dataloader(dataset_S['cis_test'], self.batch_size, self.dataset)
-        dataloader_trans_test = self.dataloader(dataset_S['trans_test'], self.batch_size, self.dataset)
-
-
-        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout)
-        projection_model.load_state_dict(torch.load(model_params_path))
-        projection_model = projection_model.to(device)
-        projection_model.eval()
-
-
-        running_corrects_cis_test = 0.0
-        size_cis_test = 0
-
-
-        running_corrects_trans_test = 0.0
-        size_trans_test = 0
-
-
-        with torch.no_grad():
-            for batch_cis_test in dataloader_cis_test:
-                image_features_cis_test, description_embeddings_cis_test, target_index_cis_test = batch_cis_test
-                size_cis_test += len(image_features_cis_test)
-                image_features_cis_test = image_features_cis_test.to(device)
-                description_embeddings_cis_test = description_embeddings_cis_test.to(device)
-
-                acc_top_3_cis  = projection_model.predict_top_3(description_embeddings_cis_test,
-                                                               image_features_cis_test, text_features2,
-                                                               self.weight_Clip, target_index_cis_test, self.t)
-
-                running_corrects_cis_test += float(acc_top_3_cis)
-            for batch_trans_test in dataloader_trans_test:
-                image_features_trans_test, description_embeddings_trans_test, target_index_trans_test = batch_trans_test
-                size_trans_test += len(image_features_trans_test)
-                image_features_trans_test = image_features_trans_test.to(device)
-                description_embeddings_trans_test = description_embeddings_trans_test.to(device)
-
-                acc_top_3_trans  = projection_model.predict_top_3(description_embeddings_trans_test,
-                                                                   image_features_trans_test, text_features2,
-                                                                   self.weight_Clip, target_index_trans_test, self.t)
-
-
-                running_corrects_trans_test += float(acc_top_3_trans)
-
-
-        epoch_acc_cis_test = (running_corrects_cis_test / size_cis_test) * 100
-
-        epoch_acc_trans_test = (running_corrects_trans_test / size_trans_test) * 100
-        print(' Cis Test acc Top 3: {:.4f}'.format( epoch_acc_cis_test))
-        print(' Trans Test acc Top 3: {:.4f}'.format( epoch_acc_trans_test))
-
-
-

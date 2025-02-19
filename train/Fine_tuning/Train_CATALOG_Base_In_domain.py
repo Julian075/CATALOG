@@ -38,7 +38,7 @@ class CATALOG_base_In_domain:
         self.patience = None
         self.exp_name = None
 
-    def set_parameters(self, weight_Clip, num_epochs, batch_size, num_layers, dropout, hidden_dim, lr, t, momentum, patience,path_features_D,path_prompts_D,exp_name,wnb=0):
+    def set_parameters(self, weight_Clip, num_epochs, batch_size, num_layers, dropout, hidden_dim, lr, t, momentum, patience,path_features_D,path_prompts_D,exp_name,sup_loss=0,wnb=0):
 
         self.wnb=wnb
         #data_dict=torch.load(self.root_dir)
@@ -56,6 +56,7 @@ class CATALOG_base_In_domain:
         self.momentum=momentum
         self.patience=patience
         self.exp_name=exp_name
+        self.sup_loss=sup_loss
 
     def set_seed(self,seed):
         torch.manual_seed(seed)
@@ -110,7 +111,7 @@ class CATALOG_base_In_domain:
                 description_embeddings = description_embeddings.to(device)
 
 
-                loss, acc,_ = projection_model(description_embeddings, image_features, text_features, self.weight_Clip,target_index,self.t)
+                loss, acc,_ = projection_model(description_embeddings, image_features, text_features, self.weight_Clip,target_index,self.t,self.sup_loss)
 
                 loss.backward()
                 optimizer.step()
@@ -146,7 +147,7 @@ class CATALOG_base_In_domain:
 
 
                     loss_val, acc_val,_ = projection_model(description_embeddings_val, image_features_val, text_features,
-                                                 self.weight_Clip,target_index_val,self.t)
+                                                 self.weight_Clip,target_index_val,self.t,self.sup_loss)
 
                     running_loss_val += loss_val.item()
                     running_corrects_val += float(acc_val)
@@ -213,7 +214,7 @@ class CATALOG_base_In_domain:
 
                             loss_test, acc_test,preds_test = projection_model(description_embeddings_test,
                                                                          image_features_test, text_features,
-                                                                         self.weight_Clip, target_index_test, self.t)
+                                                                         self.weight_Clip, target_index_test, self.t,self.sup_loss)
 
                             all_preds.extend(preds_test.cpu().numpy())
                             all_labels.extend(target_index_test.cpu().numpy())
@@ -277,7 +278,7 @@ class CATALOG_base_In_domain:
 
                 loss_test, acc_test,preds_test  = projection_model(description_embeddings_test,
                                                                image_features_test, text_features,
-                                                               self.weight_Clip, target_index_test, self.t)
+                                                               self.weight_Clip, target_index_test, self.t,self.sup_loss)
 
                 all_preds.extend(preds_test.cpu().numpy())
                 all_labels.extend(target_index_test.cpu().numpy())
@@ -302,41 +303,6 @@ class CATALOG_base_In_domain:
         print("\nClassification Report for Test:")
         print(classification_report(all_labels, all_preds))
 
-
-    def prueba_model_top_3(self,model_params_path):  # to calculate the acc in test for a saved model
-        device = "cuda" if torch.cuda.is_available() else "cpu"
-
-        text_features = torch.load(self.path_text_feat)
-        text_features = text_features.to(device)
-
-        dataloader_test = self.dataloader(self.ruta_features_test, self.batch_size,self.dataset)
-
-        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,
-                                         device=device)
-        projection_model.load_state_dict(torch.load(model_params_path))
-        projection_model = projection_model.to(device)
-        projection_model.eval()
-
-        running_corrects_test = 0.0
-        size_test = 0
-
-
-        with torch.no_grad():
-            for batch_test in dataloader_test:
-                image_features_test, description_embeddings_test, target_index_test = batch_test
-                size_test += len(description_embeddings_test)
-                image_features_test = image_features_test.to(device)
-                description_embeddings_test = description_embeddings_test.to(device)
-
-                acc_test = projection_model.predict_top_3(description_embeddings_test,
-                                                                   image_features_test, text_features,
-                                                                   self.weight_Clip, target_index_test, self.t)
-
-
-                running_corrects_test += float(acc_test)
-
-        epoch_acc_test = (running_corrects_test / size_test) * 100
-        print('Test acc Top 3: {:.4f}'.format(epoch_acc_test))
 
 
 

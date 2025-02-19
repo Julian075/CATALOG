@@ -37,7 +37,7 @@ class CATALOG_base_In_domain_terra:
         self.patience = None
         self.exp_name = None
 
-    def set_parameters(self, weight_Clip, num_epochs, batch_size, num_layers, dropout, hidden_dim, lr, t, momentum, patience,path_features_D,path_prompts_D,exp_name,wnb=0):
+    def set_parameters(self, weight_Clip, num_epochs, batch_size, num_layers, dropout, hidden_dim, lr, t, momentum, patience,path_features_D,path_prompts_D,exp_name,sup_loss=0,wnb=0):
 
         self.wnb=wnb
         #data_dict=torch.load(self.root_dir)
@@ -55,6 +55,7 @@ class CATALOG_base_In_domain_terra:
         self.momentum=momentum
         self.patience=patience
         self.exp_name=exp_name
+        self.sup_loss=sup_loss
 
 
 
@@ -116,7 +117,7 @@ class CATALOG_base_In_domain_terra:
                 image_features=image_features.to(device)
                 description_embeddings = description_embeddings.to(device)
 
-                loss, acc,_ = projection_model(description_embeddings, image_features, text_features, self.weight_Clip,target_index,self.t)
+                loss, acc,_ = projection_model(description_embeddings, image_features, text_features, self.weight_Clip,target_index,self.t,self.sup_loss)
 
                 loss.backward()
                 optimizer.step()
@@ -154,7 +155,7 @@ class CATALOG_base_In_domain_terra:
 
 
                     loss_val, acc_val,_ = projection_model(description_embeddings_cis_val, image_features_cis_val, text_features,
-                                                 self.weight_Clip,target_index_cis_val,self.t)
+                                                 self.weight_Clip,target_index_cis_val,self.t,self.sup_loss)
 
                     running_loss_cis_val += loss_val.item()
                     running_corrects_cis_val += float(acc_val)
@@ -176,16 +177,13 @@ class CATALOG_base_In_domain_terra:
 
 
                         loss_val, acc_val,_ = projection_model(description_embeddings_trans_val, image_features_trans_val, text_features,
-                                                     self.weight_Clip,target_index_trans_val,self.t)
+                                                     self.weight_Clip,target_index_trans_val,self.t,self.sup_loss)
 
                         running_loss_trans_val += loss_val.item()
                         running_corrects_trans_val += float(acc_val)
 
                 epoch_loss_trans_val = running_loss_trans_val / len(dataloader_trans_val)
                 epoch_acc_trans_val = (running_corrects_trans_val / size_trans_val) * 100
-
-               # if self.wnb == 1:
-               #     wandb.log({"epoch_loss_trans_val": epoch_loss_trans_val, "epoch_acc_trans_val": epoch_acc_trans_val})
 
 
             time_end = time.time()
@@ -246,7 +244,7 @@ class CATALOG_base_In_domain_terra:
 
                             loss_cis_test, acc_cis_test,preds_cis_test = projection_model(description_embeddings_cis_test,
                                                                          image_features_cis_test, text_features,
-                                                                         self.weight_Clip, target_index_cis_test, self.t)
+                                                                         self.weight_Clip, target_index_cis_test, self.t,self.sup_loss)
 
                             # Save predictions and targets
                             all_preds_cis.extend(preds_cis_test.cpu().numpy())
@@ -263,7 +261,7 @@ class CATALOG_base_In_domain_terra:
 
                             loss_trans_test, acc_trans_test,preds_trans_test = projection_model(description_embeddings_trans_test,
                                                                              image_features_trans_test, text_features,
-                                                                             self.weight_Clip, target_index_trans_test, self.t)
+                                                                             self.weight_Clip, target_index_trans_test, self.t,self.sup_loss)
 
                             # Save predictions and targets
                             all_preds_trans.extend(preds_trans_test.cpu().numpy())
@@ -344,7 +342,7 @@ class CATALOG_base_In_domain_terra:
 
                 loss_cis_test, acc_cis_test,preds_cis_test  = projection_model(description_embeddings_cis_test,
                                                                image_features_cis_test, text_features,
-                                                               self.weight_Clip, target_index_cis_test, self.t)
+                                                               self.weight_Clip, target_index_cis_test, self.t,self.sup_loss)
 
                 all_preds_cis.extend(preds_cis_test.cpu().numpy())
                 all_labels_cis.extend(target_index_cis_test.cpu().numpy())
@@ -359,7 +357,7 @@ class CATALOG_base_In_domain_terra:
 
                 loss_trans_test, acc_trans_test,preds_trans_test  = projection_model(description_embeddings_trans_test,
                                                                    image_features_trans_test, text_features,
-                                                                   self.weight_Clip, target_index_trans_test, self.t)
+                                                                   self.weight_Clip, target_index_trans_test, self.t,self.sup_loss)
 
                 all_preds_trans.extend(preds_trans_test.cpu().numpy())
                 all_labels_trans.extend(target_index_trans_test.cpu().numpy())
@@ -393,60 +391,3 @@ class CATALOG_base_In_domain_terra:
         print(conf_matrix_trans)
         print("\nClassification Report for Trans Test:")
         print(classification_report(all_labels_trans, all_preds_trans))
-
-    def prueba_model_top_3(self,model_params_path):# to calculate the acc in test for a saved model
-
-        device = "cuda" if torch.cuda.is_available() else "cpu"
-
-        text_features2 = torch.load(self.path_text_feat)
-        text_features2=text_features2.to(device)
-
-        dataloader_cis_test = self.dataloader(self.ruta_features_test1, self.batch_size,self.dataset)
-        dataloader_trans_test = self.dataloader(self.ruta_features_test2, self.batch_size,self.dataset)
-
-
-        projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout,device=device)
-        projection_model.load_state_dict(torch.load(model_params_path))
-        projection_model = projection_model.to(device)
-        projection_model.eval()
-
-        running_corrects_cis_test = 0.0
-        size_cis_test = 0
-
-        running_corrects_trans_test = 0.0
-        size_trans_test = 0
-
-
-        with torch.no_grad():
-            for batch_cis_test in dataloader_cis_test:
-                image_features_cis_test, description_embeddings_cis_test, target_index_cis_test = batch_cis_test
-                size_cis_test += len(image_features_cis_test)
-                image_features_cis_test = image_features_cis_test.to(device)
-                description_embeddings_cis_test = description_embeddings_cis_test.to(device)
-
-                acc_top_3_cis  = projection_model.predict_top_3(description_embeddings_cis_test,
-                                                               image_features_cis_test, text_features2,
-                                                               self.weight_Clip, target_index_cis_test, self.t)
-
-                running_corrects_cis_test += float(acc_top_3_cis)
-            for batch_trans_test in dataloader_trans_test:
-                image_features_trans_test, description_embeddings_trans_test, target_index_trans_test = batch_trans_test
-                size_trans_test += len(image_features_trans_test)
-                image_features_trans_test = image_features_trans_test.to(device)
-                description_embeddings_trans_test = description_embeddings_trans_test.to(device)
-
-                acc_top_3_trans  = projection_model.predict_top_3(description_embeddings_trans_test,
-                                                                   image_features_trans_test, text_features2,
-                                                                   self.weight_Clip, target_index_trans_test, self.t)
-
-
-                running_corrects_trans_test += float(acc_top_3_trans)
-
-
-        epoch_acc_cis_test = (running_corrects_cis_test / size_cis_test) * 100
-
-        epoch_acc_trans_test = (running_corrects_trans_test / size_trans_test) * 100
-        print(' Cis Test acc Top 3: {:.4f}'.format( epoch_acc_cis_test))
-        print(' Trans Test acc Top 3: {:.4f}'.format( epoch_acc_trans_test))
-
-

@@ -102,8 +102,8 @@ if __name__ == "__main__":
     parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
     parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
-    parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')#en_att
-    parser.add_argument('--en_att', type=int, default=0, help='Enable the Attention layer')
+    parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')
+    parser.add_argument('--sup_loss', type=int, default=0, help='Enable the Attention layer')
 
     parser.add_argument('--LLM', type=str, default="ChatGPT_0.5", help='define LLM')
     args = parser.parse_args()
@@ -116,7 +116,7 @@ if __name__ == "__main__":
     hyperparameterTuning_mode=args.hyperparameterTuning_mode
     feature_extraction=args.feature_extraction
     LLM=args.LLM
-    en_att=args.en_att
+    sup_loss=args.sup_loss
 
     if feature_extraction :
         feature_extraction_(model_version,dataset,LLM)
@@ -144,23 +144,23 @@ if __name__ == "__main__":
 
                 if hyperparameterTuning_mode == 1:
                     seeds = val_seeds
-                    random_search_hyperparameters([features_D, features_S], train_type, model_version, model, f'{model_version}_{train_type}_{LLM}_Att_{en_att}', seeds, n_combination=30, en_att=en_att)
+                    random_search_hyperparameters([features_D, features_S], train_type, model_version, model, f'{model_version}_{train_type}_{LLM}_sup_loss_{sup_loss}', seeds, n_combination=30, sup_loss=sup_loss)
                 else:
                     seeds = test_seeds
-                    test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_Att_{en_att}',config[model_version], seeds,en_att=en_att)
+                    test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_sup_loss_{sup_loss}',config[model_version], seeds,sup_loss=sup_loss)
 
             else:
                 model = CATALOG_base(model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
                 model.set_parameters(weight_Clip=config[model_version]['weight_Clip'], num_epochs=config[model_version]['num_epochs'], batch_size=config[model_version]['batch_size'],num_layers=config[model_version]['num_layers'], dropout=config[model_version]['dropout'], hidden_dim=config[model_version]['hidden_dim'], lr= config[model_version]['lr'],
                                      t=config[model_version]['t'],momentum=config[model_version]['momentum'], patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S=path_features_S,
-                                     path_prompts_S=path_prompts_S, exp_name=f'{model_version}_{train_type}', en_att=en_att,wnb=0)
+                                     path_prompts_S=path_prompts_S, exp_name=f'{model_version}_{train_type}', sup_loss=sup_loss,wnb=0)
 
                 mode_model(model, model_params_path, mode)
         elif train_type=='In_domain':
                 model = CATALOG_base(model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
                 model.set_parameters(weight_Clip=config[model_version]['weight_Clip'], num_epochs=config[model_version]['num_epochs'], batch_size=config[model_version]['batch_size'],num_layers=config[model_version]['num_layers'], dropout=config[model_version]['dropout'], hidden_dim=config[model_version]['hidden_dim'], lr= config[model_version]['lr'],
                                      t=config[model_version]['t'],momentum=config[model_version]['momentum'], patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S="",
-                                     path_prompts_S="", exp_name=f'{model_version}_{train_type}', en_att=en_att,wnb=0)
+                                     path_prompts_S="", exp_name=f'{model_version}_{train_type}', sup_loss=sup_loss,wnb=0)
 
                 if dataset != 'terra':
                     model.train_ID()
@@ -174,7 +174,7 @@ if __name__ == "__main__":
             if dataset=="serengeti":
                     model = CATALOG_base_In_domain( model=model_type[model_version], Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
                     model.set_parameters(weight_Clip=config[model_version]['weight_Clip'], num_epochs=config[model_version]['num_epochs'], batch_size=config[model_version]['batch_size'],num_layers=config[model_version]['num_layers'], dropout=config[model_version]['dropout'], hidden_dim=config[model_version]['hidden_dim'], lr= config[model_version]['lr'],
-                                     t=config[model_version]['t'],momentum=config[model_version]['momentum'], patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
+                                     t=config[model_version]['t'],momentum=config[model_version]['momentum'], patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D,exp_name=f'exp_{model_version}_{train_type}_{dataset}',sup_loss=sup_loss)
                     mode_model(model, model_params_path, mode)
 
             elif dataset=="terra":
@@ -183,7 +183,7 @@ if __name__ == "__main__":
                     #model.set_parameters(weight_Clip=0.6,num_epochs=1000,batch_size=100, num_layers=1,dropout=0.5,hidden_dim=1045,lr=1e-4,t=0.1,momentum=0.8409, patience=5,
                                          #path_features_D=path_features_D, path_prompts_D=path_prompts_D,exp_name=f'{model_version}_{train_type}', wnb=0)
                     model.set_parameters(weight_Clip=config[model_version]['weight_Clip'], num_epochs=config[model_version]['num_epochs'], batch_size=config[model_version]['batch_size'],num_layers=config[model_version]['num_layers'], dropout=config[model_version]['dropout'], hidden_dim=config[model_version]['hidden_dim'], lr= config[model_version]['lr'],
-                                     t=config[model_version]['t'],momentum=config[model_version]['momentum'], patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D,exp_name=f'exp_{model_version}_{train_type}_{dataset}')
+                                     t=config[model_version]['t'],momentum=config[model_version]['momentum'], patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D,exp_name=f'exp_{model_version}_{train_type}_{dataset}',sup_loss=sup_loss)
 
                     model_params_path = 'models/CATALOG_finetuning_Base_Terra.pth'
                     mode_model(model, model_params_path, mode)
@@ -194,7 +194,6 @@ if __name__ == "__main__":
                 model.set_parameters(num_epochs=config[model_version]['num_epochs'], batch_size=config[model_version]['batch_size'],num_layers=config[model_version]['num_layers'], dropout=config[model_version]['dropout'], hidden_dim=config[model_version]['hidden_dim'], lr= config[model_version]['lr'],
                                      t=config[model_version]['t'],momentum=config[model_version]['momentum'],patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S=path_features_S,
                                      path_prompts_S=path_prompts_S, exp_name=f'{model_version}_{train_type}',wnb=0)
-
                 mode_model(model, model_params_path, mode)
 
         elif train_type == "In_domain":

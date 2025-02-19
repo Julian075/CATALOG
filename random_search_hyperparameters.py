@@ -22,7 +22,7 @@ def combination(n_combination):
     return parameters
 
 
-def random_search_hyperparameters(path_features, train_type, model_version, model, name_exp, seeds,n_combination=30,en_att=0):
+def random_search_hyperparameters(path_features, train_type, model_version, model, name_exp, seeds,n_combination=30,sup_loss=0):
     token = os.getenv("WandB_TOKE")
     wandb.login(key=token)
     hyperparameters=combination(n_combination)
@@ -55,14 +55,14 @@ def random_search_hyperparameters(path_features, train_type, model_version, mode
                                          num_layers="", dropout="", hidden_dim=hidden_dim, lr=lr,
                                          t=t,momentum=momentum, patience=5, path_features_D=features[0][0],
                                          path_prompts_D=features[0][1], path_features_S=features[1][0],
-                                         path_prompts_S=features[1][1], exp_name=f'{seed}_{model_version}_{train_type}',en_att=en_att, wnb=1)
+                                         path_prompts_S=features[1][1], exp_name=f'{seed}_{model_version}_{train_type}',sup_loss=sup_loss, wnb=1)
 
             if model_version == 'Fine_tuning':
                 if train_type == 'In_domain':
                     model.set_parameters(weight_Clip=weight_Clip, num_epochs=num_epochs, batch_size=batch_size,
                                          num_layers="", dropout="", hidden_dim=hidden_dim, lr=lr,
                                          t=t, momentum=momentum, patience=5, path_features_D=features[0][0],
-                                         path_prompts_D=features[0][1], exp_name=f'{seed}_{model_version}_{train_type}', wnb=1)
+                                         path_prompts_D=features[0][1], exp_name=f'{seed}_{model_version}_{train_type}',sup_loss=sup_loss, wnb=1)
 
 
             best_acc_val=model.train(seed=seed, test=0)
@@ -78,14 +78,13 @@ def random_search_hyperparameters(path_features, train_type, model_version, mode
             # Escribir el encabezado solo si el archivo no existe
             if not results_exist:
                 writer.writerow([
-                    "avg_acc_val","std_acc_val", "weight_clip", "num_epochs", "batch_size",
-                    "num_layers", "dropout", "hidden_dim", "learning_rate", "temperature", "momentum"
+                    "avg_acc_val","std_acc_val", "weight_clip", "num_epochs", "batch_size", "hidden_dim", "learning_rate", "temperature", "momentum"
                 ])
             # Escribir la configuración y el resultado
             writer.writerow([avg_acc_val,std_acc_val, weight_Clip, num_epochs, batch_size, hidden_dim, lr, t, momentum])
 
 
-def test_best_model(path_features,train_type, model_version,model, name_exp,config, seeds,en_att=0):
+def test_best_model(path_features,train_type, model_version,model, name_exp,config, seeds,sup_loss=0):
     weight_clip = config['weight_Clip']
     dropout = config['dropout']
     num_layers = config['num_layers']
@@ -136,26 +135,24 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
                                  num_layers=num_layers, dropout=dropout, hidden_dim=hidden_dim, lr=learning_rate,
                                  t=temperature, momentum=momentum, patience=5, path_features_D=features[0][0],
                                  path_prompts_D=features[0][1], path_features_S=features[1][0],
-                                 path_prompts_S=features[1][1], exp_name=f'{seed}_{model_version}_{name_exp}',en_att=en_att,
-                                 wnb=0)
+                                 path_prompts_S=features[1][1], exp_name=f'{seed}_{name_exp}',sup_loss=sup_loss,wnb=0)
 
         elif model_version == 'Fine_tuning' and train_type == 'In_domain':
             model.set_parameters(weight_Clip=weight_clip, num_epochs=num_epochs, batch_size=batch_size,
                                  num_layers=num_layers, dropout=dropout, hidden_dim=hidden_dim, lr=learning_rate,
                                  t=temperature, momentum=momentum, patience=5, path_features_D=features[0][0],
-                                 path_prompts_D=features[0][1], exp_name=f'{seed}_{model_version}_{name_exp}',
-                                 wnb=0)
+                                 path_prompts_D=features[0][1], exp_name=f'{seed}_{name_exp}',sup_loss=sup_loss, wnb=0)
         elif 'MLP' in model_version :#and  model_version !='Linear_probe'
             if train_type == 'Out_domain':
                 model.set_parameters(num_epochs=num_epochs, batch_size=batch_size,num_layers=num_layers, dropout=dropout,
                                      hidden_dim=hidden_dim, lr=learning_rate,t=temperature, momentum=momentum, patience=5, path_features_D=features[0][0],
                                      path_prompts_D=features[0][1],path_features_S=features[1][0],
-                                     path_prompts_S=features[1][1], exp_name=f'{seed}_{model_version}_{name_exp}',
+                                     path_prompts_S=features[1][1], exp_name=f'{seed}_{name_exp}',
                                      wnb=0)
         elif 'Adapter' in model_version:#and  model_version !='Linear_probe'
             if train_type == 'Out_domain':
                 model.set_parameters(num_epochs=num_epochs, batch_size=batch_size,num_layers="", dropout="",hidden_dim=hidden_dim, lr=learning_rate,t=temperature, momentum=momentum, patience=5, path_features_D=features[0][0],
-                                     path_prompts_D=features[0][1],path_features_S=features[1][0],path_prompts_S=features[1][1], exp_name=f'{seed}_{model_version}_{name_exp}',
+                                     path_prompts_D=features[0][1],path_features_S=features[1][0],path_prompts_S=features[1][1], exp_name=f'{seed}_{name_exp}',
                                      wnb=0)
 
         epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test = model.train(seed=seed,test=1)
@@ -179,11 +176,7 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
 
         writer = csv.writer(file)
         if not results_exist:
-            writer.writerow([
-
-                "Experiment", "avg_acc_cis_val", "std_acc_cis_val", "avg_acc_trans_val", "std_acc_trans_val" ,"weight_clip", "num_epochs", "batch_size",
-                "num_layers", "dropout", "hidden_dim", "learning_rate", "temperature", "momentum"
-            ])
+            writer.writerow(["Experiment", "avg_acc_cis_test", "std_acc_cis_test", "avg_acc_trans_test", "std_acc_trans_test"  ])
 
         # Append new experiment results with correct number of fields
 

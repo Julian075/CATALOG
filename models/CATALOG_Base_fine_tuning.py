@@ -153,7 +153,7 @@ class LLaVA_CLIP(nn.Module):
         acc = torch.sum(predicted_index.cpu() == target_ind)
         return acc
 
-    def forward(self, embeddings, img, zeroshot_weights, weight_p,target_ind,temp):
+    def forward(self, embeddings, img, zeroshot_weights, weight_p,target_ind,temp,sup_loss=0):
 
         # Train last Layer CLIP
         img_features = self.model_clip.encode_image(img)
@@ -176,9 +176,10 @@ class LLaVA_CLIP(nn.Module):
         out_logits = similarity / similarity.norm(dim=-1, keepdim=True)
 
 
-
-        loss = self.LLaVA_CLIP_loss(out_logits,target_ind,temp)
-        #loss = self.LLaVA_CLIP_loss2(out_logits, target_ind,temp)
+        if sup_loss==0:
+            loss = self.LLaVA_CLIP_loss(out_logits,target_ind,temp)
+        else:
+            loss = self.LLaVA_CLIP_loss2(out_logits, target_ind,temp)
         acc = self.LLaVA_CLIP_acc(img_features,description_features,zeroshot_weights,weight_p,target_ind)
         return loss, acc,torch.argmax(out_logits, dim=1)
 
@@ -305,7 +306,7 @@ class LLaVA_CLIP_long(nn.Module):
         acc = torch.sum(predicted_index.cpu() == target_ind)
         return acc
 
-    def forward(self, embeddings, img, zeroshot_weights, weight_p,target_ind,temp):
+    def forward(self, embeddings, img, zeroshot_weights, weight_p,target_ind,temp,sup_loss=0):
 
         # Train last Layer CLIP
         img_features = self.model_clip.encode_image(img)
@@ -328,9 +329,10 @@ class LLaVA_CLIP_long(nn.Module):
         out_logits = similarity / similarity.norm(dim=-1, keepdim=True)
 
 
-
-        loss = self.LLaVA_CLIP_loss(out_logits,target_ind,temp)
-        #loss = self.LLaVA_CLIP_loss2(out_logits, target_ind,temp)
+        if sup_loss==0:
+            loss = self.LLaVA_CLIP_loss(out_logits,target_ind,temp)
+        else:
+            loss = self.LLaVA_CLIP_loss2(out_logits, target_ind,temp)
         acc = self.LLaVA_CLIP_acc(img_features,description_features,zeroshot_weights,weight_p,target_ind)
         return loss, acc,torch.argmax(out_logits, dim=1)
 
