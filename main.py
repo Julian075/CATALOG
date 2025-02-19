@@ -171,7 +171,6 @@ if __name__ == "__main__":
                     model = CATALOG_base_In_domain( model=model_type[model_version], Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
                     model.set_parameters(weight_Clip=config[model_version][dataset]['weight_Clip'], num_epochs=config[model_version][dataset]['num_epochs'], batch_size=config[model_version][dataset]['batch_size'],num_layers=config[model_version][dataset]['num_layers'], dropout=config[model_version][dataset]['dropout'], hidden_dim=config[model_version][dataset]['hidden_dim'], lr= config[model_version][dataset]['lr'],
                                      t=config[model_version][dataset]['t'],momentum=config[model_version][dataset]['momentum'], patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D,exp_name=f'exp_{model_version}_{train_type}_{dataset}',sup_loss=sup_loss)
-                    mode_model(model, model_params_path, mode)
 
             elif dataset=="terra":
                     model = CATALOG_base_In_domain_terra( model=model_type[model_version], Dataset=TuningDataset,Dataloader=dataloader_Tuning, version='fine_tuning',build_optimizer=build_optimizer)
@@ -179,7 +178,6 @@ if __name__ == "__main__":
                     model.set_parameters(weight_Clip=config[model_version][dataset]['weight_Clip'], num_epochs=config[model_version][dataset]['num_epochs'], batch_size=config[model_version][dataset]['batch_size'],num_layers=config[model_version][dataset]['num_layers'], dropout=config[model_version][dataset]['dropout'], hidden_dim=config[model_version][dataset]['hidden_dim'], lr= config[model_version][dataset]['lr'],
                                      t=config[model_version][dataset]['t'],momentum=config[model_version][dataset]['momentum'], patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D,exp_name=f'exp_{model_version}_{train_type}_{dataset}',sup_loss=sup_loss)
 
-                    mode_model(model, model_params_path, mode)
             if hyperparameterTuning_mode == 1 or hyperparameterTuning_mode == 2:
                 seeds=val_seeds
                 features_D=[path_features_D,path_prompts_D]
@@ -192,7 +190,8 @@ if __name__ == "__main__":
                     seeds = test_seeds
                     test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_{dataset}',config[model_version], seeds,sup_loss=sup_loss)
 
-
+            else:
+                mode_model(model, model_params_path, mode)
     elif "MLP" in model_version  or "Adapter" in model_version:
         if train_type=="Out_domain":
                 model = CLIP_MLP_train(model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline,version=model_version,build_optimizer=build_optimizer)
