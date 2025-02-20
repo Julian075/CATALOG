@@ -12,7 +12,7 @@ from models import BioCLIP_Mlp as BioCLIP_MLP
 
 import argparse
 from utils import BaselineDataset,dataloader_baseline,TuningDataset,dataloader_Tuning,build_optimizer,feature_extraction_
-from data.seeds import val_seeds, test_seeds
+from data.seeds import val_seeds, test_seeds, test_seeds_finetuning
 
 from train.Train_CATALOG_Base_out_domain import CATALOG_base
 from train.Train_CLIP_MLP import CLIP_MLP_train
@@ -82,7 +82,7 @@ config = {
             "Long_CLIP_MLP":{"weight_Clip": "", "num_epochs": 107, "batch_size": 128, "num_layers": 1, "dropout": 0.42656, "hidden_dim": 913, "lr": 0.017475, "t": 0.0983,"momentum": 0.95166},
             "BioCLIP_MLP":{"weight_Clip": "", "num_epochs": 107, "batch_size": 128, "num_layers": 1, "dropout": 0.42656, "hidden_dim": 913, "lr": 0.017475, "t": 0.0983, "momentum": 0.95166},
             "CLIP_Adapter":{"weight_Clip": "", "num_epochs": 107, "batch_size": 128, "num_layers": "", "dropout": "", "hidden_dim": 256, "lr": 0.017475, "t": 0.0983, "momentum": 0.95166},
-            "Long_CLIP_Adapter":{"weight_Clip": "", "num_epochs": 107, "batch_size": 128, "num_layers": "", "dropout": "", "hidden_dim": 913, "lr": 0.017475, "t": 0.0983,"momentum": 0.95166},
+            "Long_CLIP_Adapter":{"weight_Clip": "", "num_epochs": 107, "batch_size": 128, "num_layers": "", "dropout": "", "hidden_dim": 256, "lr": 0.017475, "t": 0.0983,"momentum": 0.95166},
             "BioCLIP_Adapter":{"weight_Clip": "", "num_epochs": 107, "batch_size": 128, "num_layers": "", "dropout": "", "hidden_dim": 256, "lr": 0.017475, "t": 0.0983,"momentum": 0.95166},
         }
 
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     parser.add_argument('--model_version', type=str, default="Base_long", help='Model version')
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
     parser.add_argument('--dataset2', type=str, default="terra", help='dataset')
-    parser.add_argument('--mode', type=str, default="test", help='define if you want train or test or feature_extraction')
+    parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
     parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
     parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')
@@ -186,7 +186,7 @@ if __name__ == "__main__":
                     seeds = val_seeds
                     random_search_hyperparameters([features_D], train_type, model_version, model, f'{model_version}_{train_type}_{LLM}_{dataset}', seeds, n_combination=30, sup_loss=sup_loss)
                 else:
-                    seeds = test_seeds
+                    seeds = test_seeds_finetuning
                     test_best_model([features_D],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_{dataset}',config[model_version], seeds,sup_loss=sup_loss)
 
             else:
@@ -203,7 +203,23 @@ if __name__ == "__main__":
            model = CLIP_MLP_train(model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline,version=model_version,build_optimizer=build_optimizer)
            model.set_parameters(num_epochs=config[model_version]['num_epochs'], batch_size=config[model_version]['batch_size'],num_layers=config[model_version]['num_layers'], dropout=config[model_version]['dropout'], hidden_dim=config[model_version]['hidden_dim'], lr= config[model_version]['lr'],
                                  t=config[model_version]['t'],momentum=config[model_version]['momentum'],patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S="",path_prompts_S="", exp_name=f'{model_version}_{train_type}',wnb=0)
-           if dataset!='terra':
+
+           if hyperparameterTuning_mode == 1 or hyperparameterTuning_mode == 2:
+               seeds = val_seeds
+               features_D = [path_features_D, path_prompts_D]
+
+               if hyperparameterTuning_mode == 1:
+                   seeds = val_seeds
+                   random_search_hyperparameters([features_D], train_type, model_version, model,
+                                                 f'{model_version}_{train_type}_{LLM}_{dataset}', seeds,
+                                                 n_combination=30, sup_loss=sup_loss)
+               else:
+                   seeds = test_seeds_finetuning
+                   test_best_model([features_D], train_type, model_version, model,
+                                   f'{model_version}_{train_type}_{LLM}_{dataset}', config[model_version], seeds,
+                                   sup_loss=sup_loss)
+
+           elif dataset!='terra':
                model.train_ID()
            else:
                model.train_ID_terra()

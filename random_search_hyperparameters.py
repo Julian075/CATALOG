@@ -100,26 +100,19 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
 
     results_cis_test_seeds = []
     results_trans_test_seeds = []
+    results_test_seeds = []
 
     results_temporal = f"results_test_random_search_temporal_{name_exp}.csv"
     results_exist_temp = os.path.isfile(results_temporal)
     existing_seeds = set()
 
     # Read existing seeds from CSV if the file exists
-    if results_exist_temp:
-        with open(results_temporal, mode='r') as file:
-            reader = csv.reader(file)
-            next(reader, None)
-            for row in reader:
-                try:
-                    seed = int(row[0])
-                    existing_seeds.add(seed)
-                except ValueError:
-                    pass
-    else:
-        with open(results_temporal, mode='w', newline='') as file:
-            writer = csv.writer(file)
+    with open(results_temporal, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        if train_type == 'Out_domain':
             writer.writerow(["seed", "acc_cis_test", "acc_trans_test"])
+        else:
+            writer.writerow(["seed", "acc_test"])
 
     for seed in seeds:
         if seed in existing_seeds:
@@ -145,32 +138,46 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
                                  num_layers=num_layers, dropout=dropout, hidden_dim=hidden_dim, lr=learning_rate,
                                  t=temperature, momentum=momentum, patience=5, path_features_D=features[0][0],
                                  path_prompts_D=features[0][1], exp_name=f'{seed}_{name_exp}',sup_loss=sup_loss, wnb=0)
-        elif 'MLP' in model_version :#and  model_version !='Linear_probe'
-            if train_type == 'Out_domain':
+        elif 'MLP' in model_version :
                 model.set_parameters(num_epochs=num_epochs, batch_size=batch_size,num_layers=num_layers, dropout=dropout,
                                      hidden_dim=hidden_dim, lr=learning_rate,t=temperature, momentum=momentum, patience=5, path_features_D=features[0][0],
                                      path_prompts_D=features[0][1],path_features_S=features[1][0],
                                      path_prompts_S=features[1][1], exp_name=f'{seed}_{name_exp}',
                                      wnb=0)
-        elif 'Adapter' in model_version:#and  model_version !='Linear_probe'
-            if train_type == 'Out_domain':
+        elif 'Adapter' in model_version:
                 model.set_parameters(num_epochs=num_epochs, batch_size=batch_size,num_layers="", dropout="",hidden_dim=hidden_dim, lr=learning_rate,t=temperature, momentum=momentum, patience=5, path_features_D=features[0][0],
                                      path_prompts_D=features[0][1],path_features_S=features[1][0],path_prompts_S=features[1][1], exp_name=f'{seed}_{name_exp}',
                                      wnb=0)
 
-        epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test = model.train(seed=seed,test=1)
-        results_cis_test_seeds.append(epoch_acc_cis_test)
-        results_trans_test_seeds.append(epoch_acc_trans_test)
+        if train_type == 'Out_domain':
+            epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test = model.train(seed=seed,test=1)
+            results_cis_test_seeds.append(epoch_acc_cis_test)
+            results_trans_test_seeds.append(epoch_acc_trans_test)
+        else:
+            epoch_loss_test, epoch_acc_test = model.train(seed=seed, test=1)
+            results_cis_test_seeds.append(epoch_acc_test)
+
 
         # Append new results to CSV
         with open(results_temporal, mode='a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([seed, epoch_acc_cis_test, epoch_acc_trans_test])
+            if train_type == 'Out_domain':
+                writer.writerow([seed, epoch_acc_cis_test, epoch_acc_trans_test])
+            else:
+                writer.writerow([seed, epoch_acc_test])
+    if train_type == 'Out_domain':
+        avg_acc_cis_test = np.mean(results_cis_test_seeds) if results_cis_test_seeds else 0
+        std_acc_cis_test = np.std(results_cis_test_seeds) if results_cis_test_seeds else 0
+        avg_acc_trans_test = np.mean(results_trans_test_seeds) if results_trans_test_seeds else 0
+        std_acc_trans_test = np.std(results_trans_test_seeds) if results_trans_test_seeds else 0
+        header=["Experiment", "avg_acc_cis_test", "std_acc_cis_test", "avg_acc_trans_test", "std_acc_trans_test"  ]
+        line =[ name_exp, avg_acc_cis_test, std_acc_cis_test,avg_acc_trans_test, std_acc_trans_test]
+    else:
+        avg_acc_test = np.mean(results_test_seeds) if results_test_seeds else 0
+        std_acc_test = np.std(results_test_seeds) if results_test_seeds else 0
+        header = ["Experiment", "avg_acc_test", "std_acc_test"]
+        line = [ name_exp, avg_acc_test, std_acc_test]
 
-    avg_acc_cis_test = np.mean(results_cis_test_seeds) if results_cis_test_seeds else 0
-    std_acc_cis_test = np.std(results_cis_test_seeds) if results_cis_test_seeds else 0
-    avg_acc_trans_test = np.mean(results_trans_test_seeds) if results_trans_test_seeds else 0
-    std_acc_trans_test = np.std(results_trans_test_seeds) if results_trans_test_seeds else 0
 
     results_file = f"results_test_random_search_{train_type}.csv"
     results_exist = os.path.isfile(results_file)
@@ -179,8 +186,8 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
 
         writer = csv.writer(file)
         if not results_exist:
-            writer.writerow(["Experiment", "avg_acc_cis_test", "std_acc_cis_test", "avg_acc_trans_test", "std_acc_trans_test"  ])
+            writer.writerow(header)
 
         # Append new experiment results with correct number of fields
 
-        writer.writerow([ name_exp, avg_acc_cis_test, std_acc_cis_test,avg_acc_trans_test, std_acc_trans_test, weight_clip, num_epochs, batch_size,num_layers, dropout, hidden_dim, learning_rate, temperature, momentum])
+        writer.writerow(line)
