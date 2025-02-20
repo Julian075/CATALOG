@@ -156,7 +156,7 @@ class LLaVA_CLIP(nn.Module):
         similarity_clip = similarity_clip / similarity_clip.norm(dim=-1, keepdim=True)
 
         logit_scale_LLaVA = self.logit_scale_LLaVA.exp()
-        similarity_VLM = (embeddings.half() @ txt_features) * logit_scale_LLaVA
+        similarity_VLM = (description_features.half() @ txt_features) * logit_scale_LLaVA
         similarity_VLM = similarity_VLM / similarity_VLM.norm(dim=-1, keepdim=True)
         similarity = (similarity_clip * weight_p + similarity_VLM * (1 - weight_p))
 
@@ -167,7 +167,7 @@ class LLaVA_CLIP(nn.Module):
             loss = self.LLaVA_CLIP_loss(out_logits,target_ind,temp)
         else:
             loss = self.LLaVA_CLIP_loss2(out_logits, target_ind,temp)
-        acc = self.LLaVA_CLIP_acc(img_features,embeddings,txt_features,weight_p,target_ind)
+        acc = self.LLaVA_CLIP_acc(img_features,description_features,txt_features,weight_p,target_ind)
         return loss, acc,torch.argmax(out_logits, dim=1)
 
     def accuracy_top_3(self,output, target):
