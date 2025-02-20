@@ -158,7 +158,7 @@ class LLaVA_CLIP(nn.Module):
         logit_scale_LLaVA = self.logit_scale_LLaVA.exp()
         similarity_VLM = (description_features.half() @ txt_features) * logit_scale_LLaVA
         similarity_VLM = similarity_VLM / similarity_VLM.norm(dim=-1, keepdim=True)
-        similarity = (similarity_clip * weight_p + similarity_VLM * (1 - weight_p))
+        similarity = similarity_clip#(similarity_clip * weight_p + similarity_VLM * (1 - weight_p))
 
         out_logits = similarity / similarity.norm(dim=-1, keepdim=True)
 
