@@ -187,7 +187,7 @@ if __name__ == "__main__":
                     random_search_hyperparameters([features_D], train_type, model_version, model, f'{model_version}_{train_type}_{LLM}_{dataset}', seeds, n_combination=30, sup_loss=sup_loss)
                 else:
                     seeds = test_seeds_finetuning
-                    test_best_model([features_D],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_{dataset}',config[model_version], seeds,sup_loss=sup_loss)
+                    test_best_model([features_D],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_{dataset}',config[model_version][dataset], seeds,sup_loss=sup_loss)
 
             else:
                 mode_model(model, model_params_path, mode)
