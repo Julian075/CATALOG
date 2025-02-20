@@ -76,7 +76,7 @@ model_params_path = {
         }
 config = {
             "Base": {"weight_Clip": 0.494, "num_epochs": 107, "batch_size": 128, "num_layers": "", "dropout": "", "hidden_dim": 913,"lr": 0.017475,"t": 0.0983,"momentum": 0.95166},
-            "Base_long": {"weight_Clip": 1, "num_epochs": 107, "batch_size": 256, "num_layers": "", "dropout":"", "hidden_dim": 613,"lr": 0.09,"t": 0.1,"momentum": 0.98},
+            "Base_long": {"weight_Clip": 0.5, "num_epochs": 107, "batch_size": 256, "num_layers": "", "dropout":"", "hidden_dim": 613,"lr": 0.09,"t": 0.1,"momentum": 0.98},
             "Fine_tuning": {'serengeti':{"weight_Clip": 0.6, "num_epochs": 1000, "batch_size": 100, "num_layers": "", "dropout": "", "hidden_dim": 913,"lr": 1e-3,"t": 0.1,"momentum": 0.8409},'terra':{"weight_Clip": 0.6, "num_epochs": 1000, "batch_size": 100, "num_layers": "", "dropout": "", "hidden_dim": 913,"lr": 1e-3,"t": 0.1,"momentum": 0.8409}},
             "CLIP_MLP":{"weight_Clip": "", "num_epochs": 107, "batch_size": 128, "num_layers": 1, "dropout": 0.42656, "hidden_dim": 913, "lr": 0.017475, "t": 0.0983,"momentum": 0.95166},
             "Long_CLIP_MLP":{"weight_Clip": "", "num_epochs": 107, "batch_size": 128, "num_layers": 1, "dropout": 0.42656, "hidden_dim": 913, "lr": 0.017475, "t": 0.0983,"momentum": 0.95166},
