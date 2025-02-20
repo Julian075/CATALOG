@@ -65,7 +65,7 @@ ext_name_feats = {
             }
 model_params_path = {
             "Base": 'models/CATALOG_BERT.pth',
-            "Base_long": 'models/CATALOG_LongCLIP.pth',
+            "Base_long": '/home/ids/jpabon/projects/CATALOG/Best/4258031807_Base_long_Out_domain/training_2025-02-19_09-47-16/best_model_params__613.pth',#'models/CATALOG_LongCLIP.pth',
             "Fine_tuning": {'serengeti':'models/CATALOG_finetuning_Base_Long_Serengeti.pth','terra':'models/CATALOG_finetuning_Base_Long_terra.pth'},
             "CLIP_MLP": 'models/CLIP_MLP.pth',
             "Long_CLIP_MLP": 'models/Long_CLIP_MLP.pth',
