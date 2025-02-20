@@ -124,7 +124,7 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
             features_S = [path_features[1][0], path_features[1][1]]
             features = [features_D, features_S]
         elif train_type == 'In_domain':
-            features = [[path_features[0][0], path_features[0][1]],""]
+            features = [[path_features[0][0], path_features[0][1]],["",""]]
 
         if (model_version == 'Base' or model_version == 'Base_long') and train_type == 'Out_domain':
             model.set_parameters(weight_Clip=weight_clip, num_epochs=num_epochs, batch_size=batch_size,
