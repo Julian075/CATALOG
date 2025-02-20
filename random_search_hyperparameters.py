@@ -157,7 +157,7 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
             results_cis_test_seeds.append(epoch_acc_cis_test)
             results_trans_test_seeds.append(epoch_acc_trans_test)
         else:
-            epoch_loss_test, epoch_acc_test = model.train_ID(seed=seed, test=1)
+            epoch_loss_test, epoch_acc_test = model.train(seed=seed, test=1)
             results_test_seeds.append(epoch_acc_test)
 
 
