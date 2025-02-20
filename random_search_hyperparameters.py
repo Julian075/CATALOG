@@ -87,7 +87,7 @@ def random_search_hyperparameters(path_features, train_type, model_version, mode
             writer.writerow([avg_acc_val,std_acc_val, weight_Clip, num_epochs, batch_size, hidden_dim, lr, t, momentum])
 
 
-def test_best_model(path_features,train_type, model_version,model, name_exp,config, seeds,sup_loss=0,dataset='terra'):
+def test_best_model(path_features,train_type, model_version,model, name_exp,config, seeds,sup_loss=0,dataset='serengeti'):
     weight_clip = config['weight_Clip']
     dropout = config['dropout']
     num_layers = config['num_layers']
@@ -150,7 +150,10 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
                                      wnb=0)
 
         if train_type == 'Out_domain' or (train_type == 'In_domain' and dataset=='terra'):
-            epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test = model.train(seed=seed, test=1)
+            if dataset!='terra':
+                epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test = model.train(seed=seed,test=1)
+            else:
+                epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test = model.train_ID_terra(seed=seed, test=1)
             results_cis_test_seeds.append(epoch_acc_cis_test)
             results_trans_test_seeds.append(epoch_acc_trans_test)
         else:
