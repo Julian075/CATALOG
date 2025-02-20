@@ -150,7 +150,7 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
                                      wnb=0)
 
         if train_type == 'Out_domain' or (train_type == 'In_domain' and dataset=='terra'):
-            if dataset=='terra':
+            if dataset!='terra':
                 epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test = model.train(seed=seed,test=1)
             else:
                 epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test = model.train_ID_terra(seed=seed, test=1)
