@@ -217,7 +217,7 @@ if __name__ == "__main__":
                    seeds = test_seeds_finetuning
                    test_best_model([features_D], train_type, model_version, model,
                                    f'{model_version}_{train_type}_{LLM}_{dataset}', config[model_version], seeds,
-                                   sup_loss=sup_loss,dataset)
+                                   sup_loss=sup_loss,dataset=dataset)
 
            elif dataset!='terra':
                model.train_ID()
