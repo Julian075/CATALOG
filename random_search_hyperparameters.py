@@ -87,7 +87,7 @@ def random_search_hyperparameters(path_features, train_type, model_version, mode
             writer.writerow([avg_acc_val,std_acc_val, weight_Clip, num_epochs, batch_size, hidden_dim, lr, t, momentum])
 
 
-def test_best_model(path_features,train_type, model_version,model, name_exp,config, seeds,sup_loss=0):
+def test_best_model(path_features,train_type, model_version,model, name_exp,config, seeds,sup_loss=0,dataset='terra'):
     weight_clip = config['weight_Clip']
     dropout = config['dropout']
     num_layers = config['num_layers']
@@ -109,7 +109,7 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
     # Read existing seeds from CSV if the file exists
     with open(results_temporal, mode='w', newline='') as file:
         writer = csv.writer(file)
-        if train_type == 'Out_domain':
+        if train_type == 'Out_domain' or (train_type == 'In_domain' and dataset=='terra'):
             writer.writerow(["seed", "acc_cis_test", "acc_trans_test"])
         else:
             writer.writerow(["seed", "acc_test"])
@@ -149,23 +149,26 @@ def test_best_model(path_features,train_type, model_version,model, name_exp,conf
                                      path_prompts_D=features[0][1],path_features_S=features[1][0],path_prompts_S=features[1][1], exp_name=f'{seed}_{name_exp}',
                                      wnb=0)
 
-        if train_type == 'Out_domain':
-            epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test = model.train(seed=seed,test=1)
+        if train_type == 'Out_domain' or (train_type == 'In_domain' and dataset=='terra'):
+            if dataset=='terra':
+                epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test = model.train(seed=seed,test=1)
+            else:
+                epoch_loss_cis_test, epoch_acc_cis_test, epoch_loss_trans_test, epoch_acc_trans_test = model.train_ID_terra(seed=seed, test=1)
             results_cis_test_seeds.append(epoch_acc_cis_test)
             results_trans_test_seeds.append(epoch_acc_trans_test)
         else:
             epoch_loss_test, epoch_acc_test = model.train_ID(seed=seed, test=1)
-            results_cis_test_seeds.append(epoch_acc_test)
+            results_test_seeds.append(epoch_acc_test)
 
 
         # Append new results to CSV
         with open(results_temporal, mode='a', newline='') as file:
             writer = csv.writer(file)
-            if train_type == 'Out_domain':
+            if train_type == 'Out_domain' or (train_type == 'In_domain' and dataset=='terra'):
                 writer.writerow([seed, epoch_acc_cis_test, epoch_acc_trans_test])
             else:
                 writer.writerow([seed, epoch_acc_test])
-    if train_type == 'Out_domain':
+    if train_type == 'Out_domain' or (train_type == 'In_domain' and dataset=='terra'):
         avg_acc_cis_test = np.mean(results_cis_test_seeds) if results_cis_test_seeds else 0
         std_acc_cis_test = np.std(results_cis_test_seeds) if results_cis_test_seeds else 0
         avg_acc_trans_test = np.mean(results_trans_test_seeds) if results_trans_test_seeds else 0
