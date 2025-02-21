@@ -107,7 +107,7 @@ if __name__ == "__main__":
     parser.add_argument('--sup_loss', type=int, default=0, help='Enable the Attention layer')
 
     parser.add_argument('--LLM', type=str, default="ChatGPT", help='define LLM')
-    parser.add_argument('--beta', type=str, default=0.5, help='define beta')
+    parser.add_argument('--beta', type=float, default=0.5, help='define beta')
     args = parser.parse_args()
 
     model_version = args.model_version
