@@ -108,7 +108,7 @@ def zeroshot_classifier_2(classnames, templates1, templates2,model_clip,device,t
         zeroshot_weights = torch.stack(zeroshot_weights, dim=1).to(device)
     return zeroshot_weights
 
-def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0):
+def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0,beta=0.5):
     #path where is located the images
     #dataset='serengeti'
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -243,8 +243,8 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0):
             zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2,model_clip,device,type_clip,0.5)
             torch.save(zeroshot_weights,f'features/Features_{dataset}/standard_features/Prompts_{dataset}_{LLM}.pt')
         elif model_version=="Base_long":
-            zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device, type_clip,0.5)
-            torch.save(zeroshot_weights, f'features/Features_{dataset}/long_features/Prompts_{dataset}_{LLM}.pt')
+            zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device, type_clip,beta)
+            torch.save(zeroshot_weights, f'features/Features_{dataset}/long_features/Prompts_{dataset}_{LLM}_{beta}.pt')
         elif 'Fine_tuning' in model_version :
             zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device, type_clip,0.5)
             torch.save(zeroshot_weights, f'features/Features_{dataset}/finetuning_features/Prompts_{dataset}_{LLM}.pt')
