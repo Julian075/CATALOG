@@ -67,7 +67,7 @@ def zeroshot_classifier(classnames,model_clip,type_clip,device):
             class_embedding = model_clip.encode_text(texts)  # embed with text encoder
             zeroshot_weights.append(class_embedding)
         zeroshot_weights = torch.stack(zeroshot_weights, dim=1).to(device)
-    return zeroshot_weights
+    return zeroshot_weights.squeze()
 def zeroshot_classifier_2(classnames, templates1, templates2,model_clip,device,type_clip,beta):
     if type_clip=='BioCLIP':
         biocllip_tokenizer = open_clip.get_tokenizer("hf-hub:imageomics/bioclip")
