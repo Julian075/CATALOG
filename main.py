@@ -215,6 +215,7 @@ if __name__ == "__main__":
                 mode_model(model, model_params_path, mode)
     elif "MLP" in model_version  or "Adapter" in model_version:
         path_prompts_D = f"features/Features_{dataset}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset}.pt"
+        path_prompts_S = f"features/Features_{dataset2}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset2}.pt"
         if train_type=="Out_domain":
                 model = CLIP_MLP_train(model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline,version=model_version,build_optimizer=build_optimizer)
                 model.set_parameters(num_epochs=config[model_version]['num_epochs'], batch_size=config[model_version]['batch_size'],num_layers=config[model_version]['num_layers'], dropout=config[model_version]['dropout'], hidden_dim=config[model_version]['hidden_dim'], lr= config[model_version]['lr'],
