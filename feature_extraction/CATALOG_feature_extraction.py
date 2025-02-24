@@ -57,7 +57,7 @@ def zeroshot_classifier(classnames,model_clip,type_clip,device):
     with torch.no_grad():
         zeroshot_weights = []
         for classname in classnames:
-            texts = f'a photo of a {classname}'
+            texts = f'A photo of a {classname}'
             if type_clip == 'longclip-B':
                 texts = longclip.tokenize(texts).to(device)
             elif type_clip == "BioCLIP":
