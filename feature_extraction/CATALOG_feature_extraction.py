@@ -199,7 +199,7 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0,b
                                 "description_embeddings": description_embeddings,
                                 "target_index": target_index
                             }
-                        elif 'MLP' in model_version or 'Adapter' in model_version:
+                        elif 'MLP' in model_version or 'Adapter' in model_version or 'zero_shot' in model_version:
                             data_dict[img_name] = {
                                 "image_features": image_features,
                                 "target_index": target_index
@@ -228,7 +228,7 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0,b
             torch.save(features_dataset, f'features/Features_{dataset}/finetuning_features/Features_{type_clip}_{dataset}.pt')
             zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device, type_clip,0.5)
             torch.save(zeroshot_weights, f'features/Features_{dataset}/finetuning_features/Prompts_{type_clip}_{dataset}_{LLM}.pt')
-        elif 'MLP' in model_version or 'Adapter' in model_version:
+        elif 'MLP' in model_version or 'Adapter' in model_version or 'zero_shot' in model_version:
             torch.save(features_dataset, f'features/Features_{dataset}/CLIP_MLP/Features_{type_clip}_{dataset}.pt')
             zeroshot_weights = zeroshot_classifier(class_indices, model_clip, device)
             torch.save(zeroshot_weights, f'features/Features_{dataset}/CLIP_MLP/Prompts_{type_clip}_{dataset}_{LLM}.pt')
@@ -243,7 +243,7 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0,b
         elif 'Fine_tuning' in model_version :
             zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device, type_clip,beta=beta)
             torch.save(zeroshot_weights, f'features/Features_{dataset}/finetuning_features/Prompts_{type_clip}_{dataset}_{LLM}_{beta}.pt')
-        elif 'MLP' in model_version or 'Adapter' in model_version:
+        elif 'MLP' in model_version or 'Adapter' in model_version or 'zero_shot' in model_version:
             zeroshot_weights = zeroshot_classifier(class_indices, model_clip, device)
             torch.save(zeroshot_weights, f'features/Features_{dataset}/CLIP_MLP/Prompts_{type_clip}_{dataset}.pt')
 
