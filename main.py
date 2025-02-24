@@ -72,7 +72,7 @@ ext_name_feats = {
             "BioCLIP_Adapter": '_BioCLIP',
             "Linear_Probe":'_16',
             "zero_shot_CLIP": '_16',
-             "zero_shot_Long_CLIP":'_longclip',
+             "zero_shot_Long_CLIP":'_longclip-B',
             "zero_shot_Bio": '_BioCLIP',
             }
 model_params_path = {
