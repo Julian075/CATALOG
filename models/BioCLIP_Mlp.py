@@ -98,7 +98,7 @@ class CLIP_Adapter(nn.Module):
         return loss
 
     def model_acc(self, img_feat,text_feat,target_ind):
-        sim_clip= img_feat @ text_feat
+        sim_clip= img_feat @ text_feat.T
         sim_clip = sim_clip / sim_clip.norm(dim=-1, keepdim=True)
 
         predicted_index = torch.argmax(sim_clip, dim=1)
@@ -112,7 +112,7 @@ class CLIP_Adapter(nn.Module):
 
 
         logit_scale_CLIP = self.logit_scale_CLIP.exp()
-        similarity_clip = (img_adapted @ txt_features) * logit_scale_CLIP
+        similarity_clip = (img_adapted @ txt_features.T) * logit_scale_CLIP
         similarity_clip = similarity_clip / similarity_clip.norm(dim=-1, keepdim=True)
 
         similarity_clip = similarity_clip / similarity_clip.norm(dim=-1, keepdim=True)
