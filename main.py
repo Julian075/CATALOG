@@ -103,11 +103,12 @@ if __name__ == "__main__":
     parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
     parser.add_argument('--train_type', type=str, default="In_domain", help='Type of training')
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
-    parser.add_argument('--feature_extraction', type=int, default=1, help='Type of training')
+    parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')
     parser.add_argument('--sup_loss', type=int, default=0, help='Enable the Attention layer')
 
     parser.add_argument('--LLM', type=str, default="ChatGPT", help='define LLM')
     parser.add_argument('--beta', type=float, default=0.5, help='define beta')
+    parser.add_argument('--alpha', type=float, default=0.5, help='define alpha')
     args = parser.parse_args()
 
     model_version = args.model_version
@@ -119,6 +120,7 @@ if __name__ == "__main__":
     feature_extraction=args.feature_extraction
     LLM=args.LLM
     beta=args.beta
+    alpha=args.alpha
     sup_loss=args.sup_loss
 
     if feature_extraction :
@@ -150,7 +152,8 @@ if __name__ == "__main__":
                     random_search_hyperparameters([features_D, features_S], train_type, model_version, model, f'{model_version}_{train_type}_{LLM}_{beta}', seeds, n_combination=30, sup_loss=sup_loss)
                 else:
                     seeds = test_seeds
-                    test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_{beta}',config[model_version], seeds,sup_loss=sup_loss)
+                    config[model_version]['weight_Clip']=alpha
+                    test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_{beta}_alpha_{alpha}',config[model_version], seeds,sup_loss=sup_loss)
 
             else:
                 model = CATALOG_base(model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
