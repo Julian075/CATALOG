@@ -130,7 +130,6 @@ class CLIP(nn.Module):
 
     def model_acc(self, img_feat,text_feat,target_ind):
         sim_clip= img_feat @ text_feat.T
-        sim_clip = sim_clip / sim_clip.norm(dim=-1, keepdim=True)
 
         predicted_index = torch.argmax(sim_clip, dim=1)
         acc = torch.sum(predicted_index.cpu() == target_ind)
