@@ -57,6 +57,7 @@ type_feat = {
             "BioCLIP_Adapter": 'CLIP_MLP',
              "Linear_Probe":'CLIP_MLP',
             "zero_shot_CLIP": 'CLIP_MLP',
+            "zero_shot_Long_CLIP":'CLIP_MLP',
             "zero_shot_Bio": 'CLIP_MLP',
             }
 ext_name_feats = {
@@ -71,6 +72,7 @@ ext_name_feats = {
             "BioCLIP_Adapter": '_BioCLIP',
             "Linear_Probe":'_16',
             "zero_shot_CLIP": '_16',
+             "zero_shot_Long_CLIP":'_longclip',
             "zero_shot_Bio": '_BioCLIP',
             }
 model_params_path = {
@@ -85,6 +87,7 @@ model_params_path = {
             "BioCLIP_Adapter": 'models/BioCLIP_Adapter.pth',
             "Linear_Probe":'models/Linear_Probe.pth',
             "zero_shot_CLIP": '',
+            "zero_shot_Long_CLIP":'',
             "zero_shot_Bio": '',
         }
 config = {

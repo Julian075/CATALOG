@@ -51,18 +51,13 @@ camera_trap_templates1 = [
         'a camera trap image of a cool {}.',
         'a camera trap image of a small {}.',
     ]
-def zeroshot_classifier(classnames, templates1, templates2,model_clip,device):
+def zeroshot_classifier(classnames,model_clip,device):
     with torch.no_grad():
         zeroshot_weights = []
         for classname in classnames:
-            texts = [template.format(classname) for template in templates1]
-            texts2 = [template for template in templates2[classname]]  # format with class
-            texts = texts + texts2
+            texts = f'a photo of a {classname}'
             texts = clip.tokenize(texts).to(device)  # tokenize
-            class_embeddings = model_clip.encode_text(texts)  # embed with text encoder
-            class_embeddings /= class_embeddings.norm(dim=-1, keepdim=True)
-            class_embedding = class_embeddings.mean(dim=0)
-            class_embedding /= class_embedding.norm()
+            class_embedding = model_clip.encode_text(texts)  # embed with text encoder
             zeroshot_weights.append(class_embedding)
         zeroshot_weights = torch.stack(zeroshot_weights, dim=1).to(device)
     return zeroshot_weights
@@ -235,7 +230,7 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0,b
             torch.save(zeroshot_weights, f'features/Features_{dataset}/finetuning_features/Prompts_{type_clip}_{dataset}_{LLM}.pt')
         elif 'MLP' in model_version or 'Adapter' in model_version:
             torch.save(features_dataset, f'features/Features_{dataset}/CLIP_MLP/Features_{type_clip}_{dataset}.pt')
-            zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device,type_clip,0.5)
+            zeroshot_weights = zeroshot_classifier(class_indices, model_clip, device)
             torch.save(zeroshot_weights, f'features/Features_{dataset}/CLIP_MLP/Prompts_{type_clip}_{dataset}_{LLM}.pt')
     else:
 
@@ -249,7 +244,7 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0,b
             zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device, type_clip,beta=beta)
             torch.save(zeroshot_weights, f'features/Features_{dataset}/finetuning_features/Prompts_{type_clip}_{dataset}_{LLM}_{beta}.pt')
         elif 'MLP' in model_version or 'Adapter' in model_version:
-            zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device,type_clip,beta=beta)
+            zeroshot_weights = zeroshot_classifier(class_indices, model_clip, device)
             torch.save(zeroshot_weights, f'features/Features_{dataset}/CLIP_MLP/Prompts_{type_clip}_{dataset}_{LLM}_{beta}.pt')
 
 
