@@ -173,7 +173,7 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0,b
                                 image_features = model_clip.encode_image(images)
                                 image_features /= image_features.norm(dim=-1, keepdim=True)
 
-                        if not  ('MLP'in model_version) and not  ('Adapter'in model_version):
+                        if not  ('MLP'in model_version) and not  ('Adapter'in model_version)and not ('zero_shot' in model_version):
                             f = open(json_path)
                             data = json.load(f)
                             description = data['description']
