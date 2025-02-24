@@ -122,6 +122,25 @@ class CLIP_Adapter(nn.Module):
         acc = self.model_acc(img_adapted,txt_features, target_ind)
         return loss, acc
 
+
+class CLIP(nn.Module):
+    def __init__(self):
+        super(CLIP, self).__init__()
+
+
+    def model_acc(self, img_feat,text_feat,target_ind):
+        sim_clip= img_feat @ text_feat
+        sim_clip = sim_clip / sim_clip.norm(dim=-1, keepdim=True)
+
+        predicted_index = torch.argmax(sim_clip, dim=1)
+        acc = torch.sum(predicted_index.cpu() == target_ind)
+        return acc
+
+    def forward(self, img_features, txt_features, target_ind,t=0):
+        # Similarity
+        acc = self.model_acc(img_features,txt_features, target_ind)
+        return acc
+
 class Linear_probe(nn.Module):
     def __init__(self, hidden_dim,output_dim, num_layers, dropout) -> None:
         super().__init__()

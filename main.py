@@ -9,6 +9,8 @@ from models import CATALOG_Base_fine_tuning as base_fine_tuning
 from models import CLIP_Mlp as CLIP_MLP
 from models import BioCLIP_Mlp as BioCLIP_MLP
 
+from models.CLIP_Mlp import CLIP as zero_shot_CLIP
+from models.BioCLIP_Mlp import BioCLIP as zero_shot_BioCLIP
 
 import argparse
 from utils import BaselineDataset,dataloader_baseline,TuningDataset,dataloader_Tuning,build_optimizer,feature_extraction_
@@ -260,3 +262,30 @@ if __name__ == "__main__":
             model.train_ID_terra(seed=1064200250)#3519650116,2424918363,1064200250
         else:
             model.train_ID()
+
+    elif model_version == 'Zero_shot':
+        import torch
+
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+
+        dataset_D = torch.load(path_features_D)
+        text_features = torch.load(path_prompts_D)
+        dataloader_test = dataloader_baseline(dataset_D['test'], 128, BaselineDataset)
+        if 'CLIP' in model_version:
+            model=zero_shot_CLIP()
+        elif 'Bio'in model_version:
+            model = zero_shot_BioCLIP()
+
+        size=0
+        running_corrects=0
+        model=model.to(device)
+        for batch in dataloader_test:
+            image_features, target_index = batch
+            size += len(image_features)
+            image_features = image_features.to(device)
+
+            loss, acc = model(image_features, text_features, target_index)
+            running_corrects += float(acc)
+
+        epoch_acc = (running_corrects / size) * 100
+        print('Acc: {:.4f}'.format(epoch_acc))
