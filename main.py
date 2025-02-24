@@ -195,10 +195,10 @@ if __name__ == "__main__":
                 
                 if hyperparameterTuning_mode == 1:
                     seeds = val_seeds
-                    random_search_hyperparameters([features_D], train_type, model_version, model, f'{model_version}_{train_type}_{LLM}_{dataset}', seeds, n_combination=30, sup_loss=sup_loss)
+                    random_search_hyperparameters([features_D], train_type, model_version, model, f'{model_version}_{train_type}_{LLM}_{beta}_{dataset}', seeds, n_combination=30, sup_loss=sup_loss)
                 else:
                     seeds = test_seeds_finetuning
-                    test_best_model([features_D],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_{dataset}',config[model_version][dataset], seeds,sup_loss=sup_loss,dataset=dataset)
+                    test_best_model([features_D],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_{beta}_{dataset}',config[model_version][dataset], seeds,sup_loss=sup_loss,dataset=dataset)
 
             else:
                 mode_model(model, model_params_path, mode)
@@ -222,12 +222,12 @@ if __name__ == "__main__":
                if hyperparameterTuning_mode == 1:
                    seeds = val_seeds
                    random_search_hyperparameters([features_D], train_type, model_version, model,
-                                                 f'{model_version}_{train_type}_{LLM}_{dataset}', seeds,
+                                                 f'{model_version}_{train_type}_{LLM}_{beta}_{dataset}', seeds,
                                                  n_combination=30, sup_loss=sup_loss)
                else:
                    seeds = test_seeds_finetuning
                    test_best_model([features_D], train_type, model_version, model,
-                                   f'{model_version}_{train_type}_{LLM}_{dataset}', config[model_version], seeds,
+                                   f'{model_version}_{train_type}_{LLM}_{beta}_{dataset}', config[model_version], seeds,
                                    sup_loss=sup_loss,dataset=dataset)
 
            elif dataset!='terra':
