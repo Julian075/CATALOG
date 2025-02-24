@@ -290,7 +290,7 @@ if __name__ == "__main__":
             size += len(image_features)
             image_features = image_features.to(device)
 
-            loss, acc = model(image_features, text_features, target_index)
+            acc = model(image_features, text_features, target_index)
             running_corrects += float(acc)
 
         epoch_acc = (running_corrects / size) * 100
