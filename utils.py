@@ -103,7 +103,7 @@ def build_optimizer( projection_model, optimizer, learning_rate, momentum, versi
 def feature_extraction_(model_version,dataset,LLM,beta=0.5):
     if model_version=='Base_long':
         extract_features(model_version=model_version, dataset=dataset, type_clip='longclip-B', LLM=LLM, only_text=1,beta=beta)
-    elif  "BioCLIP" in model_version :
+    elif  "Bio" in model_version :
         extract_features(model_version=model_version, dataset=dataset, type_clip='BioCLIP', LLM=LLM, only_text=1,beta=beta)
     elif not('Long' in model_version) and (model_version != 'Fine_tuning') :
         extract_features(model_version=model_version, dataset=dataset, type_clip='16', LLM=LLM, only_text=1,beta=beta)
