@@ -211,15 +211,16 @@ if __name__ == "__main__":
                 if hyperparameterTuning_mode == 1 or hyperparameterTuning_mode == 2:
                    seeds = val_seeds
                    features_D = [path_features_D, path_prompts_D]
+                   features_S = [path_features_S, path_prompts_S]
 
                    if hyperparameterTuning_mode == 1:
                        seeds = val_seeds
-                       random_search_hyperparameters([features_D], train_type, model_version, model,
+                       random_search_hyperparameters([features_D,features_S], train_type, model_version, model,
                                                      f'{model_version}_{train_type}_{LLM}_{beta}_{dataset}', seeds,
                                                      n_combination=30, sup_loss=sup_loss)
                    else:
                        seeds = test_seeds_finetuning
-                       test_best_model([features_D], train_type, model_version, model,
+                       test_best_model([features_D,features_S], train_type, model_version, model,
                                        f'{model_version}_{train_type}_{LLM}_{beta}_{dataset}', config[model_version], seeds,
                                        sup_loss=sup_loss,dataset=dataset)
                 else:
