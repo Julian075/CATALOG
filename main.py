@@ -208,7 +208,22 @@ if __name__ == "__main__":
                 model.set_parameters(num_epochs=config[model_version]['num_epochs'], batch_size=config[model_version]['batch_size'],num_layers=config[model_version]['num_layers'], dropout=config[model_version]['dropout'], hidden_dim=config[model_version]['hidden_dim'], lr= config[model_version]['lr'],
                                      t=config[model_version]['t'],momentum=config[model_version]['momentum'],patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S=path_features_S,
                                      path_prompts_S=path_prompts_S, exp_name=f'{model_version}_{train_type}',wnb=0)
-                mode_model(model, model_params_path, mode)
+                if hyperparameterTuning_mode == 1 or hyperparameterTuning_mode == 2:
+                   seeds = val_seeds
+                   features_D = [path_features_D, path_prompts_D]
+
+                   if hyperparameterTuning_mode == 1:
+                       seeds = val_seeds
+                       random_search_hyperparameters([features_D], train_type, model_version, model,
+                                                     f'{model_version}_{train_type}_{LLM}_{beta}_{dataset}', seeds,
+                                                     n_combination=30, sup_loss=sup_loss)
+                   else:
+                       seeds = test_seeds_finetuning
+                       test_best_model([features_D], train_type, model_version, model,
+                                       f'{model_version}_{train_type}_{LLM}_{beta}_{dataset}', config[model_version], seeds,
+                                       sup_loss=sup_loss,dataset=dataset)
+                else:
+                    mode_model(model, model_params_path, mode)
 
         elif train_type == "In_domain":
            model = CLIP_MLP_train(model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline,version=model_version,build_optimizer=build_optimizer)
