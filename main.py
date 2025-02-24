@@ -56,6 +56,8 @@ type_feat = {
             "Long_CLIP_Adapter": 'CLIP_MLP',
             "BioCLIP_Adapter": 'CLIP_MLP',
              "Linear_Probe":'CLIP_MLP',
+            "zero_shot_CLIP": 'CLIP_MLP',
+            "zero_shot_Bio": 'CLIP_MLP',
             }
 ext_name_feats = {
             "Base": '',
@@ -68,6 +70,8 @@ ext_name_feats = {
             "CLIP_Adapter": '_16',
             "BioCLIP_Adapter": '_BioCLIP',
             "Linear_Probe":'_16',
+            "zero_shot_CLIP": '_16',
+            "zero_shot_Bio": '_BioCLIP',
             }
 model_params_path = {
             "Base": 'models/CATALOG_BERT.pth',
@@ -80,6 +84,8 @@ model_params_path = {
             "Long_CLIP_Adapter": 'models/Long_CLIP_Adapter.pth',
             "BioCLIP_Adapter": 'models/BioCLIP_Adapter.pth',
             "Linear_Probe":'models/Linear_Probe.pth',
+            "zero_shot_CLIP": '',
+            "zero_shot_Bio": '',
         }
 config = {
             "Base": {"weight_Clip": 0.494, "num_epochs": 107, "batch_size": 128, "num_layers": "", "dropout": "", "hidden_dim": 913,"lr": 0.017475,"t": 0.0983,"momentum": 0.95166},
@@ -263,7 +269,7 @@ if __name__ == "__main__":
         else:
             model.train_ID()
 
-    elif model_version == 'Zero_shot':
+    elif 'zero_shot' in model_version:
         import torch
 
         device = "cuda" if torch.cuda.is_available() else "cpu"
