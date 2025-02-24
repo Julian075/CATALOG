@@ -276,7 +276,7 @@ if __name__ == "__main__":
 
         dataset_D = torch.load(path_features_D)
         text_features = torch.load(path_prompts_D)
-        dataloader_test = dataloader_baseline(dataset_D['test'], 128, BaselineDataset)
+        dataloader_test = dataloader_baseline(dataset_D['cis_test'], 128, BaselineDataset)
         if 'CLIP' in model_version:
             model=zero_shot_CLIP()
         elif 'Bio'in model_version:
