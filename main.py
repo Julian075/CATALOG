@@ -214,6 +214,7 @@ if __name__ == "__main__":
             else:
                 mode_model(model, model_params_path, mode)
     elif "MLP" in model_version  or "Adapter" in model_version:
+        path_prompts_D = f"features/Features_{dataset}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset}.pt"
         if train_type=="Out_domain":
                 model = CLIP_MLP_train(model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline,version=model_version,build_optimizer=build_optimizer)
                 model.set_parameters(num_epochs=config[model_version]['num_epochs'], batch_size=config[model_version]['batch_size'],num_layers=config[model_version]['num_layers'], dropout=config[model_version]['dropout'], hidden_dim=config[model_version]['hidden_dim'], lr= config[model_version]['lr'],
@@ -263,6 +264,7 @@ if __name__ == "__main__":
                model.train_ID_terra()
         
     elif model_version == 'Linear_Probe':
+        path_prompts_D = f"features/Features_{dataset}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset}.pt"
         model = Linear_probe_train(model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline,version=model_version,build_optimizer=build_optimizer)
         model.set_parameters(num_epochs=config[model_version][dataset]['num_epochs'], batch_size=config[model_version][dataset]['batch_size'],num_layers=config[model_version][dataset]['num_layers'], dropout=config[model_version][dataset]['dropout'], hidden_dim=config[model_version][dataset]['hidden_dim'], lr= config[model_version][dataset]['lr'],
                              t=config[model_version][dataset]['t'],momentum=config[model_version][dataset]['momentum'],patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S="",path_prompts_S="", exp_name=f'{model_version}_{train_type}',wnb=0)
@@ -273,6 +275,7 @@ if __name__ == "__main__":
             model.train_ID()
 
     elif 'zero_shot' in model_version:
+        path_prompts_D = f"features/Features_{dataset}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset}.pt"
         import torch
 
         device = "cuda" if torch.cuda.is_available() else "cpu"

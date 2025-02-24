@@ -245,7 +245,7 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0,b
             torch.save(zeroshot_weights, f'features/Features_{dataset}/finetuning_features/Prompts_{type_clip}_{dataset}_{LLM}_{beta}.pt')
         elif 'MLP' in model_version or 'Adapter' in model_version:
             zeroshot_weights = zeroshot_classifier(class_indices, model_clip, device)
-            torch.save(zeroshot_weights, f'features/Features_{dataset}/CLIP_MLP/Prompts_{type_clip}_{dataset}_{LLM}_{beta}.pt')
+            torch.save(zeroshot_weights, f'features/Features_{dataset}/CLIP_MLP/Prompts_{type_clip}_{dataset}.pt')
 
 
 
