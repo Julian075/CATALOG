@@ -145,7 +145,7 @@ if __name__ == "__main__":
     #f'features/Features_{dataset}/long_features/Prompts_{dataset}.pt'#
     if train_type == "Out_domain":
         path_features_S = f"features/Features_{dataset2}/{type_feat[model_version]}/Features{ext_name_feats[model_version]}_{dataset2}.pt"
-        path_prompts_S = 'features/Features_{dataset2}/long_features/Prompts_{dataset2}.pt'#f"features/Features_{dataset2}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset2}_{LLM}_{beta}.pt"
+        path_prompts_S = f'features/Features_{dataset2}/long_features/Prompts_{dataset2}.pt'#f"features/Features_{dataset2}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset2}_{LLM}_{beta}.pt"
 #f'features/Features_{dataset2}/long_features/Prompts_{dataset2}.pt'#
 
     model_params_path=model_params_path[model_version]
