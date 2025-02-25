@@ -141,11 +141,11 @@ if __name__ == "__main__":
             feature_extraction_(model_version,dataset2,LLM,beta)
 
     path_features_D = f"features/Features_{dataset}/{type_feat[model_version]}/Features{ext_name_feats[model_version]}_{dataset}.pt"
-    path_prompts_D = f'features/Features_{dataset}/long_features/Prompts_{dataset}.pt'#f"features/Features_{dataset}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset}_{LLM}_{beta}.pt"
+    path_prompts_D = f"features/Features_{dataset}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset}_{LLM}_{beta}.pt"
     #f'features/Features_{dataset}/long_features/Prompts_{dataset}.pt'#
     if train_type == "Out_domain":
         path_features_S = f"features/Features_{dataset2}/{type_feat[model_version]}/Features{ext_name_feats[model_version]}_{dataset2}.pt"
-        path_prompts_S =f'features/Features_{dataset2}/long_features/Prompts_{dataset2}.pt'#f"features/Features_{dataset2}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset2}_{LLM}_{beta}.pt"
+        path_prompts_S =f"features/Features_{dataset2}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset2}_{LLM}_{beta}.pt"
 #f'features/Features_{dataset2}/long_features/Prompts_{dataset2}.pt'#
 
     model_params_path=model_params_path[model_version]
