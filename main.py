@@ -162,9 +162,9 @@ if __name__ == "__main__":
                     seeds = val_seeds
                     random_search_hyperparameters([features_D, features_S], train_type, model_version, model, f'{model_version}_{train_type}_{LLM}_{beta}', seeds, n_combination=30, sup_loss=sup_loss)
                 else:
-                    seeds = test_seeds
+                    seeds = test_seeds_finetuning#test_seeds
                     config[model_version]['weight_Clip']=alpha
-                    test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_{beta}_alpha_{alpha}',config[model_version], seeds,sup_loss=sup_loss)
+                    test_best_model([features_D, features_S],train_type, model_version,model, f'AB010_{model_version}_{train_type}_{LLM}_{beta}_alpha_{alpha}',config[model_version], seeds,sup_loss=sup_loss)
 
             else:
                 model = CATALOG_base(model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
