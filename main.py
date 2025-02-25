@@ -77,7 +77,7 @@ ext_name_feats = {
             }
 model_params_path = {
             "Base": 'models/CATALOG_BERT.pth',
-            "Base_long": '/home/ids/jpabon/projects/CATALOG/Best/4258031807_Base_long_Out_domain/training_2025-02-19_09-47-16/best_model_params__613.pth',#'models/CATALOG_LongCLIP.pth',
+            "Base_long": '/home/julian/CATALOG/Best/Base_long_Out_domain/training_2025-02-25_14-47-50/best_model_params__793.pth',#'models/OoD/Ablation_t1/CATALOG_3.pth',
             "Fine_tuning": {'serengeti':'models/CATALOG_finetuning_Base_Long_Serengeti.pth','terra':'models/CATALOG_finetuning_Base_Long_terra.pth'},
             "CLIP_MLP": 'models/CLIP_MLP.pth',
             "Long_CLIP_MLP": 'models/Long_CLIP_MLP.pth',
@@ -108,11 +108,11 @@ config = {#0.5
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program description')
 
-    parser.add_argument('--model_version', type=str, default="zero_shot_Long_CLIP", help='Model version')
+    parser.add_argument('--model_version', type=str, default="Base_long", help='Model version')
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
     parser.add_argument('--dataset2', type=str, default="terra", help='dataset')
-    parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
-    parser.add_argument('--train_type', type=str, default="In_domain", help='Type of training')
+    parser.add_argument('--mode', type=str, default="test", help='define if you want train or test or feature_extraction')
+    parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
     parser.add_argument('--feature_extraction', type=int, default=1, help='Type of training')
     parser.add_argument('--sup_loss', type=int, default=0, help='Enable the Attention layer')
@@ -141,11 +141,12 @@ if __name__ == "__main__":
             feature_extraction_(model_version,dataset2,LLM,beta)
 
     path_features_D = f"features/Features_{dataset}/{type_feat[model_version]}/Features{ext_name_feats[model_version]}_{dataset}.pt"
-    path_prompts_D = f"features/Features_{dataset}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset}_{LLM}_{beta}.pt"
+    path_prompts_D = f'features/Features_{dataset}/long_features/Prompts_{dataset}.pt'#f"features/Features_{dataset}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset}_{LLM}_{beta}.pt"
+    #f'features/Features_{dataset}/long_features/Prompts_{dataset}.pt'#
     if train_type == "Out_domain":
         path_features_S = f"features/Features_{dataset2}/{type_feat[model_version]}/Features{ext_name_feats[model_version]}_{dataset2}.pt"
-        path_prompts_S = f"features/Features_{dataset2}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset2}_{LLM}_{beta}.pt"
-
+        path_prompts_S = f'features/Features_{dataset2}/long_features/Prompts_{dataset2}.pt'#f"features/Features_{dataset2}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset2}_{LLM}_{beta}.pt"
+#f'features/Features_{dataset2}/long_features/Prompts_{dataset2}.pt'#
 
     model_params_path=model_params_path[model_version]
 
