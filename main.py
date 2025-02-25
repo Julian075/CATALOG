@@ -165,7 +165,7 @@ if __name__ == "__main__":
                 else:
                     seeds = test_seeds
                     config[model_version]['weight_Clip']=alpha
-                    test_best_model([features_D, features_S],train_type, model_version,model, f'AB_011{model_version}_{train_type}_{LLM}_{beta}_alpha_{alpha}',config[model_version], seeds,sup_loss=sup_loss)
+                    test_best_model([features_D, features_S],train_type, model_version,model, f'Alpha_{model_version}_{train_type}_{LLM}_{beta}_alpha_{alpha}',config[model_version], seeds,sup_loss=sup_loss)
 
             else:
                 model = CATALOG_base(model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
