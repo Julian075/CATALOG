@@ -114,11 +114,11 @@ if __name__ == "__main__":
     parser.add_argument('--mode', type=str, default="train", help='define if you want train or test')
     parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
-    parser.add_argument('--feature_extraction', type=int, default=1, help='Type of training')
+    parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')
     parser.add_argument('--sup_loss', type=int, default=0, help='Enable the Attention layer')
 
     parser.add_argument('--LLM', type=str, default="ChatGPT", help='define LLM')
-    parser.add_argument('--beta', type=float, default=0.0, help='define beta')
+    parser.add_argument('--beta', type=float, default=1.0, help='define beta')
     parser.add_argument('--alpha', type=float, default=0.5, help='define alpha')
     args = parser.parse_args()
 
@@ -145,11 +145,11 @@ if __name__ == "__main__":
             feature_extraction_(model_version,dataset2,LLM,beta)
 
     path_features_D = f"features/Features_{dataset}/{type_feat[model_version]}/Features{ext_name_feats[model_version]}_{dataset}.pt"
-    path_prompts_D = f"features/Features_{dataset}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset}_{LLM}_{beta}_zero_shot.pt"
+    path_prompts_D = f"features/Features_{dataset}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset}_{LLM}_{beta}.pt"
     #f'features/Features_{dataset}/long_features/Prompts_{dataset}.pt'#
     if train_type == "Out_domain":
         path_features_S = f"features/Features_{dataset2}/{type_feat[model_version]}/Features{ext_name_feats[model_version]}_{dataset2}.pt"
-        path_prompts_S =f"features/Features_{dataset2}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset2}_{LLM}_{beta}_zero_shot.pt"
+        path_prompts_S =f"features/Features_{dataset2}/{type_feat[model_version]}/Prompts{ext_name_feats[model_version]}_{dataset2}_{LLM}_{beta}.pt"
 #f'features/Features_{dataset2}/long_features/Prompts_{dataset2}.pt'#
 
     model_params_path=model_params_path[model_version]
@@ -168,7 +168,7 @@ if __name__ == "__main__":
                     random_search_hyperparameters([features_D, features_S], train_type, model_version, model, f'{model_version}_{train_type}_{LLM}_{beta}', seeds, n_combination=30, sup_loss=sup_loss)
                 else:
                     seeds = test_seeds
-                    test_best_model([features_D, features_S],train_type, model_version,model, f'2AB_010_{model_version}_{train_type}_{LLM}_{beta}_alpha_{alpha}',config[model_version], seeds,sup_loss=sup_loss)
+                    test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_{beta}_alpha_{alpha}',config[model_version], seeds,sup_loss=sup_loss)
 
             else:
                 model = CATALOG_base(model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
