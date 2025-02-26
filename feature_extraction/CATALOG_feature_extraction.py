@@ -247,7 +247,7 @@ def extract_features(model_version,dataset,type_clip,LLM='ChatGPT',only_text=0,b
             torch.save(zeroshot_weights,f'features/Features_{dataset}/standard_features/Prompts_{dataset}_{LLM}_{beta}.pt')
         elif model_version=="Base_long":
             zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device, type_clip,beta)
-            torch.save(zeroshot_weights, f'features/Features_{dataset}/long_features/Prompts_{dataset}_{LLM}_{beta}.pt')
+            torch.save(zeroshot_weights, f'features/Features_{dataset}/long_features/Prompts_{dataset}_{LLM}_{beta}_zero_shot.pt')
         elif 'Fine_tuning' in model_version :
             zeroshot_weights = zeroshot_classifier_2(class_indices, camera_trap_templates1, camera_trap_templates2, model_clip, device, type_clip,beta=beta)
             torch.save(zeroshot_weights, f'features/Features_{dataset}/finetuning_features/Prompts_{type_clip}_{dataset}_{LLM}_{beta}.pt')
