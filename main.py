@@ -111,7 +111,7 @@ if __name__ == "__main__":
     parser.add_argument('--model_version', type=str, default="Base_long", help='Model version')
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
     parser.add_argument('--dataset2', type=str, default="terra", help='dataset')
-    parser.add_argument('--mode', type=str, default="train", help='define if you want train or test or feature_extraction')
+    parser.add_argument('--mode', type=str, default="test", help='define if you want train or test or feature_extraction')
     parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
     parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')
@@ -119,7 +119,7 @@ if __name__ == "__main__":
 
     parser.add_argument('--LLM', type=str, default="ChatGPT", help='define LLM')
     parser.add_argument('--beta', type=float, default=1.0, help='define beta')
-    parser.add_argument('--alpha', type=float, default=0.0, help='define alpha')
+    parser.add_argument('--alpha', type=float, default=0.5, help='define alpha')
     args = parser.parse_args()
 
     model_version = args.model_version
@@ -133,6 +133,10 @@ if __name__ == "__main__":
     beta=args.beta
     alpha=args.alpha
     sup_loss=args.sup_loss
+
+
+    if alpha!=0.5 and not ('zero_shot' in model_version):
+        config[model_version]['weight_Clip'] = alpha
 
     if feature_extraction :
         feature_extraction_(model_version,dataset,LLM,beta)
@@ -164,8 +168,7 @@ if __name__ == "__main__":
                     random_search_hyperparameters([features_D, features_S], train_type, model_version, model, f'{model_version}_{train_type}_{LLM}_{beta}', seeds, n_combination=30, sup_loss=sup_loss)
                 else:
                     seeds = test_seeds
-                    config[model_version]['weight_Clip']=alpha
-                    test_best_model([features_D, features_S],train_type, model_version,model, f'Alpha_{model_version}_{train_type}_{LLM}_{beta}_alpha_{alpha}',config[model_version], seeds,sup_loss=sup_loss)
+                    test_best_model([features_D, features_S],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_{beta}_alpha_{alpha}',config[model_version], seeds,sup_loss=sup_loss)
 
             else:
                 model = CATALOG_base(model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
