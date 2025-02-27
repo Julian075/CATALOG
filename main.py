@@ -212,7 +212,7 @@ if __name__ == "__main__":
                     seeds = val_seeds
                     random_search_hyperparameters([features_D], train_type, model_version, model, f'{model_version}_{train_type}_{LLM}_{beta}_{dataset}', seeds, n_combination=30, sup_loss=sup_loss)
                 else:
-                    seeds = test_seeds_finetuning
+                    seeds =test_seeds#test_seeds_finetuning
                     test_best_model([features_D],train_type, model_version,model, f'{model_version}_{train_type}_{LLM}_{beta}_{dataset}',config[model_version][dataset], seeds,sup_loss=sup_loss,dataset=dataset)
 
             else:
