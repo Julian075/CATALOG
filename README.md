@@ -8,9 +8,12 @@
 <sup>2</sup>LTCI, Télécom Paris, Institut Polytechnique de Paris, Palaiseau, France.
 </p>
 
-## 📢 Announcement  
-This work builds upon our previous research presented as an **Oral Presentation at WACV 2025**. 
-The original model, **Camera Trap Language-Guided Contrastive Learning (CATALOG)**, was introduced in our WACV paper. This repository extends that work with improved representations and new evaluations.
+## 📢 Announcement 
+This work builds upon our previous research, presented as an **Oral Presentation at WACV 2025**
+([WACV Paper](https://openaccess.thecvf.com/content/WACV2025/papers/Santamaria_CATALOG_A_Camera_Trap_Language-Guided_Contrastive_Learning_Model_WACV_2025_paper.pdf)).
+
+The original model, **Camera Trap Language-Guided Contrastive Learning (CATALOG)**, was introduced in that study.
+This repository extends that work with improved representations and new evaluations.
 
 ---
 
