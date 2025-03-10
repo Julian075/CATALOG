@@ -2,18 +2,14 @@
 <p align="center">
   <img src="pipeline_v2.png" alt="Header Image" width="600">
 </p>
-
-<p align="center">
-This is the repository of the model "Camera Trap Language-guided Contrastive Learning (CATALOG)" Oral Presentation at <strong>WACV 2025</strong>.
-</p>
-
 <p align="center">
 <b>Authors:</b> Julian D. Santamaria<sup>1</sup>, Claudia Isaza<sup>1</sup>, Jhony H. Giraldo<sup>2</sup><br>
 <sup>1</sup>SISTEMIC, Faculty of Engineering, Universidad de Antioquia-UdeA, Medellín, Colombia.<br>
 <sup>2</sup>LTCI, Télécom Paris, Institut Polytechnique de Paris, Palaiseau, France.
 </p>
 
-
+## 📢 Announcement  
+This is the repository of the model "Camera Trap Language-guided Contrastive Learning (CATALOG)" Oral Presentation at <strong>WACV 2025</strong>.
 ---
 
 ## Abstract
