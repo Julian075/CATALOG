@@ -4,7 +4,7 @@
 </p>
 
 <p align="center">
-This is the repository of the model "Camera Trap Language-guided Contrastive Learning (CATALOG)" accepted at <strong>WACV 2025</strong>.
+This is the repository of the model "Camera Trap Language-guided Contrastive Learning (CATALOG)" Oral Presentation at <strong>WACV 2025</strong>.
 </p>
 
 <p align="center">
