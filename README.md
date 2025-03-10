@@ -134,11 +134,13 @@ python main.py --model_version Base --train_type Out_domain --mode train
 
 If you use this code, please cite our work:
 ```
-@inproceedings{santamaria2025catalog,
-  title={CATALOG: A Camera Trap Language-guided Contrastive Learning Model},
-  author={Julian D. Santamaria, Claudia Isaza, Jhony H. Giraldo},
-  booktitle={IEEE/CVF Winter Conference on Applications of Computer Vision},
-  year={2025}
+@InProceedings{Santamaria_2025_WACV,
+    author    = {Santamaria, Julian D. and Isaza, Claudia and Giraldo, Jhony H.},
+    title     = {CATALOG: A Camera Trap Language-Guided Contrastive Learning Model},
+    booktitle = {Proceedings of the Winter Conference on Applications of Computer Vision (WACV)},
+    month     = {February},
+    year      = {2025},
+    pages     = {1197-1206}
 }
 ```
 ## Acknowledgment.
