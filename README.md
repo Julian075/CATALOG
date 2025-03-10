@@ -11,9 +11,9 @@
 ## 📢 Announcement  
 <p align="center">
 This is the repository of the model "Camera Trap Language-guided Contrastive Learning (CATALOG)" Oral Presentation at <strong>WACV 2025</strong>.
-  </p>
----
+</p>
 
+---
 ## Abstract
 
 Foundation Models (FMs) have demonstrated significant success in computer vision tasks such as image classification, object detection, and image segmentation. However, domain shift remains a challenge, particularly in camera-trap image recognition due to factors like lighting, camouflage, and occlusions. CATALOG combines multi-modal fusion and contrastive learning to address these issues. It has been evaluated on **Snapshot Serengeti** and **Terra Incognita** datasets, showing state-of-the-art performance when training and testing data differ in animal species or environmental conditions.
