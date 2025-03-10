@@ -1,4 +1,5 @@
 <h1 align="center">WildIng: A Wildlife Invariant Representation Model for Geographical Domain Shift</h1>
+<h2 align="center">This work builds upon our previous research, presented as an <strong>Oral Presentation at WACV 2025</strong>.</h2>
 <p align="center">
   <img src="pipeline_v4.svg" alt="Header Image" width="600">
 </p>
