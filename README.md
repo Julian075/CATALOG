@@ -1,4 +1,4 @@
-<h1 align="center">CATALOG: A Camera Trap Language-guided Contrastive Learning Model</h1>
+<h1 align="center">CATALOG: A Camera Trap Language-guided Contrastive Learning Model (Oral Presentation at WACV 2025) </h1>
 <p align="center">
   <img src="pipeline_v2.png" alt="Header Image" width="600">
 </p>
