@@ -1,20 +1,16 @@
 <h1 align="center">WildIng: A Wildlife Invariant Representation Model for Geographical Domain Shift</h1>
 <p align="center">
-  <img src="pipeline_v4.png" alt="Header Image" width="600">
+  <img src="pipeline_v4.svg" alt="Header Image" width="600">
 </p>
-
-<p align="center">
-## 📢 Announcement  
-This work builds upon our previous research presented as an **Oral Presentation at WACV 2025**. 
-The original model, **Camera Trap Language-Guided Contrastive Learning (CATALOG)**, was introduced in our WACV paper. This repository extends that work with improved representations and new evaluations.
-</p>
-
 <p align="center">
 <b>Authors:</b> Julian D. Santamaria<sup>1,2</sup>, Claudia Isaza<sup>1</sup>, Jhony H. Giraldo<sup>2</sup><br>
 <sup>1</sup>SISTEMIC, Faculty of Engineering, Universidad de Antioquia-UdeA, Medellín, Colombia.<br>
 <sup>2</sup>LTCI, Télécom Paris, Institut Polytechnique de Paris, Palaiseau, France.
 </p>
 
+## 📢 Announcement  
+This work builds upon our previous research presented as an **Oral Presentation at WACV 2025**. 
+The original model, **Camera Trap Language-Guided Contrastive Learning (CATALOG)**, was introduced in our WACV paper. This repository extends that work with improved representations and new evaluations.
 
 ---
 
