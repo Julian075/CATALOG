@@ -10,8 +10,7 @@
 
 ## 📢 Announcement  
 <p align="center">
-This is the repository for the model <strong>"Camera Trap Language-Guided Contrastive Learning (CATALOG)"</strong>,  
-presented as an <strong>Oral Presentation at WACV 2025</strong>.  
+This is the repository for the model <strong>"Camera Trap Language-Guided Contrastive Learning (CATALOG)"</strong>,presented as an <strong>Oral Presentation at WACV 2025</strong>.  
 <br>
 <a href="https://openaccess.thecvf.com/content/WACV2025/papers/Santamaria_CATALOG_A_Camera_Trap_Language-Guided_Contrastive_Learning_Model_WACV_2025_paper.pdf">
 📄 Read the WACV Paper
