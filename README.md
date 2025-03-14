@@ -8,7 +8,7 @@
 <sup>1</sup>SISTEMIC, Faculty of Engineering, Universidad de Antioquia-UdeA, Medellín, Colombia.<br>
 <sup>2</sup>LTCI, Télécom Paris, Institut Polytechnique de Paris, Palaiseau, France.
 </p>
-
+---
 ## 📢 Announcement 
 This work builds upon our previous research, presented as an **Oral Presentation at WACV 2025**
 ([WACV Paper](https://openaccess.thecvf.com/content/WACV2025/papers/Santamaria_CATALOG_A_Camera_Trap_Language-Guided_Contrastive_Learning_Model_WACV_2025_paper.pdf)).
@@ -17,7 +17,6 @@ The original model, **Camera Trap Language-Guided Contrastive Learning (CATALOG)
 This repository extends that work with improved representations and new evaluations.
 
 ---
-
 ## Abstract
 
 Wildlife monitoring is crucial for studying biodiversity loss and climate change. Camera trap images provide a non-intrusive method to track animal populations and analyze ecological patterns over time, enabling large-scale data collection for conservation research. However, manual analysis is time-consuming and resource-intensive. Deep learning, particularly foundation models, has been applied to automate wildlife identification, achieving strong performance when tested on data from the same geographical locations as their training sets. 
