@@ -16,12 +16,10 @@ This work builds upon our previous research, presented as an **Oral Presentation
 The original model, **Camera Trap Language-Guided Contrastive Learning (CATALOG)**, was introduced in that study.
 This repository extends that work with improved representations and new evaluations.
 
----
 ## Abstract
 Wildlife monitoring is crucial for studying biodiversity loss and climate change. Camera trap images provide a non-intrusive method to track animal populations and analyze ecological patterns over time, enabling large-scale data collection for conservation research. However, manual analysis is time-consuming and resource-intensive. Deep learning, particularly foundation models, has been applied to automate wildlife identification, achieving strong performance when tested on data from the same geographical locations as their training sets. 
 Yet, despite their promise, these models struggle to generalize to new geographical areas, leading to significant performance drops.
 To address this, we introduce WildIng, a **Wild**life image **In**variant representation model for **g**eographical domain shift. WildIng integrates text descriptions with image features, creating a more robust representation to geographical domain shifts.
----
 
 ## Repository Overview
 
