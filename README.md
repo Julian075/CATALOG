@@ -164,7 +164,7 @@ python main.py --model_version Fine_tuning --train_type In_domain --dataset sere
 ```bash
 python main.py --model_version Base_long --train_type Out_domain --dataset serengeti --dataset2 terra --mode train
 ---
-
+```
 If you use this code, please cite our work:
 ```
 @InProceedings{Santamaria_2025_WACV,
@@ -178,3 +178,4 @@ If you use this code, please cite our work:
 ```
 ## Acknowledgment.
 This work was supported by Universidad de Antioquia - CODI and Alexander von Humboldt Institute for Research on Biological Resources (project 2020-33250), and by the ANR (French National Research Agency) under the JCJC project DeSNAP (ANR-24-CE23-1895-01), and by the Academic Grant from NVIDIA AI.
+
