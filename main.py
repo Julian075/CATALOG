@@ -24,11 +24,17 @@ from train.Fine_tuning.Train_CATALOG_Base_In_domain import CATALOG_base_In_domai
 from train.Fine_tuning.Train_CATALOG_Base_In_domain_Terra import CATALOG_base_In_domain_terra
 
 
-def mode_model(model,model_params_path,mode):
+def mode_model(model,model_params_path,mode,terra=0):
     if mode == 'train':
-        model.train()
+        if terra==0:
+            model.train()
+        else:
+            model.train_OoD_Terra()
     elif mode == 'test':
-        model.prueba_model(model_params_path=model_params_path)
+        if terra == 0:
+            model.prueba_model(model_params_path=model_params_path)
+        else:
+            model.prueba_model_OoD_terra(model_params_path=model_params_path)
 
     elif mode == 'test_top3':
         model.prueba_model_top_3(model_params_path=model_params_path)
@@ -77,7 +83,7 @@ ext_name_feats = {
             }
 model_params_path = {
             "Base": 'models/CATALOG_BERT.pth',
-            "Base_long": 'models/OoD/CATALOG.pth',
+            "Base_long": 'models/OoD/WildIng/2360402805_best_model_params__793.pth',
             "Fine_tuning": {'serengeti':'models/CATALOG_finetuning_Base_Long_Serengeti.pth','terra':'models/CATALOG_finetuning_Base_Long_terra.pth'},
             "CLIP_MLP": 'models/CLIP_MLP.pth',
             "Long_CLIP_MLP": 'models/Long_CLIP_MLP.pth',
@@ -111,7 +117,7 @@ if __name__ == "__main__":
     parser.add_argument('--model_version', type=str, default="Base_long", help='Model version')
     parser.add_argument('--dataset', type=str, default="serengeti", help='dataset')
     parser.add_argument('--dataset2', type=str, default="terra", help='dataset')
-    parser.add_argument('--mode', type=str, default="train", help='define if you want train or test')
+    parser.add_argument('--mode', type=str, default="test", help='define if you want train or test')
     parser.add_argument('--train_type', type=str, default="Out_domain", help='Type of training')
     parser.add_argument('--hyperparameterTuning_mode', type=int, default=0, help='Type of training')
     parser.add_argument('--feature_extraction', type=int, default=0, help='Type of training')
@@ -176,7 +182,10 @@ if __name__ == "__main__":
                                      t=config[model_version]['t'],momentum=config[model_version]['momentum'], patience=5, path_features_D= path_features_D, path_prompts_D=path_prompts_D, path_features_S=path_features_S,
                                      path_prompts_S=path_prompts_S, exp_name=f'{model_version}_{train_type}', sup_loss=sup_loss,wnb=0)
 
-                mode_model(model, model_params_path, mode)
+                if dataset != 'terra':
+                    mode_model(model, model_params_path, mode)
+                else:
+                    mode_model(model, model_params_path, mode,1)
         elif train_type=='In_domain':
                 model = CATALOG_base(model=model_type[model_version], Dataset=BaselineDataset,Dataloader=dataloader_baseline,version='base',build_optimizer=build_optimizer)
                 model.set_parameters(weight_Clip=config[model_version]['weight_Clip'], num_epochs=config[model_version]['num_epochs'], batch_size=config[model_version]['batch_size'],num_layers=config[model_version]['num_layers'], dropout=config[model_version]['dropout'], hidden_dim=config[model_version]['hidden_dim'], lr= config[model_version]['lr'],

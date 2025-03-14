@@ -20,8 +20,9 @@ This repository extends that work with improved representations and new evaluati
 
 ## Abstract
 
-Foundation Models (FMs) have demonstrated significant success in computer vision tasks such as image classification, object detection, and image segmentation. However, domain shift remains a challenge, particularly in camera-trap image recognition due to factors like lighting, camouflage, and occlusions. CATALOG combines multi-modal fusion and contrastive learning to address these issues. It has been evaluated on **Snapshot Serengeti** and **Terra Incognita** datasets, showing state-of-the-art performance when training and testing data differ in animal species or environmental conditions.
-
+Wildlife monitoring is crucial for studying biodiversity loss and climate change. Camera trap images provide a non-intrusive method to track animal populations and analyze ecological patterns over time, enabling large-scale data collection for conservation research. However, manual analysis is time-consuming and resource-intensive. Deep learning, particularly foundation models, has been applied to automate wildlife identification, achieving strong performance when tested on data from the same geographical locations as their training sets. 
+Yet, despite their promise, these models struggle to generalize to new geographical areas, leading to significant performance drops.
+To address this, we introduce \method, a **Wild**life image **In**variant representation model for **g**eographical domain shift. WildIng integrates text descriptions with image features, creating a more robust representation to geographical domain shifts.
 ---
 
 ## Repository Overview
@@ -35,9 +36,23 @@ The repository is organized as follows:
 - **`main.py`**: Central script to run training and testing with command-line arguments.
 - **`ImageDescriptionExtractor.py`**: Script to extract the descriptions of the images
 
+---
+
+## Table of Contents
+- [Installation](#installation)
+- [Feature Extraction](#feature-extraction)
+- [Training Models](#training-models)
+- [Testing Models](#testing-models)
+- [Available Models](#available-models)
+- [Command-Line Arguments](#command-line-arguments)
+- [Replicating Results](#replicating-results)
+- [Acknowledgments](#acknowledgments)
+
+---
+## Installation
 Clone this repository:
 ```bash
-git clone https://github.com/Julian075/CATALOG.git
+git clone -b WildIng https://github.com/Julian075/CATALOG.git
 ```
 Create a conda environment
 
@@ -79,62 +94,80 @@ python feature_extraction/Base/CATALOG_extraction_features_Terra.py
 The extracted features will be saved in the path: `features/Features_{dataset}/standard_features/Text_{mode_clip_i}.pt.` Features will always be extracted for mode_clip_i using the `ViT-B/32` and `ViT-B/16` versions.
 
 
-### Training a Model
+---
 
-To train a specific model, use:
+## Training Models
+To train a model, use the following command:
 ```bash
 python main.py --model_version <Model_Type> --train_type <Training_Type> --dataset <Dataset> --mode train
 ```
-Example:
+### Example: In-domain Training
 ```bash
 python main.py --model_version Base --train_type In_domain --dataset serengeti --mode train
 ```
-### Testing a Model
-To test a trained model, use:
+### Example: Out-of-domain Training
+```bash
+python main.py --model_version Base --train_type Out_domain --dataset serengeti --dataset2 terra --mode train
+```
+---
+## Testing Models
+To test a trained model:
 ```bash
 python main.py --model_version <Model_Type> --train_type <Training_Type> --dataset <Dataset> --mode test
 ```
-Example:
+### Example: Out-of-domain Testing
 ```bash
 python main.py --model_version Fine_tuning --train_type Out_domain --dataset terra --mode test
 ```
-### Default Feature and Model Parameter Paths
-
-For each type of model, the following default paths are set for feature files and model parameters:
-
-- **Feature Paths** (for training, validation, testing, and textual features):
-  - `ruta_features_train`: `features/Features_serengeti/finetuning_features/Features_CATALOG_train_16.pt`
-  - `ruta_features_val`: `features/Features_serengeti/finetuning_features/Features_CATALOG_val_16.pt`
-  - `ruta_features_test`: `features/Features_serengeti/finetuning_features/Features_CATALOG_test_16.pt`
-  - `path_text_feat`: `features/Features_serengeti/finetuning_features/Text_features_16.pt`
-
-- **Model Parameters Path** (used for testing):
-  - `model_params_path`: `models/CATALOG_finetuning_layer_Base_Serengeti.pth`
-
-These paths are required for testing and can be customized as needed by modifying the respective arguments in `main.py`.
-### Command-Line Arguments
-Command-Line Arguments:
-| Argument         | Description                                         | Default         |
-|------------------|-----------------------------------------------------|-----------------|
-| `--model_version` | Specifies the model version (`Base`, `Fine_tuning`, `Fine_tuning_layer`, `Base_long`.) | `"Fine_tuning"` |
-| `--train_type`   | Specifies the type of training (`In_domain`, `Out_domain`) | `"In_domain"`   |
-| `--dataset`      | Specifies the dataset to use (`serengeti`, `terra`) | `"serengeti"`   |
-| `--mode`         | Specifies the mode (`train`, `test`, `test_top3`)   | `"train"`       |
 ---
-## Replicate Results
-To replicate results, ensure that the datasets are placed in the `data/` folder and features are precomputed in the `features/` folder.
 
-Example Commands:
-For **In-domain training** (Snapshot Serengeti):
+## Available Models
+The following models are available for training and evaluation:
+
+| Model Type            | Description |
+|----------------------|-------------|
+| `Base_long`          | Standard WildIng model |
+| `Fine_tuning`        | Fine-tuned WildIng model |
+| `CLIP_Adapter`       | CLIP Adapter |
+| `Long_CLIP_Adapter`  | Long CLIP Adapter |
+| `BioCLIP_Adapter`    | BioCLIP Adapter |
+| `Linear_Probe`       | Linear probe-based approach |
+| `zero_shot_CLIP`     | Zero-shot CLIP model |
+| `zero_shot_Long_CLIP`| Long zero-shot CLIP |
+| `zero_shot_Bio`      | BioCLIP zero-shot model |
+
+---
+
+## Command-Line Arguments
+| Argument              | Description                                         | Default         |
+|----------------------|-----------------------------------------------------|-----------------|
+| `--model_version`   | Specifies the model version (`Base_long`, `Fine_tuning`, etc.) | `"Fine_tuning"` |
+| `--train_type`      | Specifies the type of training (`In_domain`, `Out_domain`) | `"In_domain"`   |
+| `--dataset`         | Specifies the primary dataset (`serengeti`, `terra`) | `"serengeti"`   |
+| `--dataset2`        | Specifies the secondary dataset for **Out-of-domain training** | `"terra"`       |
+| `--mode`            | Specifies the mode (`train`, `test`)   | `"train"`       |
+| `--hyperparameterTuning_mode` | Enables hyperparameter tuning (`0` for off, `1` for tuning, `2` for testing best model) | `0` |
+| `--feature_extraction` | Enables feature extraction (`0` for off, `1` for on) | `0` |
+| `--LLM`            | Defines the language model used | `"ChatGPT"` |
+| `--beta`            | Defines the beta value for training | `1.0` |
+| `--alpha`           | Defines the alpha value for training | `0.5` |
+---
+
+## Replicating Results
+Ensure that:
+1. Datasets are in the `data/` folder.
+2. Features are precomputed in the `features/` folder.
+3. The correct model version and training type are specified.
+
+### Example Commands
+#### In-domain Training (Serengeti)
 ```bash
 python main.py --model_version Fine_tuning --train_type In_domain --dataset serengeti --mode train
 ```
-For **Out-domain training**:
+#### Out-of-domain Training
 ```bash
-python main.py --model_version Base --train_type Out_domain --mode train
-```
-
-If you use this code, please cite our work:
+python main.py --model_version Base_long --train_type Out_domain --dataset serengeti --dataset2 terra --mode train
+---
 ```
 @inproceedings{santamaria2025catalog,
   title={CATALOG: A Camera Trap Language-guided Contrastive Learning Model},
@@ -144,4 +177,4 @@ If you use this code, please cite our work:
 }
 ```
 ## Acknowledgment.
-This work was supported by Universidad de Antioquia - CODI and Alexander von Humboldt Institute for Research on Biological Resources (project 2020-33250), and by the ANR (French National Research Agency) under the JCJC project DeSNAP (ANR-24-CE23-1895-01).
+This work was supported by Universidad de Antioquia - CODI and Alexander von Humboldt Institute for Research on Biological Resources (project 2020-33250), and by the ANR (French National Research Agency) under the JCJC project DeSNAP (ANR-24-CE23-1895-01), and by the Academic Grant from NVIDIA AI.
