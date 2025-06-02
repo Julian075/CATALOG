@@ -1,10 +1,17 @@
  *.pyc
 __pycache__/
+envs/
 # Ignorar todos los archivos .pt
 *.pt
 *.pth
 *.jpg
+*.JPG
 *.png
+*.PNG
+*.jpeg
+*.JPEG
+*.webp
+*.WEBP
 *.csv
 *.json
 !info_terra_ChatGPT.json
@@ -25,3 +32,8 @@ Best/
 No_subir_repo/
 *.tar
 *.tar.gz
+*.log
+*.log.*
+.vscode/
+.idea/
+
