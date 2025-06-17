@@ -14,10 +14,10 @@ envs/
 *.WEBP
 *.csv
 *.json
-!info_terra_ChatGPT.json
-!info_serengeti_ChatGPT.json
-!info_terra_LLAMA.json
-!info_serengeti_LLAMA.json
+!data/info_terra_ChatGPT.json
+!data/info_serengeti_ChatGPT.json
+!data/info_terra_LLAMA.json
+!data/info_serengeti_LLAMA.json
 !info_terra_Phi.json
 !info_serengeti_Phi.json
 !info_terra_Qwen.json
