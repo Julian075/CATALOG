@@ -66,6 +66,7 @@ pip install -r requirements.txt
 ```
 ---
 
+
 ## Checkpoints
 You can temporarily access the checkpoints at the following link:
 https://drive.google.com/drive/folders/1zR4Q9Ywza7B-N_5KfYASW9knmT_073lM?usp=sharing
