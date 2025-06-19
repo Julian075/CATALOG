@@ -100,7 +100,7 @@ def build_optimizer( projection_model, optimizer, learning_rate, momentum, versi
 
     return optimizer,scheduler
 
-def feature_extraction_(model_version,dataset,LLM,beta=0.5):
+def feature_extraction_(model_version,dataset,LLM,beta=1.0):
     if model_version=='Base_long':
         extract_features(model_version=model_version, dataset=dataset, type_clip='longclip-B', LLM=LLM, only_text=0,beta=beta)
     elif  "Bio" in model_version :
