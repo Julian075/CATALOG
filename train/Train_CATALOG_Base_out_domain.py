@@ -842,7 +842,7 @@ class CATALOG_base:
         text_features2 = text_features2.to(device)
 
         dataset_S = torch.load(self.path_features_S)
-        dataloader_test = self.dataloader(dataset_S['cis_test'], self.batch_size, self.dataset)
+        dataloader_test = self.dataloader(dataset_S['test'], self.batch_size, self.dataset)
 
         projection_model = self.md.LLaVA_CLIP(hidden_dim=self.hidden_dim, num_layers=self.num_layers, dropout=self.dropout)
         projection_model.load_state_dict(torch.load(model_params_path))
@@ -877,16 +877,16 @@ class CATALOG_base:
 
         epoch_loss_cis_test = running_loss_test / len(dataloader_test)
         epoch_acc_cis_test = (running_corrects_test / size_test) * 100
-        print('Cis Test loss: {:.4f}, Cis Test acc: {:.4f}'.format(epoch_loss_cis_test, epoch_acc_cis_test))
+        print('Test loss: {:.4f}, Test acc: {:.4f}'.format(epoch_loss_cis_test, epoch_acc_cis_test))
 
         # Calculate confusion matrix
         conf_matrix_cis = confusion_matrix(all_labels, all_preds)
         df_conf_matrix_cis = pd.DataFrame(conf_matrix_cis)
-        df_conf_matrix_cis.to_csv('conf_matrix_cis_Base.csv', index=False)
+        df_conf_matrix_cis.to_csv('conf_matrix_Base_out_domain.csv', index=False)
 
-        print("Confusion Matrix for Cis Test:")
+        print("Confusion Matrix for Test:")
         print(conf_matrix_cis)
-        print("\nClassification Report for Cis Test:")
+        print("\nClassification Report for Test:")
         print(classification_report(all_labels, all_preds))
 
     def prueba_model_OoD_terra(self,model_params_path):# to calculate the acc in test for a saved model
